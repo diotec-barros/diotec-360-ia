@@ -1,0 +1,120 @@
+{
+  "genesis_asset_report": {
+    "version": "1.0",
+    "report_id": "GENESIS_001",
+    "generated_at": "2026-02-11T22:43:18.836581",
+    "genesis_timestamp": 1770849798.8365812,
+    "issuer": {
+      "name": "Dionísio Sebastião Barros",
+      "company": "DIOTEC 360",
+      "role": "Founder & CEO",
+      "authority": "Genesis Key Holder"
+    },
+    "issuance": {
+      "total_credits_issued": 1000000,
+      "credit_value_usd": 0.1,
+      "total_value_usd": 100000.0,
+      "currency": "USD",
+      "backing": "Aethel Proof Verification Services"
+    },
+    "distribution_plan": {
+      "market_sale": {
+        "credits": 700000,
+        "percentage": 70.0,
+        "purpose": "Public sale to customers"
+      },
+      "strategic_reserve": {
+        "credits": 200000,
+        "percentage": 20.0,
+        "purpose": "Partnership deals and enterprise contracts"
+      },
+      "founder_allocation": {
+        "credits": 100000,
+        "percentage": 10.0,
+        "purpose": "Founder reserve and team incentives"
+      }
+    },
+    "pricing_tiers": [
+      {
+        "name": "Starter",
+        "credits": 100,
+        "price_usd": 10.0,
+        "tier": "developer"
+      },
+      {
+        "name": "Professional",
+        "credits": 1000,
+        "price_usd": 80.0,
+        "tier": "developer"
+      },
+      {
+        "name": "Business",
+        "credits": 10000,
+        "price_usd": 700.0,
+        "tier": "fintech"
+      },
+      {
+        "name": "Enterprise",
+        "credits": 100000,
+        "price_usd": 6000.0,
+        "tier": "enterprise"
+      }
+    ],
+    "use_cases": [
+      {
+        "operation": "proof_verification",
+        "cost_credits": 1,
+        "description": "Simple proof verification with Judge"
+      },
+      {
+        "operation": "batch_verification",
+        "cost_credits": 500,
+        "description": "Batch verification (1000 transactions)"
+      },
+      {
+        "operation": "conservation_oracle",
+        "cost_credits": 5,
+        "description": "Conservation oracle query"
+      },
+      {
+        "operation": "sentinel_monitoring",
+        "cost_credits": 10,
+        "description": "Sentinel monitoring (per hour)"
+      },
+      {
+        "operation": "ghost_identity",
+        "cost_credits": 20,
+        "description": "Ghost identity operation"
+      }
+    ],
+    "cryptographic_verification": {
+      "genesis_seal": "4a3001afffa6ddfdce559bc0b014d289d002bfe567c0cdd7a9014a951304b0d092fc219e4f32eabecbd831bbd7f09c6039190d6fe2e3cedbb01feee0cae510cd",
+      "seal_algorithm": "SHA-512",
+      "seal_input": "GENESIS:1000000:Dionísio Sebastião Barros:1770849798.8365812",
+      "verification_instructions": "Recompute SHA-512 hash of seal_input and compare with genesis_seal"
+    },
+    "legal": {
+      "license": "Proprietary - DIOTEC 360 Commercial License",
+      "jurisdiction": "Angola",
+      "governing_law": "Angolan Commercial Law",
+      "dispute_resolution": "Arbitration in Luanda, Angola"
+    },
+    "market_projections": {
+      "conservative": {
+        "credits_sold_monthly": 10000,
+        "revenue_monthly_usd": 1000.0,
+        "revenue_annual_usd": 12000.0
+      },
+      "realistic": {
+        "credits_sold_monthly": 100000,
+        "revenue_monthly_usd": 10000.0,
+        "revenue_annual_usd": 120000.0
+      },
+      "aggressive": {
+        "credits_sold_monthly": 1000000,
+        "revenue_monthly_usd": 100000.0,
+        "revenue_annual_usd": 1200000.0
+      }
+    }
+  }
+}

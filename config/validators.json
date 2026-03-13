@@ -1,0 +1,24 @@
+{
+  "validators": [
+    {
+      "node_id": "node_1",
+      "stake": 10000,
+      "initial_balance": 0
+    },
+    {
+      "node_id": "node_2",
+      "stake": 10000,
+      "initial_balance": 0
+    },
+    {
+      "node_id": "node_3",
+      "stake": 10000,
+      "initial_balance": 0
+    },
+    {
+      "node_id": "node_4",
+      "stake": 10000,
+      "initial_balance": 0
+    }
+  ]
+}

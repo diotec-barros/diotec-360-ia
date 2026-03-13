@@ -1,0 +1,75 @@
+{
+  "intent_name": "transfer",
+  "input_state": {
+    "sender_balance": 500,
+    "receiver_balance": 100,
+    "amount": 150
+  },
+  "output_state": {
+    "sender_balance": 350,
+    "receiver_balance": 250,
+    "amount": 150
+  },
+  "execution_time": 0.001323,
+  "gas_used": 300,
+  "gas_limit": 10000,
+  "verification_passed": true,
+  "audit_trail": [
+    {
+      "timestamp": "2026-02-02T00:24:17.815142",
+      "level": "INFO",
+      "message": "Validating sandbox security...",
+      "gas_used": 0
+    },
+    {
+      "timestamp": "2026-02-02T00:24:17.815355",
+      "level": "SUCCESS",
+      "message": "Sandbox validation passed",
+      "gas_used": 0
+    },
+    {
+      "timestamp": "2026-02-02T00:24:17.815463",
+      "level": "INFO",
+      "message": "Input state: {'sender_balance': 500, 'receiver_balance': 100, 'amount': 150}",
+      "gas_used": 0
+    },
+    {
+      "timestamp": "2026-02-02T00:24:17.815698",
+      "level": "INFO",
+      "message": "Executing WASM function: transfer",
+      "gas_used": 0
+    },
+    {
+      "timestamp": "2026-02-02T00:24:17.815857",
+      "level": "GAS",
+      "message": "Gas limit: 10000",
+      "gas_used": 0
+    },
+    {
+      "timestamp": "2026-02-02T00:24:17.815965",
+      "level": "SUCCESS",
+      "message": "Transfer executed: 150 units",
+      "gas_used": 300
+    },
+    {
+      "timestamp": "2026-02-02T00:24:17.816132",
+      "level": "INFO",
+      "message": "  Sender: 500 -> 350",
+      "gas_used": 300
+    },
+    {
+      "timestamp": "2026-02-02T00:24:17.816242",
+      "level": "INFO",
+      "message": "  Receiver: 100 -> 250",
+      "gas_used": 300
+    },
+    {
+      "timestamp": "2026-02-02T00:24:17.816355",
+      "level": "GAS",
+      "message": "Gas used: 300/10000",
+      "gas_used": 300
+    }
+  ],
+  "wat_hash": "d24a39270e8dcbdad0f5ca8a542377223953d187eb7b4c8468a0ed589554fec1",
+  "envelope_signature": "5a4191d919c8a863dac9d2615a54437f966343c6ac34ff6b271acf1dae35d599"
+}

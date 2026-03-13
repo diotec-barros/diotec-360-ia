@@ -1,0 +1,44 @@
+# Audit Trail Generation with Immutable Proof
+# Demonstrates creating an immutable audit trail for financial transactions
+# with cryptographic proof of integrity.
+
+solve generate_audit_trail {
+    # Transaction details
+    let transaction_id = 12345
+    let timestamp = 1704067200  # Unix timestamp
+    let sender = "account_A"
+    let recipient = "account_B"
+    let amount = 1000
+    
+    # Previous audit record hash (simulated)
+    let previous_hash = 987654321
+    
+    # Calculate current record hash (simplified)
+    # In production, this would use SHA-256 or similar
+    let current_hash = transaction_id + timestamp + amount + previous_hash
+    
+    # Audit trail metadata
+    let auditor = "compliance_officer"
+    let audit_timestamp = timestamp + 60  # 1 minute later
+    
+    # Compliance checks
+    let amount_valid = amount > 0
+    let parties_valid = true  # Simplified check
+    
+    assert amount_valid
+    assert parties_valid
+    
+    # Proof of audit trail integrity
+    # Each record links to previous, creating immutable chain
+    prove current_hash > previous_hash
+    prove audit_timestamp > timestamp
+    
+    return {
+        transaction_id: transaction_id,
+        audit_hash: current_hash,
+        previous_hash: previous_hash,
+        auditor: auditor,
+        audit_timestamp: audit_timestamp,
+        integrity_verified: true
+    }
+}

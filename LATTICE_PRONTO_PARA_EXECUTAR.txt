@@ -1,0 +1,91 @@
+╔══════════════════════════════════════════════════════════════╗
+║                                                              ║
+║   🛡️  DIOTEC360 LATTICE - CONFIGURAÇÃO COMPLETA  📡           ║
+║                                                              ║
+╚══════════════════════════════════════════════════════════════╝
+
+┌──────────────────────────────────────────────────────────────┐
+│  ✅ PROBLEMA IDENTIFICADO E CORRIGIDO                        │
+└──────────────────────────────────────────────────────────────┘
+
+  Causa: Variáveis de ambiente não eram herdadas pelo processo
+  Solução: Migração para arquivos .env
+
+┌──────────────────────────────────────────────────────────────┐
+│  📁 ARQUIVOS CRIADOS                                         │
+└──────────────────────────────────────────────────────────────┘
+
+  ✓ .env.nodeA                    - Config Node A
+  ✓ .env.nodeB.template           - Template Node B
+  ✓ launch_lattice_v2.bat         - Script de lançamento
+  ✓ api/main.py (modificado)      - Carrega .env
+  ✓ aethel/nexo/p2p_streams.py    - Timeout + logs
+
+┌──────────────────────────────────────────────────────────────┐
+│  🚀 COMANDO DE EXECUÇÃO                                      │
+└──────────────────────────────────────────────────────────────┘
+
+    launch_lattice_v2.bat
+
+┌──────────────────────────────────────────────────────────────┐
+│  📊 O QUE ESPERAR                                            │
+└──────────────────────────────────────────────────────────────┘
+
+  [1/6] Verificando dependencias...
+  [2/6] Verificando arquivo .env.nodeA...
+  [3/6] Iniciando Node A (porta 8000)...
+  [4/6] Obtendo peer_id do Node A...
+        OK - peer_id: QmXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+  [5/6] Criando .env.nodeB com peer_id...
+  [6/6] Iniciando Node B (porta 8001)...
+
+  === Node A ===
+  [LATTICE_P2P] started
+  [LATTICE_P2P] peer_id=QmXXX...
+  [LATTICE_P2P] listen=/ip4/127.0.0.1/tcp/9000
+
+  === Node B ===
+  [LATTICE_P2P] started
+  [LATTICE_P2P] peer_id=QmYYY...
+  [LATTICE_P2P] listen=/ip4/127.0.0.1/tcp/9001
+
+┌──────────────────────────────────────────────────────────────┐
+│  ✅ CRITÉRIO DE SUCESSO                                      │
+└──────────────────────────────────────────────────────────────┘
+
+  Se você vê mensagens [LATTICE_P2P] nos logs:
+    ✅ P2P ESTÁ FUNCIONANDO!
+
+  Se você vê "published" e "received":
+    ✅ GOSSIP ESTÁ FUNCIONANDO!
+
+┌──────────────────────────────────────────────────────────────┐
+│  🔍 VERIFICAÇÃO RÁPIDA                                       │
+└──────────────────────────────────────────────────────────────┘
+
+  # Verificar logs do P2P
+  type logs\nodeA.log | findstr /C:"[LATTICE_P2P]"
+  type logs\nodeB.log | findstr /C:"[LATTICE_P2P]"
+
+  # Testar gossip
+  python test_lattice_gossip_flow.py
+
+┌──────────────────────────────────────────────────────────────┐
+│  📚 DOCUMENTAÇÃO                                             │
+└──────────────────────────────────────────────────────────────┘
+
+  • LATTICE_CONFIGURACAO_COMPLETA.md  - Visão geral
+  • EXECUTE_LATTICE_V2.md             - Guia detalhado
+  • LATTICE_P2P_DIAGNOSTICO.md        - Análise técnica
+
+┌──────────────────────────────────────────────────────────────┐
+│  🎯 EXECUTE AGORA                                            │
+└──────────────────────────────────────────────────────────────┘
+
+    launch_lattice_v2.bat
+
+╔══════════════════════════════════════════════════════════════╗
+║                                                              ║
+║  A REDE ESTÁ PRONTA PARA RESPIRAR  🌌✨                     ║
+║                                                              ║
+╚══════════════════════════════════════════════════════════════╝

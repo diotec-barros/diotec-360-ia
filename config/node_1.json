@@ -1,0 +1,16 @@
+{
+  "node_id": "node_1",
+  "stake": 10000,
+  "network": {
+    "listen_port": 8001,
+    "bootstrap_peers": [
+      {"node_id": "node_2", "address": "localhost:8002"},
+      {"node_id": "node_3", "address": "localhost:8003"},
+      {"node_id": "node_4", "address": "localhost:8004"}
+    ]
+  },
+  "consensus": {
+    "timeout": 10.0,
+    "view_change_timeout": 5.0
+  }
+}

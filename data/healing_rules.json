@@ -1,0 +1,134 @@
+{
+  "signatures": [
+    {
+      "signature_id": "ad8bc64e795ae018",
+      "attack_type": "infinite_recursion",
+      "pattern": "RECURSION:attack:SELF_CALL",
+      "severity": 0.9,
+      "extracted_at": 1771528288.3765554,
+      "metadata": {
+        "extraction_time": 0.0001685619354248047,
+        "code_length": 41
+      }
+    },
+    {
+      "signature_id": "1e9274b55676ee39",
+      "attack_type": "dos",
+      "pattern": "LOOP:WHILE_TRUE:NO_BREAK",
+      "severity": 0.9,
+      "extracted_at": 1771528289.41695,
+      "metadata": {
+        "extraction_time": 0.0001685619354248047,
+        "code_length": 16
+      }
+    },
+    {
+      "signature_id": "5513d92bfc34840b",
+      "attack_type": "infinite_recursion",
+      "pattern": "RECURSION:f:SELF_CALL",
+      "severity": 0.9,
+      "extracted_at": 1771528289.4150808,
+      "metadata": {
+        "extraction_time": 0.0006005764007568359,
+        "code_length": 23
+      }
+    },
+    {
+      "signature_id": "5874a0ee745b2ae4",
+      "attack_type": "dos",
+      "pattern": "LOOP:UNBOUNDED",
+      "severity": 0.9,
+      "extracted_at": 1771528289.4183369,
+      "metadata": {
+        "extraction_time": 0.00010251998901367188,
+        "code_length": 28
+      }
+    }
+  ],
+  "rules": [
+    {
+      "rule_id": "rule_ad8bc64e795ae018",
+      "version": 2,
+      "signature": {
+        "signature_id": "ad8bc64e795ae018",
+        "attack_type": "infinite_recursion",
+        "pattern": "RECURSION:attack:SELF_CALL",
+        "severity": 0.9,
+        "extracted_at": 1771528288.3765554,
+        "metadata": {
+          "extraction_time": 0.0001685619354248047,
+          "code_length": 41
+        }
+      },
+      "created_at": 1771528288.3765686,
+      "parent_version": 1,
+      "active": false,
+      "true_positives": 2,
+      "false_positives": 1,
+      "effectiveness": 0.6666666666666666
+    },
+    {
+      "rule_id": "rule_1e9274b55676ee39",
+      "version": 2,
+      "signature": {
+        "signature_id": "1e9274b55676ee39",
+        "attack_type": "dos",
+        "pattern": "LOOP:WHILE_TRUE:NO_BREAK",
+        "severity": 0.9,
+        "extracted_at": 1771528289.41695,
+        "metadata": {
+          "extraction_time": 0.0001685619354248047,
+          "code_length": 16
+        }
+      },
+      "created_at": 1771528289.416958,
+      "parent_version": 1,
+      "active": true,
+      "true_positives": 0,
+      "false_positives": 0,
+      "effectiveness": 1.0
+    },
+    {
+      "rule_id": "rule_5513d92bfc34840b",
+      "version": 1,
+      "signature": {
+        "signature_id": "5513d92bfc34840b",
+        "attack_type": "infinite_recursion",
+        "pattern": "RECURSION:f:SELF_CALL",
+        "severity": 0.9,
+        "extracted_at": 1771528289.4150808,
+        "metadata": {
+          "extraction_time": 0.0006005764007568359,
+          "code_length": 23
+        }
+      },
+      "created_at": 1771528289.4150918,
+      "parent_version": null,
+      "active": true,
+      "true_positives": 0,
+      "false_positives": 0,
+      "effectiveness": 1.0
+    },
+    {
+      "rule_id": "rule_5874a0ee745b2ae4",
+      "version": 1,
+      "signature": {
+        "signature_id": "5874a0ee745b2ae4",
+        "attack_type": "dos",
+        "pattern": "LOOP:UNBOUNDED",
+        "severity": 0.9,
+        "extracted_at": 1771528289.4183369,
+        "metadata": {
+          "extraction_time": 0.00010251998901367188,
+          "code_length": 28
+        }
+      },
+      "created_at": 1771528289.4183424,
+      "parent_version": null,
+      "active": true,
+      "true_positives": 0,
+      "false_positives": 0,
+      "effectiveness": 1.0
+    }
+  ]
+}

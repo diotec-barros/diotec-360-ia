@@ -1,0 +1,82 @@
+# Git
+.git
+.gitignore
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+.pytest_cache/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Documentation (keep only essential)
+*.md
+!README_HF.md
+
+# Frontend (not needed for API)
+frontend/
+node_modules/
+
+# Test files
+test_*.py
+*_test.py
+
+# Output and temp files
+output/
+*.log
+*.tmp
+
+# Demo files
+demo_*.py
+
+# Deployment configs for other platforms
+railway.toml
+Procfile
+vercel.json
+
+# Large documentation files
+EPOCH_*.md
+HOTFIX_*.md
+V1_*.md
+DEPLOY_*.md
+LANCAMENTO_*.md
+VITORIA_*.md
+CELEBRACAO_*.md
+SINGULARIDADE_*.md
+TESTE_*.md
+STATUS_*.md
+LAUNCH_*.md
+FRONTEND_*.md
+RAILWAY_*.md
+HUGGINGFACE_*.md
+ACAO_*.md
+COMECE_*.md
+COMANDOS_*.md
+CONFIGURAR_*.md
+DOMINIO_*.md
+EXEMPLOS_*.md
+FIX_*.md
+GUIA_*.md
+INDICE_*.md
+INSTRUCOES_*.md
+LICOES_*.md
+PRIMEIROS_*.md
+PROXIMOS_*.md
+PRONTO_*.md
+RESUMO_*.md
+TESTES_*.md
+
+# Keep only essential docs
+!README.md
+!WHITEPAPER.md
+!ARCHITECTURE.md

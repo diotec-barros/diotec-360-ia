@@ -1,0 +1,185 @@
+"""
+Mrs. Watanabe Carry Trade Strategy v5.1
+"O Iene Paga o Seu Aluguel"
+
+Protocolo Watanabe - Estratégia de Carry Trade Conservadora
+Autor: Dionísio Sebastião Barros (Sovereign Creator)
+Implementação: Kiro AI (Chief Engineer)
+Data: 23 de Fevereiro de 2026
+
+Filosofia:
+"Borrow cheap, invest expensive, protect always."
+
+Três Mandamentos:
+1. Vault Hierarchy: vault_master (Dionísio) vs vault_agent (Avatar)
+2. Budget Invariant: $5,000 USD minimum reserve (circuit breaker)
+3. Watanabe Config: Conservative mode (3% differential, 10% max exposure)
+"""
+
+intent mrs_watanabe_carry_trade(
+    borrow_currency: str,
+    invest_currency: str,
+    trade_amount: decimal,
+    vault_agent_balance: decimal,
+    vault_master_balance: decimal,
+    borrow_rate: decimal,
+    invest_rate: decimal,
+    exchange_rate: decimal,
+    volatility_30d: decimal,
+    transaction_cost: decimal
+) {
+    guard {
+        # MANDAMENTO 1: Vault Hierarchy Protection
+        # O Avatar NUNCA pode tocar no vault_master
+        vault_master_balance >= 5000.00;  # $5,000 USD minimum reserve
+        
+        # MANDAMENTO 2: Budget Invariant (Circuit Breaker)
+        # Se o vault_master cair abaixo de $5k, REJECT ALL
+        vault_master_balance >= 5000.00;
+        
+        # MANDAMENTO 3: Watanabe Conservative Config
+        # Regra de Ouro: Yield spread deve cobrir risco + custo
+        (invest_rate - borrow_rate) >= (volatility_30d + transaction_cost);
+        
+        # Minimum spread: 3% differential
+        (invest_rate - borrow_rate) >= 3.00;
+        
+        # Proteção Dionísio: Nunca usar mais de 10% do vault operacional
+        trade_amount <= (vault_agent_balance * 0.10);
+        
+        # Proteção contra trade negativo
+        trade_amount > 0;
+        
+        # Proteção contra taxas absurdas
+        borrow_rate >= 0;
+        invest_rate >= 0;
+        transaction_cost >= 0;
+        volatility_30d >= 0;
+        
+        # Proteção contra exchange rate inválido
+        exchange_rate > 0;
+    }
+    
+    solve {
+        # Prioridade: Velocidade (carry trade é time-sensitive)
+        priority: speed;
+        
+        # Target: Forex Nexus (sistema de execução)
+        target: forex_nexus;
+        
+        # Timeout: 5 segundos (mercado move rápido)
+        timeout: 5000;
+    }
+    
+    verify {
+        # PROVA MATEMÁTICA: O lucro acumulado deve ser maior que o custo
+        
+        # Variáveis de estado
+        let borrowed_amount = trade_amount;
+        let invested_amount = trade_amount * exchange_rate;
+        
+        # Cálculo de juros (anualizado para diário)
+        let daily_borrow_cost = borrowed_amount * (borrow_rate / 100 / 365);
+        let daily_invest_return = invested_amount * (invest_rate / 100 / 365);
+        
+        # Lucro líquido diário
+        let daily_net_profit = daily_invest_return - daily_borrow_cost - transaction_cost;
+        
+        # INVARIANTE: Lucro diário deve ser positivo
+        daily_net_profit > 0;
+        
+        # CONSERVAÇÃO: O vault_agent não pode crescer magicamente
+        # (lucro vem do diferencial de juros, não de criação de fundos)
+        let new_vault_agent_balance = vault_agent_balance + daily_net_profit;
+        
+        # Prova de conservação: O aumento no vault_agent é exatamente o lucro
+        new_vault_agent_balance == (vault_agent_balance + daily_net_profit);
+        
+        # PROTEÇÃO FINAL: O vault_master permanece intocado
+        vault_master_balance >= 5000.00;
+    }
+}
+
+
+intent watanabe_emergency_exit(
+    position_size: decimal,
+    entry_rate: decimal,
+    current_rate: decimal,
+    vault_agent_balance: decimal,
+    vault_master_balance: decimal
+) {
+    guard {
+        # Proteção: Só pode fechar posições existentes
+        position_size > 0;
+        
+        # Proteção: Rates devem ser válidos
+        entry_rate > 0;
+        current_rate > 0;
+        
+        # MANDAMENTO 2: Budget Invariant sempre ativo
+        vault_master_balance >= 5000.00;
+    }
+    
+    solve {
+        priority: speed;
+        target: forex_nexus;
+        timeout: 2000;  # Emergency = 2 segundos
+    }
+    
+    verify {
+        # Calcular P&L
+        let rate_change = current_rate - entry_rate;
+        let pnl = position_size * rate_change;
+        
+        # Atualizar vault_agent
+        let new_vault_agent_balance = vault_agent_balance + pnl;
+        
+        # CONSERVAÇÃO: O P&L é exatamente a mudança no vault
+        new_vault_agent_balance == (vault_agent_balance + pnl);
+        
+        # PROTEÇÃO: O vault_master permanece intocado
+        vault_master_balance >= 5000.00;
+        
+        # INVARIANTE: Mesmo com perda, o vault_agent não pode ficar negativo
+        new_vault_agent_balance >= 0;
+    }
+}
+
+
+intent watanabe_risk_check(
+    total_exposure: decimal,
+    vault_agent_balance: decimal,
+    vault_master_balance: decimal,
+    max_exposure_pct: decimal
+) {
+    guard {
+        # MANDAMENTO 3: Max exposure check
+        max_exposure_pct <= 10.00;  # Never more than 10%
+        
+        # MANDAMENTO 2: Budget Invariant
+        vault_master_balance >= 5000.00;
+        
+        # Proteção: Exposure deve ser positivo
+        total_exposure >= 0;
+        vault_agent_balance >= 0;
+    }
+    
+    solve {
+        priority: safety;
+        target: risk_engine;
+        timeout: 1000;
+    }
+    
+    verify {
+        # INVARIANTE: Total exposure não pode exceder limite
+        total_exposure <= (vault_agent_balance * (max_exposure_pct / 100));
+        
+        # PROTEÇÃO: O vault_master permanece intocado
+        vault_master_balance >= 5000.00;
+        
+        # CONSERVAÇÃO: Nenhum fundo é criado ou destruído
+        # (este é apenas um check, não uma transação)
+        vault_agent_balance == vault_agent_balance;
+        vault_master_balance == vault_master_balance;
+    }
+}

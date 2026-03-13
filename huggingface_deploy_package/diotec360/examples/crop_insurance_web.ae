@@ -1,0 +1,64 @@
+// Crop Insurance - Web Proof Viewer Compatible Version
+// Uses 'solve' keyword instead of 'verify'
+
+intent insurance_payout(
+    farmer: Account,
+    insurance_pool: Account,
+    rainfall_mm: Balance,
+    threshold_mm: Balance,
+    payout_amount: Balance
+) {
+    guard {
+        rainfall_mm >= 0;
+        threshold_mm > 0;
+        payout_amount > 0;
+        old_insurance_pool_balance >= payout_amount;
+        rainfall_mm < threshold_mm;
+        old_farmer_balance >= 0;
+    }
+    
+    solve {
+        farmer_balance == old_farmer_balance + payout_amount;
+        insurance_pool_balance == old_insurance_pool_balance - payout_amount;
+    }
+}
+
+intent pay_premium(
+    farmer: Account,
+    insurance_pool: Account,
+    premium_amount: Balance
+) {
+    guard {
+        premium_amount > 0;
+        old_farmer_balance >= premium_amount;
+        old_insurance_pool_balance >= 0;
+    }
+    
+    solve {
+        farmer_balance == old_farmer_balance - premium_amount;
+        insurance_pool_balance == old_insurance_pool_balance + premium_amount;
+    }
+}
+
+intent batch_payout(
+    farmer1: Account,
+    farmer2: Account,
+    farmer3: Account,
+    insurance_pool: Account,
+    payout_per_farmer: Balance
+) {
+    guard {
+        payout_per_farmer > 0;
+        old_insurance_pool_balance >= payout_per_farmer * 3;
+        old_farmer1_balance >= 0;
+        old_farmer2_balance >= 0;
+        old_farmer3_balance >= 0;
+    }
+    
+    solve {
+        farmer1_balance == old_farmer1_balance + payout_per_farmer;
+        farmer2_balance == old_farmer2_balance + payout_per_farmer;
+        farmer3_balance == old_farmer3_balance + payout_per_farmer;
+        insurance_pool_balance == old_insurance_pool_balance - (payout_per_farmer * 3);
+    }
+}

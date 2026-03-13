@@ -1,0 +1,198 @@
+# Aethel Pre-Commit Hooks Configuration
+# 
+# This file configures pre-commit hooks to run automatically before each commit.
+# These hooks help maintain code quality and consistency across the project.
+#
+# Installation:
+#   pip install pre-commit
+#   pre-commit install
+#
+# Usage:
+#   Hooks run automatically on `git commit`
+#   Run manually: pre-commit run --all-files
+#   Update hooks: pre-commit autoupdate
+#
+# Copyright © 2024-2026 DIOTEC 360
+# Licensed under Apache 2.0
+
+repos:
+  # Python code formatting with black
+  - repo: https://github.com/psf/black
+    rev: 24.1.1
+    hooks:
+      - id: black
+        name: Format Python code with black
+        language_version: python3
+        args: ['--line-length=100']
+
+  # Python import sorting with isort
+  - repo: https://github.com/PyCQA/isort
+    rev: 5.13.2
+    hooks:
+      - id: isort
+        name: Sort Python imports with isort
+        args: ['--profile', 'black', '--line-length', '100']
+
+  # Python linting with flake8
+  - repo: https://github.com/PyCQA/flake8
+    rev: 7.0.0
+    hooks:
+      - id: flake8
+        name: Lint Python code with flake8
+        args: ['--max-line-length=100', '--extend-ignore=E203,W503']
+
+  # Python type checking with mypy
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.8.0
+    hooks:
+      - id: mypy
+        name: Type check Python code with mypy
+        additional_dependencies: [types-all]
+        args: ['--ignore-missing-imports', '--no-strict-optional']
+
+  # General file checks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      # Prevent large files from being committed
+      - id: check-added-large-files
+        name: Check for large files
+        args: ['--maxkb=1000']
+      
+      # Check for files that would conflict in case-insensitive filesystems
+      - id: check-case-conflict
+        name: Check for case conflicts
+      
+      # Check for merge conflicts
+      - id: check-merge-conflict
+        name: Check for merge conflicts
+      
+      # Check YAML syntax
+      - id: check-yaml
+        name: Check YAML syntax
+        args: ['--safe']
+      
+      # Check JSON syntax
+      - id: check-json
+        name: Check JSON syntax
+      
+      # Check TOML syntax
+      - id: check-toml
+        name: Check TOML syntax
+      
+      # Ensure files end with newline
+      - id: end-of-file-fixer
+        name: Fix end of files
+      
+      # Remove trailing whitespace
+      - id: trailing-whitespace
+        name: Remove trailing whitespace
+        args: ['--markdown-linebreak-ext=md']
+      
+      # Fix mixed line endings
+      - id: mixed-line-ending
+        name: Fix mixed line endings
+        args: ['--fix=lf']
+      
+      # Check for private keys
+      - id: detect-private-key
+        name: Detect private keys
+
+  # Markdown linting
+  - repo: https://github.com/igorshubovych/markdownlint-cli
+    rev: v0.39.0
+    hooks:
+      - id: markdownlint
+        name: Lint Markdown files
+        args: ['--fix', '--disable', 'MD013', 'MD033', 'MD041']
+
+  # Copyright header validation (custom hook)
+  - repo: local
+    hooks:
+      - id: copyright-headers
+        name: Validate copyright headers
+        entry: python scripts/add_copyright_headers.py --check
+        language: system
+        types: [python]
+        pass_filenames: true
+
+  # Run Python tests (fast unit tests only)
+  - repo: local
+    hooks:
+      - id: pytest-fast
+        name: Run fast Python tests
+        entry: pytest -m "not slow" --tb=short -q
+        language: system
+        types: [python]
+        pass_filenames: false
+        stages: [commit]
+
+  # Validate documentation structure
+  - repo: local
+    hooks:
+      - id: validate-docs
+        name: Validate documentation structure
+        entry: python scripts/validate_documentation.py
+        language: system
+        pass_filenames: false
+        files: ^docs/
+
+  # Validate repository structure
+  - repo: local
+    hooks:
+      - id: validate-structure
+        name: Validate repository structure
+        entry: python scripts/validate_repository_structure.py
+        language: system
+        pass_filenames: false
+        stages: [push]
+
+  # Security checks with bandit
+  - repo: https://github.com/PyCQA/bandit
+    rev: 1.7.6
+    hooks:
+      - id: bandit
+        name: Security check with bandit
+        args: ['-c', 'pyproject.toml', '-r', 'aethel/', 'api/']
+        additional_dependencies: ['bandit[toml]']
+
+  # Check for secrets with detect-secrets
+  - repo: https://github.com/Yelp/detect-secrets
+    rev: v1.4.0
+    hooks:
+      - id: detect-secrets
+        name: Detect secrets
+        args: ['--baseline', '.secrets.baseline']
+        exclude: package.lock.json
+
+# Configuration for specific hooks
+default_language_version:
+  python: python3.11
+
+# Files to exclude from all hooks
+exclude: |
+  (?x)^(
+    \.git/|
+    \.hypothesis/|
+    \.pytest_cache/|
+    __pycache__/|
+    \.venv/|
+    venv/|
+    node_modules/|
+    \.DIOTEC360_sentinel/|
+    \.DIOTEC360_state/|
+    \.DIOTEC360_vault/|
+    \.demo_vault/|
+    \.test_sentinel_.*|
+    frontend/\.next/|
+    frontend/node_modules/|
+    .*\.db$|
+    .*\.db-journal$|
+    benchmark_.*_results\.json$
+  )
+
+# Fail fast - stop on first failure
+fail_fast: false
+
+# Minimum pre-commit version
+minimum_pre_commit_version: '3.0.0'

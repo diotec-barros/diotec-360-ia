@@ -1,0 +1,47 @@
+# Atomic Batch Processing with Conservation Proof
+# Demonstrates processing multiple independent transactions in parallel
+# with proof that all transactions either succeed or fail together.
+
+solve atomic_batch_transfer {
+    # Initial account balances
+    let account_A = 1000
+    let account_B = 500
+    let account_C = 750
+    let account_D = 1200
+    
+    # Batch of independent transfers
+    # Transfer 1: A -> B (200)
+    # Transfer 2: C -> D (300)
+    let transfer_1_amount = 200
+    let transfer_2_amount = 300
+    
+    # Validate all transfers before executing
+    assert transfer_1_amount <= account_A
+    assert transfer_2_amount <= account_C
+    
+    # Execute transfers atomically
+    let account_A_final = account_A - transfer_1_amount
+    let account_B_final = account_B + transfer_1_amount
+    let account_C_final = account_C - transfer_2_amount
+    let account_D_final = account_D + transfer_2_amount
+    
+    # Calculate total before and after
+    let total_before = account_A + account_B + account_C + account_D
+    let total_after = account_A_final + account_B_final + account_C_final + account_D_final
+    
+    # Conservation proof: Total money conserved across batch
+    prove total_before == total_after
+    
+    # Atomicity proof: All transfers completed
+    prove account_A_final == account_A - transfer_1_amount
+    prove account_C_final == account_C - transfer_2_amount
+    
+    return {
+        batch_size: 2,
+        total_conserved: total_after,
+        account_A: account_A_final,
+        account_B: account_B_final,
+        account_C: account_C_final,
+        account_D: account_D_final
+    }
+}

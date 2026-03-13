@@ -1,0 +1,376 @@
+# Autonomous Sentinel Monitoring and Alerting Configuration
+# Compatible with Prometheus, Grafana, Datadog, and other monitoring systems
+
+# ============================================================================
+# Metrics Collection
+# ============================================================================
+
+metrics:
+  # Sentinel Monitor Metrics
+  sentinel_monitor:
+    - name: sentinel_transactions_total
+      type: counter
+      description: Total transactions processed
+      labels: [outcome, crisis_mode]
+    
+    - name: sentinel_transactions_anomalous
+      type: counter
+      description: Transactions flagged as anomalous
+      labels: [crisis_mode]
+    
+    - name: sentinel_anomaly_rate
+      type: gauge
+      description: Percentage of anomalous transactions
+      unit: percent
+    
+    - name: sentinel_crisis_mode_active
+      type: gauge
+      description: Crisis Mode status (0=normal, 1=crisis)
+    
+    - name: sentinel_crisis_mode_activations_total
+      type: counter
+      description: Total Crisis Mode activations
+    
+    - name: sentinel_cpu_time_ms
+      type: histogram
+      description: CPU time per transaction
+      unit: milliseconds
+      buckets: [1, 2, 5, 10, 20, 50, 100]
+    
+    - name: sentinel_memory_delta_mb
+      type: histogram
+      description: Memory delta per transaction
+      unit: megabytes
+      buckets: [0.1, 0.5, 1, 2, 5, 10]
+    
+    - name: sentinel_z3_duration_ms
+      type: histogram
+      description: Z3 solver duration per transaction
+      unit: milliseconds
+      buckets: [10, 50, 100, 500, 1000, 5000, 30000]
+    
+    - name: sentinel_overhead_percent
+      type: gauge
+      description: Sentinel overhead percentage
+      unit: percent
+
+  # Semantic Sanitizer Metrics
+  semantic_sanitizer:
+    - name: sanitizer_rejections_total
+      type: counter
+      description: Total rejections by Semantic Sanitizer
+      labels: [reason]
+    
+    - name: sanitizer_high_entropy_total
+      type: counter
+      description: Rejections due to high entropy
+    
+    - name: sanitizer_trojan_pattern_total
+      type: counter
+      description: Rejections due to Trojan pattern match
+      labels: [pattern_id]
+    
+    - name: sanitizer_analysis_time_ms
+      type: histogram
+      description: Analysis time per transaction
+      unit: milliseconds
+      buckets: [10, 20, 50, 100, 200]
+    
+    - name: sanitizer_patterns_active
+      type: gauge
+      description: Number of active Trojan patterns
+
+  # Quarantine System Metrics
+  quarantine:
+    - name: quarantine_transactions_isolated_total
+      type: counter
+      description: Transactions placed in quarantine
+    
+    - name: quarantine_capacity_used
+      type: gauge
+      description: Current quarantine capacity usage
+    
+    - name: quarantine_capacity_max
+      type: gauge
+      description: Maximum quarantine capacity
+    
+    - name: quarantine_reintegrations_total
+      type: counter
+      description: Successful reintegrations from quarantine
+    
+    - name: quarantine_amputations_total
+      type: counter
+      description: Merkle amputations performed
+
+  # Self-Healing Metrics
+  self_healing:
+    - name: self_healing_rules_generated_total
+      type: counter
+      description: Total rules generated
+    
+    - name: self_healing_rules_active
+      type: gauge
+      description: Currently active rules
+    
+    - name: self_healing_rules_deactivated_total
+      type: counter
+      description: Rules deactivated due to low effectiveness
+    
+    - name: self_healing_effectiveness_avg
+      type: gauge
+      description: Average rule effectiveness score
+      unit: ratio
+
+  # Gauntlet Report Metrics
+  gauntlet:
+    - name: gauntlet_attacks_blocked_total
+      type: counter
+      description: Total attacks blocked
+      labels: [category, detection_method]
+    
+    - name: gauntlet_attacks_by_category
+      type: counter
+      description: Attacks by category
+      labels: [category]
+    
+    - name: gauntlet_attacks_by_detection
+      type: counter
+      description: Attacks by detection method
+      labels: [detection_method]
+
+# ============================================================================
+# Alert Rules
+# ============================================================================
+
+alerts:
+  # Critical Alerts (Immediate Action Required)
+  critical:
+    - name: CrisisModeActivated
+      condition: sentinel_crisis_mode_active == 1
+      duration: 0s
+      severity: critical
+      description: Crisis Mode has been activated
+      action: Page on-call engineer
+      runbook: https://docs.diotec360.dev/runbooks/crisis-mode
+    
+    - name: QuarantineCapacityCritical
+      condition: (quarantine_capacity_used / quarantine_capacity_max) > 0.9
+      duration: 1m
+      severity: critical
+      description: Quarantine capacity above 90%
+      action: Scale quarantine capacity or investigate attack
+      runbook: https://docs.diotec360.dev/runbooks/quarantine-capacity
+    
+    - name: SentinelOverheadCritical
+      condition: sentinel_overhead_percent > 10
+      duration: 5m
+      severity: critical
+      description: Sentinel overhead above 10%
+      action: Investigate performance degradation
+      runbook: https://docs.diotec360.dev/runbooks/high-overhead
+    
+    - name: FalsePositiveRateCritical
+      condition: (sanitizer_rejections_total / sentinel_transactions_total) > 0.05
+      duration: 10m
+      severity: critical
+      description: False positive rate above 5%
+      action: Consider rollback, review recent rules
+      runbook: https://docs.diotec360.dev/runbooks/false-positives
+
+  # Warning Alerts (Monitor Closely)
+  warning:
+    - name: AnomalyRateElevated
+      condition: sentinel_anomaly_rate > 5
+      duration: 5m
+      severity: warning
+      description: Anomaly rate above 5%
+      action: Monitor for potential attack
+      runbook: https://docs.diotec360.dev/runbooks/elevated-anomaly-rate
+    
+    - name: FalsePositiveRateHigh
+      condition: (sanitizer_rejections_total / sentinel_transactions_total) > 0.01
+      duration: 30m
+      severity: warning
+      description: False positive rate above 1%
+      action: Review recent Self-Healing rules
+      runbook: https://docs.diotec360.dev/runbooks/false-positives
+    
+    - name: SemanticAnalysisSlow
+      condition: histogram_quantile(0.95, sanitizer_analysis_time_ms) > 80
+      duration: 10m
+      severity: warning
+      description: 95th percentile analysis time above 80ms
+      action: Optimize pattern database or increase timeout
+      runbook: https://docs.diotec360.dev/runbooks/slow-analysis
+    
+    - name: RuleEffectivenessLow
+      condition: self_healing_effectiveness_avg < 0.7
+      duration: 1h
+      severity: warning
+      description: Average rule effectiveness below 70%
+      action: Review and deactivate ineffective rules
+      runbook: https://docs.diotec360.dev/runbooks/low-effectiveness
+    
+    - name: QuarantineCapacityHigh
+      condition: (quarantine_capacity_used / quarantine_capacity_max) > 0.7
+      duration: 5m
+      severity: warning
+      description: Quarantine capacity above 70%
+      action: Monitor capacity, prepare to scale
+      runbook: https://docs.diotec360.dev/runbooks/quarantine-capacity
+
+  # Info Alerts (Informational)
+  info:
+    - name: CrisisModeDeactivated
+      condition: sentinel_crisis_mode_active == 0 (after being 1)
+      duration: 0s
+      severity: info
+      description: Crisis Mode has been deactivated
+      action: Log event, no action required
+    
+    - name: NewSelfHealingRule
+      condition: increase(self_healing_rules_generated_total[5m]) > 0
+      duration: 0s
+      severity: info
+      description: New Self-Healing rule generated
+      action: Review new rule in next maintenance window
+    
+    - name: VaccineVulnerabilityFound
+      condition: increase(vaccine_vulnerabilities_found_total[1h]) > 0
+      duration: 0s
+      severity: info
+      description: Adversarial Vaccine found vulnerability
+      action: Review vulnerability report
+
+# ============================================================================
+# Dashboard Configuration
+# ============================================================================
+
+dashboards:
+  sentinel_overview:
+    title: Sentinel Overview
+    refresh: 5s
+    panels:
+      - title: Crisis Mode Status
+        type: stat
+        metric: sentinel_crisis_mode_active
+        thresholds:
+          - value: 0
+            color: green
+            text: NORMAL
+          - value: 1
+            color: red
+            text: CRISIS
+      
+      - title: Anomaly Rate (24h)
+        type: graph
+        metric: sentinel_anomaly_rate
+        timeRange: 24h
+        thresholds:
+          - value: 5
+            color: yellow
+          - value: 10
+            color: red
+      
+      - title: Transactions (1h)
+        type: graph
+        metrics:
+          - sentinel_transactions_total
+          - sentinel_transactions_anomalous
+        timeRange: 1h
+      
+      - title: Crisis Mode Activations (7d)
+        type: bar
+        metric: sentinel_crisis_mode_activations_total
+        timeRange: 7d
+      
+      - title: Quarantine Status
+        type: gauge
+        metric: quarantine_capacity_used / quarantine_capacity_max
+        unit: percent
+        thresholds:
+          - value: 70
+            color: yellow
+          - value: 90
+            color: red
+      
+      - title: Attack Types (30d)
+        type: pie
+        metric: gauntlet_attacks_by_category
+        timeRange: 30d
+      
+      - title: Recent Attacks
+        type: table
+        query: SELECT * FROM attack_records ORDER BY timestamp DESC LIMIT 100
+        columns: [timestamp, attack_type, detection_method, severity]
+
+# ============================================================================
+# Notification Channels
+# ============================================================================
+
+notifications:
+  channels:
+    - name: pagerduty
+      type: pagerduty
+      severity: [critical]
+      integration_key: ${PAGERDUTY_INTEGRATION_KEY}
+    
+    - name: slack_critical
+      type: slack
+      severity: [critical]
+      webhook_url: ${SLACK_WEBHOOK_CRITICAL}
+      channel: "#sentinel-alerts"
+    
+    - name: slack_warning
+      type: slack
+      severity: [warning]
+      webhook_url: ${SLACK_WEBHOOK_WARNING}
+      channel: "#sentinel-monitoring"
+    
+    - name: email
+      type: email
+      severity: [critical, warning]
+      recipients:
+        - oncall@diotec360.dev
+        - security@diotec360.dev
+    
+    - name: slack_info
+      type: slack
+      severity: [info]
+      webhook_url: ${SLACK_WEBHOOK_INFO}
+      channel: "#sentinel-info"
+
+# ============================================================================
+# Retention Policies
+# ============================================================================
+
+retention:
+  metrics:
+    high_resolution: 7d    # 5s resolution for 7 days
+    medium_resolution: 30d  # 1m resolution for 30 days
+    low_resolution: 90d     # 5m resolution for 90 days
+  
+  logs:
+    sentinel: 30d
+    gauntlet: 90d
+    telemetry: 90d
+
+# ============================================================================
+# Export Configuration
+# ============================================================================
+
+export:
+  prometheus:
+    enabled: true
+    port: 9090
+    path: /metrics
+  
+  datadog:
+    enabled: false
+    api_key: ${DATADOG_API_KEY}
+    tags: [env:production, service:diotec360-sentinel]
+  
+  grafana:
+    enabled: true
+    url: http://localhost:3000
+    api_key: ${GRAFANA_API_KEY}

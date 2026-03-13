@@ -1,0 +1,129 @@
+{
+  "bundle_hash": "3be8a8cefca097d4a64eb3cf792e5a1c410f4c3bf1e33bc8c2ca7d617f5c4187",
+  "intent_name": "transfer",
+  "input_state": {
+    "sender_balance": 500,
+    "receiver_balance": 100,
+    "amount": 150
+  },
+  "output_state": {
+    "sender_balance": 350,
+    "receiver_balance": 250,
+    "amount": 150
+  },
+  "execution_time": 0.005381,
+  "verification_passed": true,
+  "audit_trail": [
+    {
+      "timestamp": "2026-02-02T00:12:43.351277",
+      "level": "INFO",
+      "message": "Loading bundle: .DIOTEC360_vault/bundles/transfer_3be8a8ce.ae_bundle"
+    },
+    {
+      "timestamp": "2026-02-02T00:12:43.351733",
+      "level": "SUCCESS",
+      "message": "Bundle loaded: transfer"
+    },
+    {
+      "timestamp": "2026-02-02T00:12:43.351855",
+      "level": "INFO",
+      "message": "Verifying certificate..."
+    },
+    {
+      "timestamp": "2026-02-02T00:12:43.352086",
+      "level": "SUCCESS",
+      "message": "Certificate verified"
+    },
+    {
+      "timestamp": "2026-02-02T00:12:43.352195",
+      "level": "INFO",
+      "message": "Verifying bundle signature..."
+    },
+    {
+      "timestamp": "2026-02-02T00:12:43.352371",
+      "level": "SUCCESS",
+      "message": "Bundle signature verified"
+    },
+    {
+      "timestamp": "2026-02-02T00:12:43.352489",
+      "level": "INFO",
+      "message": "Verifying Merkle root..."
+    },
+    {
+      "timestamp": "2026-02-02T00:12:43.352616",
+      "level": "SUCCESS",
+      "message": "Merkle root verified: 6b606a7957d904d0..."
+    },
+    {
+      "timestamp": "2026-02-02T00:12:43.352788",
+      "level": "INFO",
+      "message": "Input state: {'sender_balance': 500, 'receiver_balance': 100, 'amount': 150}"
+    },
+    {
+      "timestamp": "2026-02-02T00:12:43.352978",
+      "level": "INFO",
+      "message": "Executing logic deterministically..."
+    },
+    {
+      "timestamp": "2026-02-02T00:12:43.353173",
+      "level": "INFO",
+      "message": "Verifying guards (pre-conditions)..."
+    },
+    {
+      "timestamp": "2026-02-02T00:12:43.353458",
+      "level": "SUCCESS",
+      "message": "All guards satisfied"
+    },
+    {
+      "timestamp": "2026-02-02T00:12:43.353582",
+      "level": "SUCCESS",
+      "message": "Transfer executed: 150 units"
+    },
+    {
+      "timestamp": "2026-02-02T00:12:43.353805",
+      "level": "INFO",
+      "message": "  Sender: 500 -> 350"
+    },
+    {
+      "timestamp": "2026-02-02T00:12:43.353916",
+      "level": "INFO",
+      "message": "  Receiver: 100 -> 250"
+    },
+    {
+      "timestamp": "2026-02-02T00:12:43.354016",
+      "level": "INFO",
+      "message": "Verifying post-conditions (The Second Wall)..."
+    },
+    {
+      "timestamp": "2026-02-02T00:12:43.354434",
+      "level": "INFO",
+      "message": "  Checking: sender_balance == old_sender_balance"
+    },
+    {
+      "timestamp": "2026-02-02T00:12:43.354772",
+      "level": "SUCCESS",
+      "message": "    \u2713 sender_balance decreased"
+    },
+    {
+      "timestamp": "2026-02-02T00:12:43.355234",
+      "level": "INFO",
+      "message": "  Checking: receiver_balance == old_receiver_balance"
+    },
+    {
+      "timestamp": "2026-02-02T00:12:43.355584",
+      "level": "SUCCESS",
+      "message": "    \u2713 receiver_balance increased"
+    },
+    {
+      "timestamp": "2026-02-02T00:12:43.356025",
+      "level": "INFO",
+      "message": "  Checking: total_supply == old_total_supply"
+    },
+    {
+      "timestamp": "2026-02-02T00:12:43.356345",
+      "level": "SUCCESS",
+      "message": "All post-conditions verified"
+    }
+  ],
+  "envelope_signature": "9ad973354fa09c6d53aaa37ad27926fd32387f38ca381d4f0cc862c5503b6101"
+}

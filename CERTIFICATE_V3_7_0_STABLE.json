@@ -1,0 +1,95 @@
+{
+  "bank_ready": false,
+  "certificate": {
+    "base_url": "https://diotec-360-diotec-360-ia-judge.hf.space",
+    "finished_at": "2026-03-13T20:16:33.313804+00:00",
+    "name": "DIOTEC360-CERTIFY",
+    "started_at": "2026-03-13T20:16:15.285911+00:00",
+    "version": "v3.1.1"
+  },
+  "exit_code": 2,
+  "results": [
+    {
+      "details": {
+        "error": "DIOTEC360_ENV is not production (production=false)",
+        "http_status": 200,
+        "production": false,
+        "response": {
+          "cors_origins": [
+            "*"
+          ],
+          "p2p": {
+            "enabled": false,
+            "peer_count": 0,
+            "started": false
+          },
+          "production": false,
+          "safe_mode": false,
+          "success": true,
+          "violations": []
+        },
+        "safe_mode": false
+      },
+      "duration_ms": 10482.328000000052,
+      "name": "integrity",
+      "ok": false
+    },
+    {
+      "details": {
+        "error": "No module named 'diotec360'"
+      },
+      "duration_ms": 1.6966000002867077,
+      "name": "forex_heartbeat",
+      "ok": false
+    },
+    {
+      "details": {
+        "enabled": false,
+        "error": "P2P disabled (DIOTEC360_P2P_ENABLED != 1)",
+        "http_status": 200,
+        "min_peers": 1,
+        "peer_count": 0,
+        "response": {
+          "bootstrap_peers": [],
+          "enabled": false,
+          "error": null,
+          "has_peers": false,
+          "heartbeat_active": false,
+          "http_sync_enabled": true,
+          "libp2p_available": false,
+          "listen_multiaddrs": [],
+          "peer_count": 0,
+          "started": false,
+          "success": true,
+          "sync_mode": "HTTP",
+          "topic": "aethel/lattice/v1"
+        },
+        "started": false
+      },
+      "duration_ms": 3286.8939999998474,
+      "name": "lattice_ping",
+      "ok": false
+    },
+    {
+      "details": {
+        "error": "Backend judge did not return PROVED",
+        "http_status": 200,
+        "max_ms": 500.0,
+        "response": {
+          "errors": [
+            "Unexpected token Token('VERIFY', 'verify') at line 6, column 5.\nExpected one of: \n\t* SOLVE\nPrevious tokens: [Token('RBRACE', '}')]\n"
+          ],
+          "intents": [],
+          "message": "Unexpected token Token('VERIFY', 'verify') at line 6, column 5.\nExpected one of: \n\t* SOLVE\nPrevious tokens: [Token('RBRACE', '}')]\n",
+          "status": "ERROR",
+          "success": false
+        },
+        "success": false,
+        "verdict": "ERROR"
+      },
+      "duration_ms": 4256.771000000299,
+      "name": "math_stress",
+      "ok": false
+    }
+  ]
+}

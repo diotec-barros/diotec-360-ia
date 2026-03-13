@@ -1,0 +1,650 @@
+{
+  "total_checks": 121,
+  "passed_checks": 45,
+  "failed_checks": 76,
+  "pass_rate": 0.371900826446281,
+  "ready_for_launch": false,
+  "categories": {
+    "Documentation Consistency": {
+      "total": 20,
+      "passed": 11
+    },
+    "Link Validation": {
+      "total": 67,
+      "passed": 0
+    },
+    "Badge Validation": {
+      "total": 3,
+      "passed": 3
+    },
+    "Strategic Messaging": {
+      "total": 3,
+      "passed": 3
+    },
+    "File Completeness": {
+      "total": 24,
+      "passed": 24
+    },
+    "Cross-References": {
+      "total": 4,
+      "passed": 4
+    }
+  },
+  "failed_results": [
+    {
+      "category": "Documentation Consistency",
+      "check": "README.md - Terminology",
+      "message": "Inconsistent company name usage in README.md",
+      "details": [
+        "DIOTEC 360",
+        "diotec360"
+      ]
+    },
+    {
+      "category": "Documentation Consistency",
+      "check": "CONTRIBUTING.md - Terminology",
+      "message": "Inconsistent company name usage in CONTRIBUTING.md",
+      "details": [
+        "DIOTEC 360",
+        "diotec360"
+      ]
+    },
+    {
+      "category": "Documentation Consistency",
+      "check": "CODE_OF_CONDUCT.md - Terminology",
+      "message": "Inconsistent company name usage in CODE_OF_CONDUCT.md",
+      "details": [
+        "DIOTEC 360",
+        "diotec360"
+      ]
+    },
+    {
+      "category": "Documentation Consistency",
+      "check": "SECURITY.md - Terminology",
+      "message": "Inconsistent company name usage in SECURITY.md",
+      "details": [
+        "DIOTEC 360",
+        "diotec360"
+      ]
+    },
+    {
+      "category": "Documentation Consistency",
+      "check": "GOVERNANCE.md - Terminology",
+      "message": "Inconsistent company name usage in GOVERNANCE.md",
+      "details": [
+        "DIOTEC 360",
+        "diotec360"
+      ]
+    },
+    {
+      "category": "Documentation Consistency",
+      "check": "TRADEMARK.md - Terminology",
+      "message": "Inconsistent company name usage in TRADEMARK.md",
+      "details": [
+        "DIOTEC 360",
+        "diotec360"
+      ]
+    },
+    {
+      "category": "Documentation Consistency",
+      "check": "ROADMAP.md - Terminology",
+      "message": "Inconsistent company name usage in ROADMAP.md",
+      "details": [
+        "DIOTEC 360",
+        "diotec360"
+      ]
+    },
+    {
+      "category": "Documentation Consistency",
+      "check": "MIGRATION.md - Terminology",
+      "message": "Inconsistent company name usage in MIGRATION.md",
+      "details": [
+        "DIOTEC 360",
+        "diotec360"
+      ]
+    },
+    {
+      "category": "Documentation Consistency",
+      "check": "COMMUNITY.md - Terminology",
+      "message": "Inconsistent company name usage in COMMUNITY.md",
+      "details": [
+        "DIOTEC 360",
+        "diotec360"
+      ]
+    },
+    {
+      "category": "Link Validation",
+      "check": "README.md - Internal Link",
+      "message": "Broken internal link: docs/language-reference/proofs.md",
+      "details": [
+        "In file: README.md"
+      ]
+    },
+    {
+      "category": "Link Validation",
+      "check": "README.md - Internal Link",
+      "message": "Broken internal link: SECURITY.md#hall-of-fame",
+      "details": [
+        "In file: README.md"
+      ]
+    },
+    {
+      "category": "Link Validation",
+      "check": "SECURITY.md - Internal Link",
+      "message": "Broken internal link: docs/architecture/security.md",
+      "details": [
+        "In file: SECURITY.md"
+      ]
+    },
+    {
+      "category": "Link Validation",
+      "check": "SECURITY.md - Internal Link",
+      "message": "Broken internal link: docs/architecture/cryptography.md",
+      "details": [
+        "In file: SECURITY.md"
+      ]
+    },
+    {
+      "category": "Link Validation",
+      "check": "SECURITY.md - Internal Link",
+      "message": "Broken internal link: docs/architecture/threat-model.md",
+      "details": [
+        "In file: SECURITY.md"
+      ]
+    },
+    {
+      "category": "Link Validation",
+      "check": "SECURITY.md - Internal Link",
+      "message": "Broken internal link: docs/testing/security-testing.md",
+      "details": [
+        "In file: SECURITY.md"
+      ]
+    },
+    {
+      "category": "Link Validation",
+      "check": "SECURITY.md - Internal Link",
+      "message": "Broken internal link: tools/security-scanner.py",
+      "details": [
+        "In file: SECURITY.md"
+      ]
+    },
+    {
+      "category": "Link Validation",
+      "check": "SECURITY.md - Internal Link",
+      "message": "Broken internal link: tools/audit-analyzer.py",
+      "details": [
+        "In file: SECURITY.md"
+      ]
+    },
+    {
+      "category": "Link Validation",
+      "check": "SECURITY.md - Internal Link",
+      "message": "Broken internal link: tools/dependency-check.py",
+      "details": [
+        "In file: SECURITY.md"
+      ]
+    },
+    {
+      "category": "Link Validation",
+      "check": "tasks_backup.md - Processing",
+      "message": "Error processing file: 'utf-8' codec can't decode byte 0xff in position 0: invalid start byte",
+      "details": []
+    },
+    {
+      "category": "Link Validation",
+      "check": "README.md - Internal Link",
+      "message": "Broken internal link: ./V1_6_2_GHOST_PROTOCOL_EXPANSION.md",
+      "details": [
+        "In file: diotec360-judge\\README.md"
+      ]
+    },
+    {
+      "category": "Link Validation",
+      "check": "README.md - Internal Link",
+      "message": "Broken internal link: ./ADVERSARIAL_ANALYSIS_V1_5_FORTRESS.md",
+      "details": [
+        "In file: diotec360-judge\\README.md"
+      ]
+    },
+    {
+      "category": "Link Validation",
+      "check": "README.md - Internal Link",
+      "message": "Broken internal link: ./V1_6_2_IMPLEMENTATION_SUMMARY.md",
+      "details": [
+        "In file: diotec360-judge\\README.md"
+      ]
+    },
+    {
+      "category": "Link Validation",
+      "check": "README.md - Internal Link",
+      "message": "Broken internal link: ./ADVERSARIAL_ANALYSIS_V1_5_FORTRESS.md",
+      "details": [
+        "In file: diotec360-judge\\README.md"
+      ]
+    },
+    {
+      "category": "Link Validation",
+      "check": "README.md - Internal Link",
+      "message": "Broken internal link: ./HUGGINGFACE_QUICKSTART.md",
+      "details": [
+        "In file: diotec360-judge\\README.md"
+      ]
+    },
+    {
+      "category": "Link Validation",
+      "check": "performance-optimization.md - Internal Link",
+      "message": "Broken internal link: ../examples/banking.md",
+      "details": [
+        "In file: docs\\advanced\\performance-optimization.md"
+      ]
+    },
+    {
+      "category": "Link Validation",
+      "check": "conservation-validator.md - Internal Link",
+      "message": "Broken internal link: ../examples/banking.md",
+      "details": [
+        "In file: docs\\api-reference\\conservation-validator.md"
+      ]
+    },
+    {
+      "category": "Link Validation",
+      "check": "judge.md - Internal Link",
+      "message": "Broken internal link: ../examples/banking.md",
+      "details": [
+        "In file: docs\\api-reference\\judge.md"
+      ]
+    },
+    {
+      "category": "Link Validation",
+      "check": "runtime.md - Internal Link",
+      "message": "Broken internal link: ../examples/banking.md",
+      "details": [
+        "In file: docs\\api-reference\\runtime.md"
+      ]
+    },
+    {
+      "category": "Link Validation",
+      "check": "system-overview.md - Internal Link",
+      "message": "Broken internal link: ../examples/banking.md",
+      "details": [
+        "In file: docs\\architecture\\system-overview.md"
+      ]
+    },
+    {
+      "category": "Link Validation",
+      "check": "enterprise-support.md - Internal Link",
+      "message": "Broken internal link: enterprise-support.md#support-tier-comparison",
+      "details": [
+        "In file: docs\\commercial\\enterprise-support.md"
+      ]
+    },
+    {
+      "category": "Link Validation",
+      "check": "first-steps.md - Internal Link",
+      "message": "Broken internal link: ../examples/banking.md",
+      "details": [
+        "In file: docs\\getting-started\\first-steps.md"
+      ]
+    },
+    {
+      "category": "Link Validation",
+      "check": "quickstart.md - Internal Link",
+      "message": "Broken internal link: ../commercial/managed-services.md",
+      "details": [
+        "In file: docs\\getting-started\\quickstart.md"
+      ]
+    },
+    {
+      "category": "Link Validation",
+      "check": "conservation-laws.md - Internal Link",
+      "message": "Broken internal link: ../examples/banking.md",
+      "details": [
+        "In file: docs\\language-reference\\conservation-laws.md"
+      ]
+    },
+    {
+      "category": "Link Validation",
+      "check": "README.md - Internal Link",
+      "message": "Broken internal link: ../../tests/README.md",
+      "details": [
+        "In file: docs\\maintainers\\README.md"
+      ]
+    },
+    {
+      "category": "Link Validation",
+      "check": "INDEX.md - Internal Link",
+      "message": "Broken internal link: ../../RELEASE_NOTES_V2_1_0.md",
+      "details": [
+        "In file: docs\\releases\\v2.1.0\\INDEX.md"
+      ]
+    },
+    {
+      "category": "Link Validation",
+      "check": "INDEX.md - Internal Link",
+      "message": "Broken internal link: ../../MIGRATION_GUIDE_V2_1.md",
+      "details": [
+        "In file: docs\\releases\\v2.1.0\\INDEX.md"
+      ]
+    },
+    {
+      "category": "Link Validation",
+      "check": "INDEX.md - Internal Link",
+      "message": "Broken internal link: ../../DEPLOYMENT_GUIDE_MOE_V2_1_0.md",
+      "details": [
+        "In file: docs\\releases\\v2.1.0\\INDEX.md"
+      ]
+    },
+    {
+      "category": "Link Validation",
+      "check": "INDEX.md - Internal Link",
+      "message": "Broken internal link: ../../API_REFERENCE_MOE_V2_1_0.md",
+      "details": [
+        "In file: docs\\releases\\v2.1.0\\INDEX.md"
+      ]
+    },
+    {
+      "category": "Link Validation",
+      "check": "INDEX.md - Internal Link",
+      "message": "Broken internal link: ../../MOE_GUIDE.md",
+      "details": [
+        "In file: docs\\releases\\v2.1.0\\INDEX.md"
+      ]
+    },
+    {
+      "category": "Link Validation",
+      "check": "INDEX.md - Internal Link",
+      "message": "Broken internal link: ../../PERFORMANCE_ISSUES_ANALYSIS_V2_1_0.md",
+      "details": [
+        "In file: docs\\releases\\v2.1.0\\INDEX.md"
+      ]
+    },
+    {
+      "category": "Link Validation",
+      "check": "INDEX.md - Internal Link",
+      "message": "Broken internal link: ../../TEST_RESULTS_V2_1_0.md",
+      "details": [
+        "In file: docs\\releases\\v2.1.0\\INDEX.md"
+      ]
+    },
+    {
+      "category": "Link Validation",
+      "check": "INDEX.md - Internal Link",
+      "message": "Broken internal link: ../../FINAL_REVIEW_V2_1_0.md",
+      "details": [
+        "In file: docs\\releases\\v2.1.0\\INDEX.md"
+      ]
+    },
+    {
+      "category": "Link Validation",
+      "check": "INDEX.md - Internal Link",
+      "message": "Broken internal link: ../../ANALISE_TECNICA_6_TESTES_FALHANDO.md",
+      "details": [
+        "In file: docs\\releases\\v2.1.0\\INDEX.md"
+      ]
+    },
+    {
+      "category": "Link Validation",
+      "check": "INDEX.md - Internal Link",
+      "message": "Broken internal link: ../../diotec360/moe/orchestrator.py",
+      "details": [
+        "In file: docs\\releases\\v2.1.0\\INDEX.md"
+      ]
+    },
+    {
+      "category": "Link Validation",
+      "check": "INDEX.md - Internal Link",
+      "message": "Broken internal link: ../../diotec360/moe/z3_expert.py",
+      "details": [
+        "In file: docs\\releases\\v2.1.0\\INDEX.md"
+      ]
+    },
+    {
+      "category": "Link Validation",
+      "check": "INDEX.md - Internal Link",
+      "message": "Broken internal link: ../../diotec360/moe/sentinel_expert.py",
+      "details": [
+        "In file: docs\\releases\\v2.1.0\\INDEX.md"
+      ]
+    },
+    {
+      "category": "Link Validation",
+      "check": "INDEX.md - Internal Link",
+      "message": "Broken internal link: ../../diotec360/moe/guardian_expert.py",
+      "details": [
+        "In file: docs\\releases\\v2.1.0\\INDEX.md"
+      ]
+    },
+    {
+      "category": "Link Validation",
+      "check": "INDEX.md - Internal Link",
+      "message": "Broken internal link: ../../diotec360/moe/visual_dashboard.py",
+      "details": [
+        "In file: docs\\releases\\v2.1.0\\INDEX.md"
+      ]
+    },
+    {
+      "category": "Link Validation",
+      "check": "INDEX.md - Internal Link",
+      "message": "Broken internal link: ../../scripts/monitor_moe.py",
+      "details": [
+        "In file: docs\\releases\\v2.1.0\\INDEX.md"
+      ]
+    },
+    {
+      "category": "Link Validation",
+      "check": "INDEX.md - Internal Link",
+      "message": "Broken internal link: ../../MOE_ROLLBACK_PLAN.md",
+      "details": [
+        "In file: docs\\releases\\v2.1.0\\INDEX.md"
+      ]
+    },
+    {
+      "category": "Link Validation",
+      "check": "INDEX.md - Internal Link",
+      "message": "Broken internal link: ../../scripts/",
+      "details": [
+        "In file: docs\\releases\\v2.1.0\\INDEX.md"
+      ]
+    },
+    {
+      "category": "Link Validation",
+      "check": "INDEX.md - Internal Link",
+      "message": "Broken internal link: ../../demo_moe.py",
+      "details": [
+        "In file: docs\\releases\\v2.1.0\\INDEX.md"
+      ]
+    },
+    {
+      "category": "Link Validation",
+      "check": "INDEX.md - Internal Link",
+      "message": "Broken internal link: ../../demo_visual_dashboard.py",
+      "details": [
+        "In file: docs\\releases\\v2.1.0\\INDEX.md"
+      ]
+    },
+    {
+      "category": "Link Validation",
+      "check": "INDEX.md - Internal Link",
+      "message": "Broken internal link: ../../benchmark_moe_components.py",
+      "details": [
+        "In file: docs\\releases\\v2.1.0\\INDEX.md"
+      ]
+    },
+    {
+      "category": "Link Validation",
+      "check": "INDEX.md - Internal Link",
+      "message": "Broken internal link: ../../benchmark_expert_latency.py",
+      "details": [
+        "In file: docs\\releases\\v2.1.0\\INDEX.md"
+      ]
+    },
+    {
+      "category": "Link Validation",
+      "check": "INDEX.md - Internal Link",
+      "message": "Broken internal link: ../../benchmark_throughput.py",
+      "details": [
+        "In file: docs\\releases\\v2.1.0\\INDEX.md"
+      ]
+    },
+    {
+      "category": "Link Validation",
+      "check": "RELEASE_MANIFEST.md - Internal Link",
+      "message": "Broken internal link: RELEASE_NOTES_V2_1_0.md",
+      "details": [
+        "In file: docs\\releases\\v2.1.0\\RELEASE_MANIFEST.md"
+      ]
+    },
+    {
+      "category": "Link Validation",
+      "check": "RELEASE_MANIFEST.md - Internal Link",
+      "message": "Broken internal link: API_REFERENCE_MOE_V2_1_0.md",
+      "details": [
+        "In file: docs\\releases\\v2.1.0\\RELEASE_MANIFEST.md"
+      ]
+    },
+    {
+      "category": "Link Validation",
+      "check": "RELEASE_MANIFEST.md - Internal Link",
+      "message": "Broken internal link: DEPLOYMENT_GUIDE_MOE_V2_1_0.md",
+      "details": [
+        "In file: docs\\releases\\v2.1.0\\RELEASE_MANIFEST.md"
+      ]
+    },
+    {
+      "category": "Link Validation",
+      "check": "RELEASE_MANIFEST.md - Internal Link",
+      "message": "Broken internal link: MIGRATION_GUIDE_V2_1.md",
+      "details": [
+        "In file: docs\\releases\\v2.1.0\\RELEASE_MANIFEST.md"
+      ]
+    },
+    {
+      "category": "Link Validation",
+      "check": "RELEASE_MANIFEST.md - Internal Link",
+      "message": "Broken internal link: ../../MOE_GUIDE.md",
+      "details": [
+        "In file: docs\\releases\\v2.1.0\\RELEASE_MANIFEST.md"
+      ]
+    },
+    {
+      "category": "Link Validation",
+      "check": "RELEASE_MANIFEST.md - Internal Link",
+      "message": "Broken internal link: ../../diotec360/moe/orchestrator.py",
+      "details": [
+        "In file: docs\\releases\\v2.1.0\\RELEASE_MANIFEST.md"
+      ]
+    },
+    {
+      "category": "Link Validation",
+      "check": "RELEASE_MANIFEST.md - Internal Link",
+      "message": "Broken internal link: ../../diotec360/moe/z3_expert.py",
+      "details": [
+        "In file: docs\\releases\\v2.1.0\\RELEASE_MANIFEST.md"
+      ]
+    },
+    {
+      "category": "Link Validation",
+      "check": "RELEASE_MANIFEST.md - Internal Link",
+      "message": "Broken internal link: ../../diotec360/moe/sentinel_expert.py",
+      "details": [
+        "In file: docs\\releases\\v2.1.0\\RELEASE_MANIFEST.md"
+      ]
+    },
+    {
+      "category": "Link Validation",
+      "check": "RELEASE_MANIFEST.md - Internal Link",
+      "message": "Broken internal link: ../../diotec360/moe/guardian_expert.py",
+      "details": [
+        "In file: docs\\releases\\v2.1.0\\RELEASE_MANIFEST.md"
+      ]
+    },
+    {
+      "category": "Link Validation",
+      "check": "RELEASE_MANIFEST.md - Internal Link",
+      "message": "Broken internal link: ../../diotec360/moe/visual_dashboard.py",
+      "details": [
+        "In file: docs\\releases\\v2.1.0\\RELEASE_MANIFEST.md"
+      ]
+    },
+    {
+      "category": "Link Validation",
+      "check": "RELEASE_MANIFEST.md - Internal Link",
+      "message": "Broken internal link: ../../demo_moe.py",
+      "details": [
+        "In file: docs\\releases\\v2.1.0\\RELEASE_MANIFEST.md"
+      ]
+    },
+    {
+      "category": "Link Validation",
+      "check": "RELEASE_MANIFEST.md - Internal Link",
+      "message": "Broken internal link: ../../demo_visual_dashboard.py",
+      "details": [
+        "In file: docs\\releases\\v2.1.0\\RELEASE_MANIFEST.md"
+      ]
+    },
+    {
+      "category": "Link Validation",
+      "check": "RELEASE_MANIFEST.md - Internal Link",
+      "message": "Broken internal link: ../../benchmark_moe_components.py",
+      "details": [
+        "In file: docs\\releases\\v2.1.0\\RELEASE_MANIFEST.md"
+      ]
+    },
+    {
+      "category": "Link Validation",
+      "check": "RELEASE_MANIFEST.md - Internal Link",
+      "message": "Broken internal link: ../../benchmark_expert_latency.py",
+      "details": [
+        "In file: docs\\releases\\v2.1.0\\RELEASE_MANIFEST.md"
+      ]
+    },
+    {
+      "category": "Link Validation",
+      "check": "RELEASE_MANIFEST.md - Internal Link",
+      "message": "Broken internal link: ../../benchmark_throughput.py",
+      "details": [
+        "In file: docs\\releases\\v2.1.0\\RELEASE_MANIFEST.md"
+      ]
+    },
+    {
+      "category": "Link Validation",
+      "check": "RELEASE_MANIFEST.md - Internal Link",
+      "message": "Broken internal link: ../../scripts/deploy_moe_shadow_mode.py",
+      "details": [
+        "In file: docs\\releases\\v2.1.0\\RELEASE_MANIFEST.md"
+      ]
+    },
+    {
+      "category": "Link Validation",
+      "check": "RELEASE_MANIFEST.md - Internal Link",
+      "message": "Broken internal link: ../../scripts/deploy_moe_soft_launch.py",
+      "details": [
+        "In file: docs\\releases\\v2.1.0\\RELEASE_MANIFEST.md"
+      ]
+    },
+    {
+      "category": "Link Validation",
+      "check": "RELEASE_MANIFEST.md - Internal Link",
+      "message": "Broken internal link: ../../scripts/deploy_moe_full_activation.py",
+      "details": [
+        "In file: docs\\releases\\v2.1.0\\RELEASE_MANIFEST.md"
+      ]
+    },
+    {
+      "category": "Link Validation",
+      "check": "RELEASE_MANIFEST.md - Internal Link",
+      "message": "Broken internal link: ../../scripts/monitor_moe.py",
+      "details": [
+        "In file: docs\\releases\\v2.1.0\\RELEASE_MANIFEST.md"
+      ]
+    },
+    {
+      "category": "Link Validation",
+      "check": "RELEASE_MANIFEST.md - Internal Link",
+      "message": "Broken internal link: ../../scripts/rollback_moe.py",
+      "details": [
+        "In file: docs\\releases\\v2.1.0\\RELEASE_MANIFEST.md"
+      ]
+    }
+  ]
+}

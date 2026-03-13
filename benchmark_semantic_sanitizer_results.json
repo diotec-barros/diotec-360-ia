@@ -1,0 +1,334 @@
+{
+  "summary": {
+    "target_latency_ms": 100.0,
+    "tests_passing": 7,
+    "tests_total": 7,
+    "pass_rate_percent": 100.0,
+    "mean_latency_ms": 1.74225671428368,
+    "median_latency_ms": 1.0701099999732833,
+    "max_latency_ms": 4.652778999961811,
+    "min_latency_ms": 0.29982100003508094,
+    "meets_requirement": true,
+    "primary_bottleneck": "pattern",
+    "bottleneck_count": 7
+  },
+  "ast_parsing": {
+    "simple": {
+      "mean_ms": 0.04805699997632473,
+      "median_ms": 0.04510000053414842,
+      "min_ms": 0.04369999987829942,
+      "max_ms": 0.1480999999330379,
+      "std_dev_ms": 0.01390977603797802,
+      "iterations": 100
+    },
+    "medium": {
+      "mean_ms": 0.11941099998693971,
+      "median_ms": 0.105000000075961,
+      "min_ms": 0.10230000043520704,
+      "max_ms": 0.382299999728275,
+      "std_dev_ms": 0.04297320963570068,
+      "iterations": 100
+    },
+    "complex": {
+      "mean_ms": 0.4891509999652044,
+      "median_ms": 0.25510000023132307,
+      "min_ms": 0.23639999926672317,
+      "max_ms": 19.26180000009481,
+      "std_dev_ms": 1.900290214026795,
+      "iterations": 100
+    },
+    "high_entropy": {
+      "mean_ms": 0.0773230000595504,
+      "median_ms": 0.06845000007160706,
+      "min_ms": 0.06649999977526022,
+      "max_ms": 0.26139999954466475,
+      "std_dev_ms": 0.026334698296816124,
+      "iterations": 100
+    },
+    "malicious_infinite_loop": {
+      "mean_ms": 0.025213999979314394,
+      "median_ms": 0.02119999953720253,
+      "min_ms": 0.02069999936793465,
+      "max_ms": 0.2955999998448533,
+      "std_dev_ms": 0.027758398552577026,
+      "iterations": 100
+    },
+    "malicious_recursion": {
+      "mean_ms": 0.026341000020693173,
+      "median_ms": 0.02319999930477934,
+      "min_ms": 0.022599999283556826,
+      "max_ms": 0.10139999994862592,
+      "std_dev_ms": 0.010766578469535808,
+      "iterations": 100
+    },
+    "large_function": {
+      "mean_ms": 0.38824300003398093,
+      "median_ms": 0.2621500002533139,
+      "min_ms": 0.2480000002833549,
+      "max_ms": 3.1200000003082096,
+      "std_dev_ms": 0.4345278329957484,
+      "iterations": 100
+    }
+  },
+  "entropy_calculation": {
+    "simple": {
+      "mean_ms": 0.21489499998097017,
+      "median_ms": 0.13404999981503352,
+      "min_ms": 0.13019999914831715,
+      "max_ms": 1.926899999489251,
+      "std_dev_ms": 0.26528102087801064,
+      "iterations": 100
+    },
+    "medium": {
+      "mean_ms": 0.3982880000330624,
+      "median_ms": 0.348649999978079,
+      "min_ms": 0.3403999999136431,
+      "max_ms": 1.7165999997814652,
+      "std_dev_ms": 0.1678101399512595,
+      "iterations": 100
+    },
+    "complex": {
+      "mean_ms": 0.7779140000002371,
+      "median_ms": 0.7110000001375738,
+      "min_ms": 0.6990999991103308,
+      "max_ms": 2.1108999999341904,
+      "std_dev_ms": 0.18596366704937126,
+      "iterations": 100
+    },
+    "high_entropy": {
+      "mean_ms": 0.2243259999613656,
+      "median_ms": 0.21260000039546867,
+      "min_ms": 0.20539999968605116,
+      "max_ms": 0.4166999997323728,
+      "std_dev_ms": 0.03375756589865918,
+      "iterations": 100
+    },
+    "malicious_infinite_loop": {
+      "mean_ms": 0.0784630000271136,
+      "median_ms": 0.05695000027117203,
+      "min_ms": 0.05469999996421393,
+      "max_ms": 0.9367999991809484,
+      "std_dev_ms": 0.10036108906176319,
+      "iterations": 100
+    },
+    "malicious_recursion": {
+      "mean_ms": 0.07037900000796071,
+      "median_ms": 0.06669999993391684,
+      "min_ms": 0.06479999956354732,
+      "max_ms": 0.19489999976940453,
+      "std_dev_ms": 0.015266900206985779,
+      "iterations": 100
+    },
+    "large_function": {
+      "mean_ms": 0.87584799999604,
+      "median_ms": 0.7577000001219858,
+      "min_ms": 0.7293999997273204,
+      "max_ms": 3.1481999994866783,
+      "std_dev_ms": 0.354537186551796,
+      "iterations": 100
+    }
+  },
+  "pattern_matching": {
+    "simple": {
+      "mean_ms": 0.4832700000042678,
+      "median_ms": 0.409600000239152,
+      "min_ms": 0.40300000000570435,
+      "max_ms": 1.6478999996252242,
+      "std_dev_ms": 0.19866047348717436,
+      "iterations": 100
+    },
+    "medium": {
+      "mean_ms": 1.009440000034374,
+      "median_ms": 0.940900000387046,
+      "min_ms": 0.9258000000045286,
+      "max_ms": 1.8565000000307919,
+      "std_dev_ms": 0.19710111540692146,
+      "iterations": 100
+    },
+    "complex": {
+      "mean_ms": 3.659472999997888,
+      "median_ms": 3.3696999998937827,
+      "min_ms": 3.27350000043225,
+      "max_ms": 7.634600000528735,
+      "std_dev_ms": 0.7055221213076388,
+      "iterations": 100
+    },
+    "high_entropy": {
+      "mean_ms": 0.7257850000132748,
+      "median_ms": 0.693250000495027,
+      "min_ms": 0.6534000003739493,
+      "max_ms": 1.3355999999475898,
+      "std_dev_ms": 0.11393709703717461,
+      "iterations": 100
+    },
+    "malicious_infinite_loop": {
+      "mean_ms": 0.19716099996912817,
+      "median_ms": 0.1793500000530912,
+      "min_ms": 0.17350000052829273,
+      "max_ms": 0.5075999997643521,
+      "std_dev_ms": 0.046876260640534434,
+      "iterations": 100
+    },
+    "malicious_recursion": {
+      "mean_ms": 0.16871000000719505,
+      "median_ms": 0.15295000002879533,
+      "min_ms": 0.14430000010179356,
+      "max_ms": 0.46830000064801425,
+      "std_dev_ms": 0.04660273868198803,
+      "iterations": 100
+    },
+    "large_function": {
+      "mean_ms": 2.5818679999065353,
+      "median_ms": 2.3913499999252963,
+      "min_ms": 2.2351999996317318,
+      "max_ms": 6.013899999743444,
+      "std_dev_ms": 0.531210898325484,
+      "iterations": 100
+    }
+  },
+  "overall_analysis": {
+    "simple": {
+      "mean_ms": 0.6865800000196032,
+      "median_ms": 0.6091999998716346,
+      "min_ms": 0.5670000000463915,
+      "max_ms": 1.9278999998277868,
+      "std_dev_ms": 0.23217626443412434,
+      "iterations": 100,
+      "meets_target": true
+    },
+    "medium": {
+      "mean_ms": 1.5443809999396763,
+      "median_ms": 1.4343000002554618,
+      "min_ms": 1.3448999998217914,
+      "max_ms": 3.022699999746692,
+      "std_dev_ms": 0.2901210414809707,
+      "iterations": 100,
+      "meets_target": true
+    },
+    "complex": {
+      "mean_ms": 4.652778999961811,
+      "median_ms": 4.407700000228942,
+      "min_ms": 4.09490000038204,
+      "max_ms": 8.717799999431008,
+      "std_dev_ms": 0.6992800541996417,
+      "iterations": 100,
+      "meets_target": true
+    },
+    "high_entropy": {
+      "mean_ms": 1.0701099999732833,
+      "median_ms": 1.000199999907636,
+      "min_ms": 0.9383000005982467,
+      "max_ms": 2.485500000148022,
+      "std_dev_ms": 0.20386006766888143,
+      "iterations": 100,
+      "meets_target": true
+    },
+    "malicious_infinite_loop": {
+      "mean_ms": 0.3411830000277405,
+      "median_ms": 0.28325000039330916,
+      "min_ms": 0.2658000003066263,
+      "max_ms": 3.407300000617397,
+      "std_dev_ms": 0.3230391033123335,
+      "iterations": 100,
+      "meets_target": true
+    },
+    "malicious_recursion": {
+      "mean_ms": 0.29982100003508094,
+      "median_ms": 0.26075000005221227,
+      "min_ms": 0.24680000024090987,
+      "max_ms": 0.9617999994588899,
+      "std_dev_ms": 0.111122050699618,
+      "iterations": 100,
+      "meets_target": true
+    },
+    "large_function": {
+      "mean_ms": 3.6009430000285647,
+      "median_ms": 3.458600000158185,
+      "min_ms": 3.213099999811675,
+      "max_ms": 6.302200000391167,
+      "std_dev_ms": 0.4629176747632322,
+      "iterations": 100,
+      "meets_target": true
+    }
+  },
+  "bottleneck_analysis": {
+    "simple": {
+      "overall_ms": 0.6865800000196032,
+      "ast_parsing_ms": 0.04805699997632473,
+      "entropy_calc_ms": 0.21489499998097017,
+      "pattern_match_ms": 0.4832700000042678,
+      "overhead_ms": -0.05964199994195951,
+      "ast_percent": 6.999475658328616,
+      "entropy_percent": 31.299338747827566,
+      "pattern_percent": 70.38801013581367,
+      "overhead_percent": -8.686824541969854
+    },
+    "medium": {
+      "overall_ms": 1.5443809999396763,
+      "ast_parsing_ms": 0.11941099998693971,
+      "entropy_calc_ms": 0.3982880000330624,
+      "pattern_match_ms": 1.009440000034374,
+      "overhead_ms": 0.017241999885300174,
+      "ast_percent": 7.731965103922149,
+      "entropy_percent": 25.78949106785305,
+      "pattern_percent": 65.36210948424015,
+      "overhead_percent": 1.1164343439846547
+    },
+    "complex": {
+      "overall_ms": 4.652778999961811,
+      "ast_parsing_ms": 0.4891509999652044,
+      "entropy_calc_ms": 0.7779140000002371,
+      "pattern_match_ms": 3.659472999997888,
+      "overhead_ms": -0.27375900000151887,
+      "ast_percent": 10.513093357093025,
+      "entropy_percent": 16.719341279837753,
+      "pattern_percent": 78.65133933994983,
+      "overhead_percent": -5.88377397688061
+    },
+    "high_entropy": {
+      "overall_ms": 1.0701099999732833,
+      "ast_parsing_ms": 0.0773230000595504,
+      "entropy_calc_ms": 0.2243259999613656,
+      "pattern_match_ms": 0.7257850000132748,
+      "overhead_ms": 0.042675999939092435,
+      "ast_percent": 7.225705774311134,
+      "entropy_percent": 20.96289166225586,
+      "pattern_percent": 67.8234013355071,
+      "overhead_percent": 3.9880012279259045
+    },
+    "malicious_infinite_loop": {
+      "overall_ms": 0.3411830000277405,
+      "ast_parsing_ms": 0.025213999979314394,
+      "entropy_calc_ms": 0.0784630000271136,
+      "pattern_match_ms": 0.19716099996912817,
+      "overhead_ms": 0.04034500005218433,
+      "ast_percent": 7.390168905620833,
+      "entropy_percent": 22.997335746720683,
+      "pattern_percent": 57.787463019288076,
+      "overhead_percent": 11.825032328370408
+    },
+    "malicious_recursion": {
+      "overall_ms": 0.29982100003508094,
+      "ast_parsing_ms": 0.026341000020693173,
+      "entropy_calc_ms": 0.07037900000796071,
+      "pattern_match_ms": 0.16871000000719505,
+      "overhead_ms": 0.03439099999923201,
+      "ast_percent": 8.785575399191888,
+      "entropy_percent": 23.473672624574636,
+      "pattern_percent": 56.27024123975802,
+      "overhead_percent": 11.470510736475445
+    },
+    "large_function": {
+      "overall_ms": 3.6009430000285647,
+      "ast_parsing_ms": 0.38824300003398093,
+      "entropy_calc_ms": 0.87584799999604,
+      "pattern_match_ms": 2.5818679999065353,
+      "overhead_ms": -0.2450159999079915,
+      "ast_percent": 10.781703571283998,
+      "entropy_percent": 24.322739904216544,
+      "pattern_percent": 71.69977419487213,
+      "overhead_percent": -6.804217670372674
+    }
+  },
+  "timestamp": 1770312941.4219406
+}

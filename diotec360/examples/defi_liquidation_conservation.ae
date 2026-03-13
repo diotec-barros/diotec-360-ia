@@ -1,0 +1,95 @@
+# DeFi Liquidation with Oracle-Aware Conservation
+# 
+# This example demonstrates how the Conservation Checker validates
+# transactions that use external oracle data (prices, rates, etc.)
+# while ensuring conservation of value.
+#
+# Scenario: A borrower's collateral position becomes under-collateralized
+# due to BTC price movement. A liquidator can seize the collateral.
+
+intent liquidate_position(
+    borrower: Account,
+    liquidator: Account,
+    collateral_amount: Balance,
+    external btc_price: Price
+) {
+    guard {
+        # Oracle validation (checked by Oracle Sanctuary)
+        btc_price_verified == true;
+        btc_price_fresh == true;
+        
+        # Liquidation condition: position is under-collateralized
+        collateral_value = collateral_amount * btc_price;
+        debt_value = 100000;  # $100k debt
+        collateral_value < debt_value * 1.5;  # Below 150% collateralization
+        
+        # Capture old values for conservation check
+        old_borrower_collateral == borrower_collateral;
+        old_liquidator_balance == liquidator_balance;
+    }
+    
+    solve {
+        priority: security;
+        target: oracle_sanctuary;
+    }
+    
+    verify {
+        # Conservation: collateral moves from borrower to liquidator
+        # The Conservation Checker validates that no value is created/destroyed
+        borrower_collateral == old_borrower_collateral - collateral_amount;
+        liquidator_balance == old_liquidator_balance + collateral_amount;
+        
+        # Slippage protection: btc_price must be within 5% of reference
+        # This prevents oracle manipulation attacks
+        btc_price >= reference_price * 0.95;
+        btc_price <= reference_price * 1.05;
+    }
+}
+
+# Example execution:
+# 
+# Input:
+#   borrower_collateral = 2.5 BTC
+#   liquidator_balance = 0 BTC
+#   collateral_amount = 2.5 BTC
+#   btc_price = $45,000 (from Chainlink oracle)
+#   debt_value = $100,000
+#   reference_price = $44,000
+#
+# Conservation Check:
+#   borrower: -2.5 BTC
+#   liquidator: +2.5 BTC
+#   Total: 0 BTC ✅
+#
+# Oracle Check:
+#   btc_price = $45,000
+#   reference_price = $44,000
+#   slippage = ($45,000 - $44,000) / $44,000 = 2.27% ✅
+#   Within 5% tolerance ✅
+#
+# Result: Transaction VERIFIED ✅
+
+# Example of conservation violation:
+#
+# If the verify block had:
+#   borrower_collateral == old_borrower_collateral - 2.5;
+#   liquidator_balance == old_liquidator_balance + 3.0;  # Wrong!
+#
+# Conservation Check:
+#   borrower: -2.5 BTC
+#   liquidator: +3.0 BTC
+#   Total: +0.5 BTC ❌
+#
+# Error: "Conservation violation: 0.5 units created from nothing"
+# Result: Transaction REJECTED ❌
+
+# Example of slippage violation:
+#
+# If btc_price = $50,000 (13.6% above reference):
+#
+# Oracle Check:
+#   slippage = ($50,000 - $44,000) / $44,000 = 13.6% ❌
+#   Exceeds 5% tolerance ❌
+#
+# Error: "Slippage violation: oracle price deviates by 13.6%"
+# Result: Transaction REJECTED ❌

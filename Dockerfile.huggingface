@@ -1,0 +1,43 @@
+# Aethel Judge - Hugging Face Space Deployment
+# Formal verification system with Z3 theorem prover
+
+FROM python:3.11-slim
+
+# Create non-root user as required by HF
+RUN useradd -m -u 1000 user
+USER user
+
+# Set environment
+ENV PATH="/home/user/.local/bin:$PATH"
+ENV PYTHONUNBUFFERED=1
+
+WORKDIR /app
+
+# Install system dependencies (as root)
+USER root
+RUN apt-get update && apt-get install -y \
+    gcc \
+    g++ \
+    && rm -rf /var/lib/apt/lists/*
+USER user
+
+# Copy requirements
+COPY --chown=user requirements.txt ./requirements-core.txt
+COPY --chown=user api/requirements.txt ./requirements-api.txt
+
+# Install Python dependencies
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir -r requirements-core.txt && \
+    pip install --no-cache-dir -r requirements-api.txt
+
+# Copy application code
+COPY --chown=user . /app
+
+# Create vault directories
+RUN mkdir -p .aethel_vault/bundles .aethel_vault/certificates
+
+# Expose port 7860 (required by HF Spaces)
+EXPOSE 7860
+
+# Start the API server on port 7860
+CMD ["uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "7860"]

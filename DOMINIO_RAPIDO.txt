@@ -1,0 +1,109 @@
+╔══════════════════════════════════════════════════════════════╗
+║                                                              ║
+║        🌐 CONFIGURAR DOMÍNIO diotec360.com - RÁPIDO        ║
+║                                                              ║
+╚══════════════════════════════════════════════════════════════╝
+
+✅ BACKEND JÁ ESTÁ NO AR NO RAILWAY!
+
+═══════════════════════════════════════════════════════════════
+
+🎯 ESTRUTURA RECOMENDADA
+
+  Frontend:  https://aethel.diotec360.com  (Vercel)
+  Backend:   https://api.diotec360.com     (Railway)
+
+═══════════════════════════════════════════════════════════════
+
+📋 PASSO 1: CONFIGURAR BACKEND (Railway)
+
+1. Railway Dashboard → Seu projeto
+2. Settings → Networking → Custom Domain
+3. Digite: api.diotec360.com
+4. Railway mostra um CNAME (copie!)
+
+═══════════════════════════════════════════════════════════════
+
+📋 PASSO 2: ADICIONAR DNS (Seu provedor)
+
+No painel do seu provedor de DNS:
+
+  Tipo:  CNAME
+  Nome:  api
+  Valor: [o-cname-do-railway].up.railway.app
+  TTL:   3600
+
+Exemplo:
+  CNAME  api  →  aethel-api-production.up.railway.app
+
+═══════════════════════════════════════════════════════════════
+
+📋 PASSO 3: CONFIGURAR FRONTEND (Vercel)
+
+1. Vercel Dashboard → Projeto diotec360-lang
+2. Settings → Domains → Add
+3. Digite: aethel.diotec360.com
+4. Vercel mostra registros DNS
+
+═══════════════════════════════════════════════════════════════
+
+📋 PASSO 4: ADICIONAR DNS FRONTEND
+
+No painel do seu provedor de DNS:
+
+  Tipo:  CNAME
+  Nome:  aethel
+  Valor: cname.vercel-dns.com
+  TTL:   3600
+
+═══════════════════════════════════════════════════════════════
+
+📋 PASSO 5: ATUALIZAR VERCEL
+
+1. Vercel → Settings → Environment Variables
+2. Edite: NEXT_PUBLIC_API_URL
+3. Novo valor: https://api.diotec360.com
+4. Save → Redeploy
+
+═══════════════════════════════════════════════════════════════
+
+⏰ AGUARDAR PROPAGAÇÃO DNS
+
+  Tempo: 5-30 minutos (às vezes até 24h)
+  
+  Teste backend:
+    curl https://api.diotec360.com/health
+  
+  Teste frontend:
+    Abra: https://aethel.diotec360.com
+
+═══════════════════════════════════════════════════════════════
+
+🎉 RESULTADO FINAL
+
+  ✅ https://api.diotec360.com/health
+     → {"status": "healthy"}
+  
+  ✅ https://aethel.diotec360.com
+     → Aethel Studio funcionando!
+  
+  ✅ SSL automático (HTTPS)
+  ✅ URLs profissionais
+
+═══════════════════════════════════════════════════════════════
+
+📚 DOCUMENTAÇÃO COMPLETA
+
+  Ver: CONFIGURAR_DOMINIO.md
+
+═══════════════════════════════════════════════════════════════
+
+💡 QUAL PROVEDOR DE DNS VOCÊ USA?
+
+  • GoDaddy
+  • Namecheap
+  • Cloudflare
+  • Registro.br
+  • Outro?
+
+Me diga e vou te dar instruções específicas! 🚀

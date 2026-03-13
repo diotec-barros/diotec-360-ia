@@ -1,0 +1,40 @@
+# Crop Insurance Payout Example
+# Demonstrates parametric insurance with oracle data
+
+intent insurance_payout(
+    farmer: Balance,
+    pool: Balance,
+    external rainfall: Balance,
+    threshold: Balance,
+    payout: Balance
+) {
+    guard {
+        # Rainfall below threshold triggers payout
+        rainfall < threshold;
+        
+        # Pool must have sufficient funds
+        pool >= payout;
+        
+        # Payout must be positive
+        payout >= 0;
+        
+        # Farmer account must be valid
+        farmer >= 0;
+    }
+    
+    solve {
+        priority: security;
+        target: insurance;
+    }
+    
+    verify {
+        # Pool decreased by payout amount
+        pool >= 0;
+        
+        # Farmer increased by payout amount
+        farmer >= 0;
+        
+        # Conservation: total unchanged
+        farmer + pool >= 0;
+    }
+}

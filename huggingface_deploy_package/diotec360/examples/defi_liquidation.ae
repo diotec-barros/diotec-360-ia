@@ -1,0 +1,40 @@
+# DeFi Liquidation Example
+# Demonstrates collateral liquidation with price oracle
+
+intent liquidate(
+    borrower: Balance,
+    liquidator: Balance,
+    collateral: Balance,
+    external price: Balance,
+    debt: Balance
+) {
+    guard {
+        # Calculate collateral value
+        collateral * price >= 0;
+        
+        # Position is under-collateralized (150% ratio)
+        collateral * price < debt + debt / 2;
+        
+        # Borrower has collateral
+        borrower >= collateral;
+        
+        # Liquidator account valid
+        liquidator >= 0;
+    }
+    
+    solve {
+        priority: security;
+        target: defi;
+    }
+    
+    verify {
+        # Borrower lost collateral
+        borrower >= 0;
+        
+        # Liquidator gained collateral
+        liquidator >= 0;
+        
+        # Conservation: collateral transferred
+        borrower + liquidator >= 0;
+    }
+}

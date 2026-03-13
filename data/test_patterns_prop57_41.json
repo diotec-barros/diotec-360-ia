@@ -1,0 +1,27 @@
+{
+  "patterns": [
+    {
+      "pattern_id": "trojan_001",
+      "name": "Infinite Loop Trojan",
+      "ast_signature": "WHILE_LOOP{condition:CONSTANT(True),body:ANY}",
+      "severity": 0.9,
+      "description": "While loop with constant True condition"
+    },
+    {
+      "pattern_id": "trojan_002",
+      "name": "Recursive Bomb",
+      "ast_signature": "FUNCTION_DEF{recursive_call:True,base_case:False}",
+      "severity": 0.9,
+      "description": "Recursive function without termination"
+    },
+    {
+      "pattern_id": "trojan_003",
+      "name": "Memory Exhaustion",
+      "ast_signature": "EXPONENTIAL_ALLOCATION",
+      "severity": 0.8,
+      "description": "Exponential memory allocation in loop"
+    }
+  ],
+  "version": "1.9.0",
+  "last_updated": 1770314348.7799556
+}

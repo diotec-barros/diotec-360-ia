@@ -1,0 +1,100 @@
+// Crop Insurance Smart Contract
+// Demonstrates parametric insurance based on rainfall data
+
+// Intent 1: Process insurance payout when rainfall is below threshold
+intent insurance_payout(
+    farmer: Account,
+    insurance_pool: Account,
+    rainfall_mm: Balance,
+    threshold_mm: Balance,
+    payout_amount: Balance
+) {
+    guard {
+        // Input validation
+        rainfall_mm >= 0;
+        threshold_mm > 0;
+        payout_amount > 0;
+        
+        // Pool must have sufficient funds
+        old_insurance_pool_balance >= payout_amount;
+        
+        // Payout condition: rainfall below threshold (drought)
+        rainfall_mm < threshold_mm;
+        
+        // Farmer must have valid policy
+        old_farmer_balance >= 0;
+    }
+    
+    verify {
+        // Farmer receives payout
+        farmer_balance == old_farmer_balance + payout_amount;
+        
+        // Insurance pool pays out
+        insurance_pool_balance == old_insurance_pool_balance - payout_amount;
+        
+        // Conservation: total money unchanged
+        // (farmer gains what pool loses)
+    }
+}
+
+// Intent 2: Process premium payment
+intent pay_premium(
+    farmer: Account,
+    insurance_pool: Account,
+    premium_amount: Balance
+) {
+    guard {
+        // Input validation
+        premium_amount > 0;
+        
+        // Farmer must have sufficient funds
+        old_farmer_balance >= premium_amount;
+        
+        // Pool must exist
+        old_insurance_pool_balance >= 0;
+    }
+    
+    verify {
+        // Farmer pays premium
+        farmer_balance == old_farmer_balance - premium_amount;
+        
+        // Insurance pool receives premium
+        insurance_pool_balance == old_insurance_pool_balance + premium_amount;
+        
+        // Conservation: total money unchanged
+    }
+}
+
+// Intent 3: Multi-farmer payout (batch processing)
+intent batch_payout(
+    farmer1: Account,
+    farmer2: Account,
+    farmer3: Account,
+    insurance_pool: Account,
+    payout_per_farmer: Balance
+) {
+    guard {
+        // Input validation
+        payout_per_farmer > 0;
+        
+        // Pool must have sufficient funds for all payouts
+        old_insurance_pool_balance >= payout_per_farmer * 3;
+        
+        // All farmers must have valid accounts
+        old_farmer1_balance >= 0;
+        old_farmer2_balance >= 0;
+        old_farmer3_balance >= 0;
+    }
+    
+    verify {
+        // Each farmer receives payout
+        farmer1_balance == old_farmer1_balance + payout_per_farmer;
+        farmer2_balance == old_farmer2_balance + payout_per_farmer;
+        farmer3_balance == old_farmer3_balance + payout_per_farmer;
+        
+        // Pool pays out to all farmers
+        insurance_pool_balance == old_insurance_pool_balance - (payout_per_farmer * 3);
+        
+        // Conservation: total money unchanged
+    }
+}

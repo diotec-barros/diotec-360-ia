@@ -1,0 +1,17 @@
+{
+  "timestamp": "2026-02-21T19:52:41.452241",
+  "total_requests": 100,
+  "successful_requests": 100,
+  "failed_requests": 0,
+  "avg_response_time_ms": 8.832530975341797,
+  "p50_response_time_ms": 7.738709449768066,
+  "p95_response_time_ms": 14.686238765716553,
+  "p99_response_time_ms": 46.88000679016113,
+  "min_response_time_ms": 4.797935485839844,
+  "max_response_time_ms": 46.88000679016113,
+  "requests_per_second": 18.902002160098,
+  "concurrent_users": 10,
+  "test_duration_seconds": 5.290444850921631,
+  "cpu_usage_percent": 0.0,
+  "memory_usage_mb": 64.203125
+}

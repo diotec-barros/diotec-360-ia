@@ -1,0 +1,101 @@
+# Fat Finger Protection
+# Prevent $15M Mizuho-Style Trading Errors
+#
+# Real Incident: Mizuho Securities (2005)
+# - Trader meant to sell 1 share at ¥610,000
+# - Actually sold 610,000 shares at ¥1
+# - Loss: $340 million
+#
+# Aethel Solution: Mathematical proof prevents impossible orders
+
+intent place_order(
+    asset: Currency,
+    quantity: Integer,
+    price: Price,
+    action: String  # "buy" or "sell"
+) {
+    # GUARD: Sanity checks before execution
+    guard {
+        # Price must be within 10% of current market price
+        price >= market_price * 0.90;
+        price <= market_price * 1.10;
+        
+        # Quantity must be reasonable for account size
+        order_value = quantity * price;
+        order_value <= account_balance * 0.50;  # Max 50% of account
+        
+        # Prevent absurd quantities
+        quantity > 0;
+        quantity <= max_position_size;
+        
+        # Prevent penny pricing on expensive assets
+        if asset_typical_price > 100.00 {
+            price >= 1.00;  # No penny prices for expensive assets
+        }
+    }
+    
+    # SOLVE: Execute with confirmation
+    solve {
+        # Calculate order impact
+        order_value = quantity * price;
+        price_impact = calculate_market_impact(quantity, asset);
+        
+        # Require explicit confirmation for large orders
+        if order_value > 10000.00 {
+            require_confirmation = true;
+            confirmation_message = format(
+                "CONFIRM: {} {} {} @ ${} (Total: ${})",
+                action, quantity, asset, price, order_value
+            );
+        }
+        
+        # Execute order
+        execute_order(asset, quantity, price, action);
+    }
+    
+    # VERIFY: Post-execution validation
+    verify {
+        # Conservation: Account balance changed by expected amount
+        if action == "buy" {
+            account_balance_after == account_balance_before - order_value - fees;
+            position_after == position_before + quantity;
+        } else {
+            account_balance_after == account_balance_before + order_value - fees;
+            position_after == position_before - quantity;
+        }
+        
+        # No money created or destroyed
+        total_value_before == total_value_after;
+        
+        # Order executed at expected price (within slippage tolerance)
+        abs(execution_price - price) <= price * 0.01;  # 1% slippage max
+    }
+}
+
+# Example 1: Prevent Mizuho-Style Error
+#
+# Intended: Sell 1 share @ $610,000
+# Typed: Sell 610,000 shares @ $1
+#
+# Aethel Protection:
+# ❌ REJECTED: Price $1 is 99.9% below market price ($610,000)
+# ❌ REJECTED: Order value ($610,000) exceeds 50% of account
+# ❌ REJECTED: Quantity 610,000 exceeds max position size
+#
+# Result: Error prevented, $340M loss avoided
+
+# Example 2: Legitimate Large Order
+#
+# Order: Buy 10,000 shares @ $50 (Total: $500,000)
+# Account Balance: $2,000,000
+# Market Price: $49.50
+#
+# Aethel Validation:
+# ✅ PASS: Price within 10% of market ($49.50)
+# ✅ PASS: Order value ($500,000) is 25% of account (< 50%)
+# ✅ PASS: Quantity within position limits
+# ⚠️  CONFIRM: Large order requires explicit confirmation
+#
+# User confirms via WhatsApp signature
+# ✅ EXECUTED: Order placed successfully
+# ✅ PROOF: Conservation verified, no slippage

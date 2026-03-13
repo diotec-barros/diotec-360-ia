@@ -1,0 +1,42 @@
+# DeFi Liquidation with Conservation Proof
+# Demonstrates a collateralized loan liquidation with mathematical proof
+# that assets are conserved during the liquidation process.
+
+solve liquidate_position {
+    # Borrower's collateral (in ETH) and debt (in USDC)
+    let collateral_eth = 10
+    let debt_usdc = 15000
+    
+    # Market prices
+    let eth_price_usd = 2000
+    let liquidation_penalty = 0.10  # 10% penalty
+    
+    # Calculate collateral value
+    let collateral_value_usd = collateral_eth * eth_price_usd
+    
+    # Liquidation threshold: 150% collateralization ratio
+    let required_collateral = debt_usdc * 1.5
+    
+    # Check if position is under-collateralized
+    assert collateral_value_usd < required_collateral
+    
+    # Calculate liquidation amounts
+    let debt_to_repay = debt_usdc
+    let collateral_to_seize = (debt_to_repay / eth_price_usd) * (1 + liquidation_penalty)
+    let remaining_collateral = collateral_eth - collateral_to_seize
+    
+    # Conservation proof: Value before = Value after
+    # Before: collateral_value_usd + 0 (no debt repaid)
+    # After: (remaining_collateral * eth_price_usd) + debt_to_repay + (penalty in USD)
+    let penalty_value = collateral_to_seize * eth_price_usd - debt_to_repay
+    let value_after = (remaining_collateral * eth_price_usd) + debt_to_repay + penalty_value
+    
+    prove collateral_value_usd == value_after
+    
+    return {
+        collateral_seized_eth: collateral_to_seize,
+        remaining_collateral_eth: remaining_collateral,
+        debt_repaid_usdc: debt_to_repay,
+        liquidation_penalty_usd: penalty_value
+    }
+}

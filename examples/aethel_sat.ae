@@ -1,0 +1,57 @@
+intent satellite_power_management(battery_level: Percent, altitude: Meters, solar_exposure: Boolean) {
+    guard {
+        battery_level >= battery_min;
+        battery_level <= battery_max;
+        altitude > altitude_min;
+    }
+    
+    solve {
+        priority: survival;
+        target: risc_v_hardened;
+    }
+    
+    verify {
+        battery_level >= battery_min;
+        altitude > altitude_min;
+    }
+}
+
+intent attitude_control(current_angle: Degrees, target_angle: Degrees, angular_velocity: DegreesPerSec) {
+    guard {
+        current_angle >= angle_min;
+        current_angle <= angle_max;
+        target_angle >= angle_min;
+        target_angle <= angle_max;
+        angular_velocity < velocity_max;
+    }
+    
+    solve {
+        priority: precision;
+        target: risc_v_hardened;
+    }
+    
+    verify {
+        angular_velocity < velocity_max;
+        current_angle >= angle_min;
+    }
+}
+
+intent reentry_calculation(altitude: Meters, velocity: MetersPerSec, angle: Degrees) {
+    guard {
+        altitude > altitude_zero;
+        velocity > velocity_zero;
+        angle >= reentry_min;
+        angle <= reentry_max;
+    }
+    
+    solve {
+        priority: safety;
+        target: risc_v_hardened;
+    }
+    
+    verify {
+        angle >= reentry_min;
+        angle <= reentry_max;
+        altitude > altitude_zero;
+    }
+}

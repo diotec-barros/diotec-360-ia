@@ -1,0 +1,33 @@
+# Payroll Distribution with Conservation Proof
+# Demonstrates distributing payroll to multiple employees while proving
+# that the total amount distributed equals the payroll budget.
+
+solve payroll_distribution {
+    # Company payroll budget
+    let payroll_budget = 10000
+    
+    # Employee salaries
+    let employee_1_salary = 3000
+    let employee_2_salary = 2500
+    let employee_3_salary = 2000
+    let employee_4_salary = 2500
+    
+    # Calculate total distribution
+    let total_distributed = employee_1_salary + employee_2_salary + 
+                           employee_3_salary + employee_4_salary
+    
+    # Constraint: Cannot distribute more than budget
+    assert total_distributed <= payroll_budget
+    
+    # Calculate remaining budget
+    let remaining_budget = payroll_budget - total_distributed
+    
+    # Conservation proof: Budget equals distributed + remaining
+    prove payroll_budget == total_distributed + remaining_budget
+    
+    return {
+        distributed: total_distributed,
+        remaining: remaining_budget,
+        employees_paid: 4
+    }
+}

@@ -1,0 +1,204 @@
+/*
+ * EXEMPLO OFICIAL: SISTEMA DE VAGAS ESCOLARES - MÁRTIRES DO UGANDA
+ * 
+ * Este exemplo demonstra a Conservação Simbólica da Aethel v1.9.1
+ * Prova que a soma das vagas escolares é inviolável:
+ *   vagas_ocupadas + vagas_livres = total_vagas
+ * 
+ * Contexto: Complexo Escolar Mártires do Uganda, Angola
+ * Sistema de gestão de vagas escolares com garantia matemática
+ * de que nenhuma vaga pode ser criada ou destruída.
+ */
+
+intent matricular_aluno(
+    vagas_ocupadas: Vagas,
+    vagas_livres: Vagas,
+    total_vagas: Vagas,
+    aluno_novo: Aluno
+) {
+    /*
+     * Matricula um novo aluno, garantindo conservação de vagas.
+     * 
+     * Pré-condições:
+     * 1. Há vagas livres disponíveis
+     * 2. O aluno é válido (não duplicado)
+     * 
+     * Pós-condições:
+     * 1. Vagas ocupadas aumentam em 1
+     * 2. Vagas livres diminuem em 1
+     * 3. Total de vagas permanece constante
+     */
+    
+    guard {
+        vagas_livres > 0;
+        aluno_novo.valido == true;
+        aluno_novo.duplicado == false;
+    }
+    
+    solve {
+        priority: fairness;
+        target: school_management;
+    }
+    
+    verify {
+        // Conservação simbólica: Σ(deltas) == 0
+        // (vagas_ocupadas + 1) + (vagas_livres - 1) == total_vagas
+        vagas_ocupadas + 1 + vagas_livres - 1 == total_vagas;
+        
+        // Garantias de integridade
+        vagas_ocupadas > old_vagas_ocupadas;
+        vagas_livres < old_vagas_livres;
+        total_vagas == old_total_vagas;
+    }
+}
+
+intent cancelar_matricula(
+    vagas_ocupadas: Vagas,
+    vagas_livres: Vagas,
+    total_vagas: Vagas,
+    aluno_cancelar: Aluno
+) {
+    /*
+     * Cancela matrícula de aluno, garantindo conservação de vagas.
+     * 
+     * Pré-condições:
+     * 1. Aluno está matriculado
+     * 2. Período de cancelamento permitido
+     * 
+     * Pós-condições:
+     * 1. Vagas ocupadas diminuem em 1
+     * 2. Vagas livres aumentam em 1
+     * 3. Total de vagas permanece constante
+     */
+    
+    guard {
+        vagas_ocupadas > 0;
+        aluno_cancelar.matriculado == true;
+        aluno_cancelar.periodo_cancelamento == true;
+    }
+    
+    solve {
+        priority: fairness;
+        target: school_management;
+    }
+    
+    verify {
+        // Conservação simbólica: Σ(deltas) == 0
+        // (vagas_ocupadas - 1) + (vagas_livres + 1) == total_vagas
+        vagas_ocupadas - 1 + vagas_livres + 1 == total_vagas;
+        
+        // Garantias de integridade
+        vagas_ocupadas < old_vagas_ocupadas;
+        vagas_livres > old_vagas_livres;
+        total_vagas == old_total_vagas;
+    }
+}
+
+intent transferir_vaga(
+    vagas_ocupadas_turma_a: Vagas,
+    vagas_livres_turma_a: Vagas,
+    vagas_ocupadas_turma_b: Vagas,
+    vagas_livres_turma_b: Vagas,
+    total_vagas_turma_a: Vagas,
+    total_vagas_turma_b: Vagas,
+    aluno_transferir: Aluno
+) {
+    /*
+     * Transfere aluno entre turmas, garantindo conservação total.
+     * 
+     * Pré-condições:
+     * 1. Aluno está na turma A
+     * 2. Há vaga na turma B
+     * 3. Transferência permitida
+     * 
+     * Pós-condições:
+     * 1. Turma A: vagas ocupadas -1, vagas livres +1
+     * 2. Turma B: vagas ocupadas +1, vagas livres -1
+     * 3. Totais de cada turma permanecem constantes
+     */
+    
+    guard {
+        vagas_ocupadas_turma_a > 0;
+        vagas_livres_turma_b > 0;
+        aluno_transferir.turma_atual == "A";
+        aluno_transferir.transferencia_permitida == true;
+    }
+    
+    solve {
+        priority: fairness;
+        target: school_management;
+    }
+    
+    verify {
+        // Conservação simbólica para turma A
+        // (vagas_ocupadas_turma_a - 1) + (vagas_livres_turma_a + 1) == total_vagas_turma_a
+        vagas_ocupadas_turma_a - 1 + vagas_livres_turma_a + 1 == total_vagas_turma_a;
+        
+        // Conservação simbólica para turma B
+        // (vagas_ocupadas_turma_b + 1) + (vagas_livres_turma_b - 1) == total_vagas_turma_b
+        vagas_ocupadas_turma_b + 1 + vagas_livres_turma_b - 1 == total_vagas_turma_b;
+        
+        // Garantias de integridade
+        vagas_ocupadas_turma_a < old_vagas_ocupadas_turma_a;
+        vagas_livres_turma_a > old_vagas_livres_turma_a;
+        vagas_ocupadas_turma_b > old_vagas_ocupadas_turma_b;
+        vagas_livres_turma_b < old_vagas_livres_turma_b;
+        total_vagas_turma_a == old_total_vagas_turma_a;
+        total_vagas_turma_b == old_total_vagas_turma_b;
+    }
+}
+
+intent verificar_invariante_escolar(
+    vagas_ocupadas: Vagas,
+    vagas_livres: Vagas,
+    total_vagas: Vagas
+) {
+    /*
+     * Verifica o invariante fundamental do sistema escolar:
+     * A soma das vagas ocupadas e livres sempre igual ao total.
+     * 
+     * Este intent é puramente de verificação, não modifica estado.
+     * Pode ser executado a qualquer momento para auditoria.
+     */
+    
+    guard {
+        // Sempre verdadeiro - verificação pura
+        true;
+    }
+    
+    solve {
+        priority: audit;
+        target: monitoring;
+    }
+    
+    verify {
+        // INVARIANTE FUNDAMENTAL DO SISTEMA ESCOLAR
+        // Este é o coração da conservação simbólica
+        vagas_ocupadas + vagas_livres == total_vagas;
+        
+        // Garantias adicionais
+        vagas_ocupadas >= 0;
+        vagas_livres >= 0;
+        total_vagas >= 0;
+        vagas_ocupadas <= total_vagas;
+        vagas_livres <= total_vagas;
+    }
+}
+
+/*
+ * COMENTÁRIO FINAL:
+ * 
+ * Este exemplo demonstra o poder da Conservação Simbólica da Aethel v1.9.1.
+ * O Juiz agora injeta Σ(deltas) == 0 no Z3 quando detecta variáveis simbólicas,
+ * garantindo que o sistema escolar seja matematicamente inviolável.
+ * 
+ * Para o Complexo Escolar Mártires do Uganda, isso significa:
+ * 1. Nenhuma vaga pode ser criada do nada
+ * 2. Nenhuma vaga pode desaparecer misteriosamente
+ * 3. Todas as transferências conservam o total
+ * 4. Auditoria em tempo real do invariante
+ * 
+ * A verdade matemática não aceita inconsistências de tipo.
+ * A educação é um direito, e as vagas são um recurso finito.
+ * Com Aethel, garantimos que cada vaga seja contabilizada com perfeição.
+ */

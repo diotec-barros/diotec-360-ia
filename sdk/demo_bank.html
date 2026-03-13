@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Digital Bank - Powered by DIOTEC 360 IA</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 500px;
+            width: 100%;
+            padding: 40px;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .balance-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+
+        .balance-label {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 5px;
+        }
+
+        .balance-amount {
+            font-size: 42px;
+            font-weight: bold;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .result.success {
+            background: #d4edda;
+            border: 2px solid #28a745;
+            color: #155724;
+        }
+
+        .result.error {
+            background: #f8d7da;
+            border: 2px solid #dc3545;
+            color: #721c24;
+        }
+
+        .diotec-badge {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 30px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border: 2px solid #e0e0e0;
+        }
+
+        .diotec-badge img {
+            width: 24px;
+            height: 24px;
+            margin-right: 10px;
+        }
+
+        .diotec-badge span {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .diotec-badge strong {
+            color: #667eea;
+        }
+
+        .proof-link {
+            margin-top: 10px;
+            font-size: 12px;
+        }
+
+        .proof-link a {
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .proof-link a:hover {
+            text-decoration: underline;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .verifying {
+            animation: pulse 1.5s infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏦 Simple Digital Bank</h1>
+        <p class="subtitle">Demo: Mathematical Verification with DIOTEC 360 IA</p>
+
+        <div class="balance-card">
+            <div class="balance-label">Current Balance</div>
+            <div class="balance-amount" id="balance">5,000.00 AOA</div>
+        </div>
+
+        <form id="transferForm">
+            <div class="form-group">
+                <label for="recipient">Recipient Account</label>
+                <input type="text" id="recipient" placeholder="account_456" required>
+            </div>
+
+            <div class="form-group">
+                <label for="amount">Amount (AOA)</label>
+                <input type="number" id="amount" placeholder="1000" min="1" required>
+            </div>
+
+            <button type="submit" class="btn" id="submitBtn">
+                🛡️ Transfer with DIOTEC Verification
+            </button>
+        </form>
+
+        <div id="result" class="result"></div>
+
+        <div class="diotec-badge">
+            <span>🛡️</span>
+            <span>Secured by <strong>DIOTEC 360 IA</strong> - Logic Verified</span>
+        </div>
+    </div>
+
+    <script>
+        // DIOTEC 360 IA SDK Integration
+        const DIOTEC_API_KEY = 'diotec_demo_key_12345678901234567890';
+        const DIOTEC_API_URL = 'https://diotec-360-diotec-360-ia-judge.hf.space/api/sdk';
+
+        let currentBalance = 5000;
+
+        // Update balance display
+        function updateBalance() {
+            document.getElementById('balance').textContent = 
+                currentBalance.toLocaleString('pt-AO', { minimumFractionDigits: 2 }) + ' AOA';
+        }
+
+        // Show result message
+        function showResult(success, message, proofId = null) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.className = `result ${success ? 'success' : 'error'}`;
+            resultDiv.innerHTML = message;
+            
+            if (proofId) {
+                resultDiv.innerHTML += `
+                    <div class="proof-link">
+                        <a href="${DIOTEC_API_URL}/proof/${proofId}" target="_blank">
+                            📜 View Merkle Proof
+                        </a>
+                    </div>
+                `;
+            }
+            
+            resultDiv.style.display = 'block';
+        }
+
+        // Verify transfer with DIOTEC 360 IA
+        async function verifyTransfer(recipient, amount) {
+            const response = await fetch(`${DIOTEC_API_URL}/verify`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-API-Key': DIOTEC_API_KEY
+                },
+                body: JSON.stringify({
+                    intent: 'transfer',
+                    params: {
+                        from: 'account_123',
+                        to: recipient,
+                        amount: amount,
+                        currency: 'AOA',
+                        balance: currentBalance
+                    }
+                })
+            });
+
+            return await response.json();
+        }
+
+        // Handle form submission
+        document.getElementById('transferForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const recipient = document.getElementById('recipient').value;
+            const amount = parseFloat(document.getElementById('amount').value);
+            const submitBtn = document.getElementById('submitBtn');
+
+            // Disable button and show loading
+            submitBtn.disabled = true;
+            submitBtn.textContent = '🔄 Verifying with DIOTEC 360 IA...';
+            submitBtn.classList.add('verifying');
+
+            try {
+                // Call DIOTEC 360 IA for verification
+                const result = await verifyTransfer(recipient, amount);
+
+                if (result.verified && result.status === 'PROVED') {
+                    // Verification successful - proceed with transfer
+                    currentBalance -= amount;
+                    updateBalance();
+
+                    showResult(
+                        true,
+                        `✅ Transfer Verified & Completed!<br>
+                        <strong>${amount.toFixed(2)} AOA</strong> sent to <strong>${recipient}</strong><br>
+                        <small>Verified by DIOTEC 360 IA in ${result.details.verification_time_ms}ms</small>`,
+                        result.merkleProof
+                    );
+
+                    // Reset form
+                    document.getElementById('transferForm').reset();
+                } else {
+                    // Verification failed
+                    showResult(
+                        false,
+                        `❌ Transfer Rejected by DIOTEC 360 IA<br>
+                        <strong>Reason:</strong> ${result.error || 'Insufficient balance or invalid parameters'}<br>
+                        <small>Your funds are protected by mathematical verification</small>`
+                    );
+                }
+            } catch (error) {
+                showResult(
+                    false,
+                    `❌ Verification Error<br>
+                    <strong>Message:</strong> ${error.message}<br>
+                    <small>Please try again or contact support</small>`
+                );
+            } finally {
+                // Re-enable button
+                submitBtn.disabled = false;
+                submitBtn.textContent = '🛡️ Transfer with DIOTEC Verification';
+                submitBtn.classList.remove('verifying');
+            }
+        });
+
+        // Initialize
+        updateBalance();
+    </script>
+</body>
+</html>

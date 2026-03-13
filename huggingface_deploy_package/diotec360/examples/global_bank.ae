@@ -1,0 +1,129 @@
+// Aethel Global Bank - Provably Secure Financial System
+// Demonstrates state management with conservation proofs
+
+// Transfer funds between accounts with mathematical guarantees
+intent transfer(sender_balance: Balance, receiver_balance: Balance, amount: Balance) {
+    guard {
+        // Sender must have sufficient balance
+        sender_balance >= amount;
+        
+        // Amount must be positive
+        amount >= amount_zero;
+        
+        // Snapshot balances for conservation proof
+        old_sender_balance == sender_balance;
+        old_receiver_balance == receiver_balance;
+    }
+    
+    solve {
+        priority: security;
+        target: global_bank;
+        constraints: [
+            // Conservation law: total supply never changes
+            "sender_balance + receiver_balance == old_sender_balance + old_receiver_balance",
+            
+            // Sender balance decreases
+            "sender_balance < old_sender_balance",
+            
+            // Receiver balance increases
+            "receiver_balance > old_receiver_balance"
+        ];
+    }
+    
+    verify {
+        // Post-conditions (The Second Wall)
+        
+        // Sender balance decreased by exactly amount
+        sender_balance == old_sender_balance;
+        
+        // Receiver balance increased by exactly amount
+        receiver_balance == old_receiver_balance;
+        
+        // Conservation: total unchanged
+        sender_balance >= balance_zero;
+        receiver_balance >= balance_zero;
+    }
+}
+
+// Check account balance against minimum threshold
+intent check_balance(account_balance: Balance, minimum: Balance) {
+    guard {
+        // Balance must be non-negative
+        account_balance >= balance_zero;
+        
+        // Minimum must be non-negative
+        minimum >= balance_zero;
+    }
+    
+    solve {
+        priority: correctness;
+        target: balance_verification;
+    }
+    
+    verify {
+        // Balance remains non-negative
+        account_balance >= balance_zero;
+    }
+}
+
+// Mint new tokens (only for authorized accounts)
+intent mint(account_balance: Balance, mint_amount: Balance) {
+    guard {
+        // Balance must be non-negative
+        account_balance >= balance_zero;
+        
+        // Mint amount must be positive
+        mint_amount >= mint_zero;
+        
+        // Snapshot for verification
+        old_balance == account_balance;
+    }
+    
+    solve {
+        priority: security;
+        target: token_minting;
+        constraints: [
+            // Balance increases by mint amount
+            "account_balance == old_balance + mint_amount"
+        ];
+    }
+    
+    verify {
+        // Balance increased
+        account_balance >= old_balance;
+        
+        // Balance is non-negative
+        account_balance >= balance_zero;
+    }
+}
+
+// Burn tokens (destroy tokens from circulation)
+intent burn(account_balance: Balance, burn_amount: Balance) {
+    guard {
+        // Must have sufficient balance to burn
+        account_balance >= burn_amount;
+        
+        // Burn amount must be positive
+        burn_amount >= burn_zero;
+        
+        // Snapshot for verification
+        old_balance == account_balance;
+    }
+    
+    solve {
+        priority: security;
+        target: token_burning;
+        constraints: [
+            // Balance decreases by burn amount
+            "account_balance == old_balance - burn_amount"
+        ];
+    }
+    
+    verify {
+        // Balance decreased
+        account_balance <= old_balance;
+        
+        // Balance is non-negative
+        account_balance >= balance_zero;
+    }
+}

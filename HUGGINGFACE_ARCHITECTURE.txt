@@ -1,0 +1,234 @@
+╔════════════════════════════════════════════════════════════════════════════╗
+║                    AETHEL JUDGE - HUGGING FACE ARCHITECTURE                ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│                          DEPLOYMENT FLOW                                 │
+└─────────────────────────────────────────────────────────────────────────┘
+
+    Local Machine                  Hugging Face                  Users
+    ─────────────                  ────────────                  ─────
+
+         │                              │                           │
+         │  1. Run deploy script        │                           │
+         │  ──────────────────────>     │                           │
+         │                              │                           │
+         │  2. Clone Space repo         │                           │
+         │  <──────────────────────     │                           │
+         │                              │                           │
+         │  3. Copy files               │                           │
+         │  (aethel/, api/, configs)    │                           │
+         │                              │                           │
+         │  4. Git push                 │                           │
+         │  ──────────────────────>     │                           │
+         │                              │                           │
+         │                              │  5. Build Docker image    │
+         │                              │     (~5-10 minutes)       │
+         │                              │                           │
+         │                              │  6. Start container       │
+         │                              │     (port 7860)           │
+         │                              │                           │
+         │                              │  7. API ready             │
+         │                              │  <─────────────────────   │
+         │                              │                           │
+         │  8. Test deployment          │                           │
+         │  ──────────────────────>     │                           │
+         │                              │                           │
+         │  9. Tests pass ✓             │                           │
+         │  <──────────────────────     │                           │
+         │                              │                           │
+         │                              │  10. Users access API     │
+         │                              │  <─────────────────────   │
+         │                              │                           │
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│                        CONTAINER ARCHITECTURE                            │
+└─────────────────────────────────────────────────────────────────────────┘
+
+    ┌───────────────────────────────────────────────────────────────┐
+    │                    Docker Container (HF Space)                 │
+    │                                                                │
+    │  ┌──────────────────────────────────────────────────────┐    │
+    │  │              FastAPI Application (Port 7860)          │    │
+    │  │                                                        │    │
+    │  │  ┌──────────────┐  ┌──────────────┐  ┌────────────┐ │    │
+    │  │  │   Parser     │  │    Judge     │  │   Vault    │ │    │
+    │  │  │  (Lark)      │  │    (Z3)      │  │  (Storage) │ │    │
+    │  │  └──────────────┘  └──────────────┘  └────────────┘ │    │
+    │  │                                                        │    │
+    │  │  ┌──────────────┐  ┌──────────────┐  ┌────────────┐ │    │
+    │  │  │ Ghost-Runner │  │ Mirror Frame │  │Conservation│ │    │
+    │  │  │ (Prediction) │  │  (Preview)   │  │  (Checker) │ │    │
+    │  │  └──────────────┘  └──────────────┘  └────────────┘ │    │
+    │  │                                                        │    │
+    │  │  ┌────────────────────────────────────────────────┐  │    │
+    │  │  │              REST API Endpoints                 │  │    │
+    │  │  │  /health  /api/verify  /api/ghost/predict      │  │    │
+    │  │  └────────────────────────────────────────────────┘  │    │
+    │  └──────────────────────────────────────────────────────┘    │
+    │                                                                │
+    │  ┌──────────────────────────────────────────────────────┐    │
+    │  │                  Python 3.11 Runtime                  │    │
+    │  └──────────────────────────────────────────────────────┘    │
+    │                                                                │
+    │  ┌──────────────────────────────────────────────────────┐    │
+    │  │                    Dependencies                       │    │
+    │  │  • z3-solver (theorem prover)                        │    │
+    │  │  • lark (parser)                                     │    │
+    │  │  • fastapi (web framework)                           │    │
+    │  │  • uvicorn (ASGI server)                             │    │
+    │  └──────────────────────────────────────────────────────┘    │
+    │                                                                │
+    └───────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│                           API ENDPOINTS                                  │
+└─────────────────────────────────────────────────────────────────────────┘
+
+    ┌─────────────────────────────────────────────────────────────┐
+    │  GET  /                                                      │
+    │  └─> API information and available endpoints                │
+    ├─────────────────────────────────────────────────────────────┤
+    │  GET  /health                                                │
+    │  └─> Health check (returns {"status": "healthy"})           │
+    ├─────────────────────────────────────────────────────────────┤
+    │  POST /api/verify                                            │
+    │  └─> Verify Aethel code with Z3 theorem prover              │
+    │      Input: {"code": "intent ..."}                           │
+    │      Output: {"success": true, "status": "PROVED", ...}     │
+    ├─────────────────────────────────────────────────────────────┤
+    │  POST /api/compile                                           │
+    │  └─> Compile verified code                                  │
+    ├─────────────────────────────────────────────────────────────┤
+    │  POST /api/execute                                           │
+    │  └─> Execute verified code                                  │
+    ├─────────────────────────────────────────────────────────────┤
+    │  GET  /api/examples                                          │
+    │  └─> Get example Aethel programs                            │
+    ├─────────────────────────────────────────────────────────────┤
+    │  POST /api/ghost/predict                                     │
+    │  └─> Ghost-Runner: Zero-latency prediction                  │
+    ├─────────────────────────────────────────────────────────────┤
+    │  POST /api/mirror/manifest                                   │
+    │  └─> Mirror Frame: Create instant manifestation            │
+    ├─────────────────────────────────────────────────────────────┤
+    │  GET  /api/vault/list                                        │
+    │  └─> List all functions in vault                            │
+    └─────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│                        VERIFICATION FLOW                                 │
+└─────────────────────────────────────────────────────────────────────────┘
+
+    User Code                Parser              Judge (Z3)          Result
+    ─────────                ──────              ──────────          ──────
+
+    intent transfer() {      Parse to            Generate Z3         PROVED
+      guard {           ──>  Intent Map    ──>   Constraints   ──>  or
+        x >= 0;              (AST)               (SMT-LIB)           FAILED
+      }
+      verify {
+        x >= 0;
+      }
+    }
+
+    ┌──────────────┐     ┌──────────────┐     ┌──────────────┐
+    │  Aethel Code │ ──> │    Parser    │ ──> │  Intent Map  │
+    └──────────────┘     └──────────────┘     └──────────────┘
+                                                       │
+                                                       ▼
+    ┌──────────────┐     ┌──────────────┐     ┌──────────────┐
+    │    Result    │ <── │  Z3 Solver   │ <── │ Constraints  │
+    └──────────────┘     └──────────────┘     └──────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│                         FILE STRUCTURE                                   │
+└─────────────────────────────────────────────────────────────────────────┘
+
+    diotec360-judge/                    (HF Space Repository)
+    │
+    ├── Dockerfile                   (from Dockerfile.huggingface)
+    ├── README.md                    (from README_HF.md)
+    ├── .dockerignore                (build optimization)
+    │
+    ├── requirements.txt             (core dependencies)
+    │
+    ├── aethel/                      (core system)
+    │   ├── __init__.py
+    │   ├── core/
+    │   │   ├── parser.py           (Lark parser)
+    │   │   ├── judge.py            (Z3 verification)
+    │   │   ├── vault.py            (storage)
+    │   │   ├── ghost.py            (prediction)
+    │   │   ├── mirror.py           (preview)
+    │   │   ├── conservation.py     (balance checking)
+    │   │   └── ...
+    │   └── examples/
+    │       └── *.ae                (example programs)
+    │
+    ├── api/                         (FastAPI application)
+    │   ├── main.py                 (API endpoints)
+    │   └── requirements.txt        (API dependencies)
+    │
+    └── .DIOTEC360_vault/              (certified storage)
+        ├── bundles/
+        └── certificates/
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│                      DEPLOYMENT REQUIREMENTS                             │
+└─────────────────────────────────────────────────────────────────────────┘
+
+    ✓ Port 7860                     (HF Spaces requirement)
+    ✓ Non-root user (UID 1000)      (Security requirement)
+    ✓ Docker SDK                    (Space type)
+    ✓ Python 3.11                   (Runtime)
+    ✓ Z3 Solver                     (Theorem prover)
+    ✓ FastAPI + Uvicorn             (Web framework)
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│                         MONITORING & LOGS                                │
+└─────────────────────────────────────────────────────────────────────────┘
+
+    Space Dashboard
+    └─> https://huggingface.co/spaces/diotec/diotec360-judge
+        │
+        ├─> Logs Tab
+        │   └─> Build logs, runtime logs, errors
+        │
+        ├─> Settings Tab
+        │   └─> Environment variables, secrets
+        │
+        └─> Files Tab
+            └─> Browse deployed files
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│                        INTEGRATION POINTS                                │
+└─────────────────────────────────────────────────────────────────────────┘
+
+    Frontend (Aethel Studio)
+    └─> NEXT_PUBLIC_API_URL=https://diotec-diotec360-judge.hf.space
+        │
+        ├─> Editor sends code to /api/verify
+        ├─> Ghost-Runner calls /api/ghost/predict
+        ├─> Mirror Frame calls /api/mirror/manifest
+        └─> Examples loaded from /api/examples
+
+    External Applications
+    └─> Any HTTP client can call the API
+        │
+        ├─> curl
+        ├─> Python requests
+        ├─> JavaScript fetch
+        └─> Any REST client
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║                              QUICK REFERENCE                               ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+Deploy:     deploy_to_huggingface.bat
+Test:       python test_huggingface_deployment.py
+Monitor:    https://huggingface.co/spaces/diotec/diotec360-judge
+API:        https://diotec-diotec360-judge.hf.space
+Health:     https://diotec-diotec360-judge.hf.space/health
+
+╚════════════════════════════════════════════════════════════════════════════╝

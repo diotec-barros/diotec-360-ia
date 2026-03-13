@@ -1,0 +1,108 @@
+╔═══════════════════════════════════════════════════════════════════╗
+║                                                                   ║
+║              ⚠️  DECISÃO NECESSÁRIA: SUBDOMÍNIO HF ⚠️             ║
+║                                                                   ║
+╚═══════════════════════════════════════════════════════════════════╝
+
+┌───────────────────────────────────────────────────────────────────┐
+│                                                                   │
+│  ✅ DNS CONFIGURADO COM SUCESSO                                   │
+│  ⚠️  MAS: Hugging Face Spaces não suporta domínios personalizados │
+│                                                                   │
+└───────────────────────────────────────────────────────────────────┘
+
+
+═══════════════════════════════════════════════════════════════════
+  SITUAÇÃO ATUAL
+═══════════════════════════════════════════════════════════════════
+
+  ✅ DNS: hf.diotec360.com → diotec-diotec360-judge.hf.space
+  ✅ Propagação: OK (2 minutos)
+  ✅ Resolução: OK (IPs do Cloudflare)
+  ❌ SSL/TLS: Erro (HF não reconhece o domínio)
+
+
+═══════════════════════════════════════════════════════════════════
+  OPÇÃO 1: URL DIRETA DO HF (RECOMENDADO) ⭐
+═══════════════════════════════════════════════════════════════════
+
+  URL: https://diotec-diotec360-judge.hf.space
+
+  ✅ Funciona imediatamente
+  ✅ SSL automático
+  ✅ Zero configuração
+  ✅ Confiável
+  ✅ Simples
+
+  ❌ URL não é personalizada
+
+
+═══════════════════════════════════════════════════════════════════
+  OPÇÃO 2: PROXY REVERSO (NÃO RECOMENDADO) ❌
+═══════════════════════════════════════════════════════════════════
+
+  URL: https://hf.diotec360.com
+
+  ✅ Domínio personalizado
+
+  ❌ Complexo de configurar
+  ❌ Adiciona latência
+  ❌ Custo adicional
+  ❌ Ponto único de falha
+  ❌ Requer infraestrutura extra
+
+
+═══════════════════════════════════════════════════════════════════
+  OPÇÃO 3: SUBDOMÍNIO PARA NODE 2 (BOA ALTERNATIVA) ✅
+═══════════════════════════════════════════════════════════════════
+
+  Node 1 (HF): https://diotec-diotec360-judge.hf.space
+  Node 2 (API): https://api.diotec360.com (seu servidor)
+  Node 3 (Backup): https://backup.diotec360.com
+
+  ✅ Domínio personalizado para seu servidor
+  ✅ Você controla o SSL
+  ✅ Fácil de configurar
+  ✅ Confiável
+
+  ⚠️  HF continua com URL direta
+
+
+═══════════════════════════════════════════════════════════════════
+  RECOMENDAÇÃO
+═══════════════════════════════════════════════════════════════════
+
+  🎯 OPÇÃO 1: Usar URL direta do HF
+
+  Motivo: Simples, confiável, funciona imediatamente.
+  
+  O Hugging Face Spaces não foi projetado para domínios 
+  personalizados. Tentar forçar isso adiciona complexidade 
+  desnecessária.
+
+
+═══════════════════════════════════════════════════════════════════
+  QUAL OPÇÃO VOCÊ ESCOLHE?
+═══════════════════════════════════════════════════════════════════
+
+  [ ] OPÇÃO 1: URL direta do HF (recomendado)
+  [ ] OPÇÃO 2: Proxy reverso (não recomendado)
+  [ ] OPÇÃO 3: Subdomínio para Node 2 (alternativa)
+
+
+═══════════════════════════════════════════════════════════════════
+  PRÓXIMA AÇÃO
+═══════════════════════════════════════════════════════════════════
+
+  Responda com o número da opção escolhida (1, 2 ou 3)
+  
+  Vou atualizar todos os arquivos de acordo com sua escolha.
+
+
+╔═══════════════════════════════════════════════════════════════════╗
+║                                                                   ║
+║              🎯 AGUARDANDO SUA DECISÃO! 🎯                        ║
+║                                                                   ║
+║  Leia: DNS_CONFIGURADO_PROXIMO_PASSO_HF.md para mais detalhes    ║
+║                                                                   ║
+╚═══════════════════════════════════════════════════════════════════╝

@@ -1,0 +1,612 @@
+# MOE Intelligence Layer Monitoring and Alerting Configuration
+# Compatible with Prometheus, Grafana, Datadog, and other monitoring systems
+
+# ============================================================================
+# Metrics Collection
+# ============================================================================
+
+metrics:
+  # MOE Orchestrator Metrics
+  moe_orchestrator:
+    - name: moe_transactions_total
+      type: counter
+      description: Total transactions processed by MOE
+      labels: [consensus, mode]
+    
+    - name: moe_verdicts_approved
+      type: counter
+      description: Transactions approved by MOE consensus
+      labels: [mode]
+    
+    - name: moe_verdicts_rejected
+      type: counter
+      description: Transactions rejected by MOE consensus
+      labels: [mode, rejecting_expert]
+    
+    - name: moe_verdicts_uncertain
+      type: counter
+      description: Transactions marked as uncertain
+      labels: [mode]
+    
+    - name: moe_orchestration_latency_ms
+      type: histogram
+      description: Total orchestration latency
+      unit: milliseconds
+      buckets: [1, 5, 10, 20, 50, 100, 200]
+    
+    - name: moe_overhead_ms
+      type: histogram
+      description: MOE overhead (orchestration + gating + consensus)
+      unit: milliseconds
+      buckets: [1, 2, 5, 10, 20, 50]
+    
+    - name: moe_throughput_tps
+      type: gauge
+      description: Transactions per second
+      unit: tps
+    
+    - name: moe_fallback_activations_total
+      type: counter
+      description: Fallback to existing layers
+      labels: [reason]
+
+  # Expert Performance Metrics
+  z3_expert:
+    - name: z3_expert_verdicts_total
+      type: counter
+      description: Total verdicts by Z3 Expert
+      labels: [verdict]
+    
+    - name: z3_expert_latency_ms
+      type: histogram
+      description: Z3 Expert latency
+      unit: milliseconds
+      buckets: [100, 500, 1000, 5000, 10000, 30000]
+    
+    - name: z3_expert_confidence
+      type: histogram
+      description: Z3 Expert confidence scores
+      buckets: [0.5, 0.6, 0.7, 0.8, 0.9, 0.95, 1.0]
+    
+    - name: z3_expert_timeouts_total
+      type: counter
+      description: Z3 Expert timeouts
+    
+    - name: z3_expert_failures_total
+      type: counter
+      description: Z3 Expert failures
+      labels: [error_type]
+    
+    - name: z3_expert_accuracy
+      type: gauge
+      description: Z3 Expert accuracy (rolling window)
+      unit: ratio
+
+  sentinel_expert:
+    - name: sentinel_expert_verdicts_total
+      type: counter
+      description: Total verdicts by Sentinel Expert
+      labels: [verdict]
+    
+    - name: sentinel_expert_latency_ms
+      type: histogram
+      description: Sentinel Expert latency
+      unit: milliseconds
+      buckets: [10, 20, 50, 100, 200]
+    
+    - name: sentinel_expert_confidence
+      type: histogram
+      description: Sentinel Expert confidence scores
+      buckets: [0.5, 0.6, 0.7, 0.8, 0.9, 0.95, 1.0]
+    
+    - name: sentinel_expert_timeouts_total
+      type: counter
+      description: Sentinel Expert timeouts
+    
+    - name: sentinel_expert_failures_total
+      type: counter
+      description: Sentinel Expert failures
+      labels: [error_type]
+    
+    - name: sentinel_expert_accuracy
+      type: gauge
+      description: Sentinel Expert accuracy (rolling window)
+      unit: ratio
+
+  guardian_expert:
+    - name: guardian_expert_verdicts_total
+      type: counter
+      description: Total verdicts by Guardian Expert
+      labels: [verdict]
+    
+    - name: guardian_expert_latency_ms
+      type: histogram
+      description: Guardian Expert latency
+      unit: milliseconds
+      buckets: [5, 10, 20, 50, 100]
+    
+    - name: guardian_expert_confidence
+      type: histogram
+      description: Guardian Expert confidence scores
+      buckets: [0.5, 0.6, 0.7, 0.8, 0.9, 0.95, 1.0]
+    
+    - name: guardian_expert_timeouts_total
+      type: counter
+      description: Guardian Expert timeouts
+    
+    - name: guardian_expert_failures_total
+      type: counter
+      description: Guardian Expert failures
+      labels: [error_type]
+    
+    - name: guardian_expert_accuracy
+      type: gauge
+      description: Guardian Expert accuracy (rolling window)
+      unit: ratio
+
+  # Gating Network Metrics
+  gating_network:
+    - name: gating_network_routing_latency_ms
+      type: histogram
+      description: Gating network routing latency
+      unit: milliseconds
+      buckets: [1, 2, 5, 10, 20]
+    
+    - name: gating_network_experts_activated
+      type: histogram
+      description: Number of experts activated per transaction
+      buckets: [1, 2, 3]
+    
+    - name: gating_network_routing_decisions
+      type: counter
+      description: Routing decisions by expert
+      labels: [expert_name]
+
+  # Consensus Engine Metrics
+  consensus_engine:
+    - name: consensus_engine_latency_ms
+      type: histogram
+      description: Consensus engine latency
+      unit: milliseconds
+      buckets: [1, 5, 10, 50, 100, 500, 1000]
+    
+    - name: consensus_engine_unanimous_approvals
+      type: counter
+      description: Unanimous approvals
+    
+    - name: consensus_engine_split_decisions
+      type: counter
+      description: Split decisions (mixed verdicts)
+    
+    - name: consensus_engine_overall_confidence
+      type: histogram
+      description: Overall confidence scores
+      buckets: [0.5, 0.6, 0.7, 0.8, 0.9, 0.95, 1.0]
+
+  # Caching Metrics
+  verdict_cache:
+    - name: verdict_cache_hits_total
+      type: counter
+      description: Cache hits
+    
+    - name: verdict_cache_misses_total
+      type: counter
+      description: Cache misses
+    
+    - name: verdict_cache_hit_rate
+      type: gauge
+      description: Cache hit rate
+      unit: ratio
+    
+    - name: verdict_cache_size
+      type: gauge
+      description: Current cache size
+    
+    - name: verdict_cache_evictions_total
+      type: counter
+      description: Cache evictions
+
+  # Training Metrics
+  expert_training:
+    - name: training_ground_truth_collected_total
+      type: counter
+      description: Ground truth outcomes collected
+      labels: [expert_name]
+    
+    - name: training_accuracy_improvement
+      type: gauge
+      description: Accuracy improvement over time
+      labels: [expert_name]
+      unit: ratio
+    
+    - name: training_threshold_adjustments_total
+      type: counter
+      description: Confidence threshold adjustments
+      labels: [expert_name]
+    
+    - name: training_ab_tests_active
+      type: gauge
+      description: Active A/B tests
+    
+    - name: training_model_promotions_total
+      type: counter
+      description: Expert model promotions
+      labels: [expert_name]
+
+# ============================================================================
+# Alert Rules
+# ============================================================================
+
+alerts:
+  # Critical Alerts (Immediate Action Required)
+  critical:
+    - name: MOEExpertFailureRate
+      condition: rate(z3_expert_failures_total[5m]) > 0.05 OR rate(sentinel_expert_failures_total[5m]) > 0.05 OR rate(guardian_expert_failures_total[5m]) > 0.05
+      duration: 2m
+      severity: critical
+      description: Expert failure rate above 5%
+      action: Investigate expert failures, consider rollback
+      runbook: https://docs.diotec360.dev/runbooks/moe-expert-failure
+    
+    - name: MOEAccuracyDegraded
+      condition: z3_expert_accuracy < 0.999 OR sentinel_expert_accuracy < 0.999 OR guardian_expert_accuracy < 0.999
+      duration: 10m
+      severity: critical
+      description: Expert accuracy below 99.9%
+      action: Investigate accuracy degradation, consider rollback
+      runbook: https://docs.diotec360.dev/runbooks/moe-accuracy-degradation
+    
+    - name: MOEOverheadCritical
+      condition: histogram_quantile(0.95, moe_overhead_ms) > 10
+      duration: 5m
+      severity: critical
+      description: MOE overhead above 10ms (95th percentile)
+      action: Investigate performance bottleneck
+      runbook: https://docs.diotec360.dev/runbooks/moe-high-overhead
+    
+    - name: MOEThroughputDegraded
+      condition: moe_throughput_tps < 1000
+      duration: 5m
+      severity: critical
+      description: Throughput below 1000 tx/s
+      action: Investigate throughput degradation
+      runbook: https://docs.diotec360.dev/runbooks/moe-low-throughput
+    
+    - name: MOEFallbackRateCritical
+      condition: rate(moe_fallback_activations_total[5m]) > 0.1
+      duration: 5m
+      severity: critical
+      description: Fallback rate above 10%
+      action: Investigate why MOE is falling back frequently
+      runbook: https://docs.diotec360.dev/runbooks/moe-high-fallback
+
+  # Warning Alerts (Monitor Closely)
+  warning:
+    - name: Z3ExpertLatencyHigh
+      condition: histogram_quantile(0.95, z3_expert_latency_ms) > 30000
+      duration: 10m
+      severity: warning
+      description: Z3 Expert latency above 30s (95th percentile)
+      action: Monitor Z3 Expert performance
+      runbook: https://docs.diotec360.dev/runbooks/z3-expert-slow
+    
+    - name: SentinelExpertLatencyHigh
+      condition: histogram_quantile(0.95, sentinel_expert_latency_ms) > 100
+      duration: 10m
+      severity: warning
+      description: Sentinel Expert latency above 100ms (95th percentile)
+      action: Monitor Sentinel Expert performance
+      runbook: https://docs.diotec360.dev/runbooks/sentinel-expert-slow
+    
+    - name: GuardianExpertLatencyHigh
+      condition: histogram_quantile(0.95, guardian_expert_latency_ms) > 50
+      duration: 10m
+      severity: warning
+      description: Guardian Expert latency above 50ms (95th percentile)
+      action: Monitor Guardian Expert performance
+      runbook: https://docs.diotec360.dev/runbooks/guardian-expert-slow
+    
+    - name: MOEUncertaintyRateHigh
+      condition: rate(moe_verdicts_uncertain[10m]) / rate(moe_transactions_total[10m]) > 0.01
+      duration: 10m
+      severity: warning
+      description: Uncertainty rate above 1%
+      action: Review consensus thresholds
+      runbook: https://docs.diotec360.dev/runbooks/moe-high-uncertainty
+    
+    - name: MOEFallbackRateElevated
+      condition: rate(moe_fallback_activations_total[10m]) > 0.05
+      duration: 10m
+      severity: warning
+      description: Fallback rate above 5%
+      action: Monitor fallback reasons
+      runbook: https://docs.diotec360.dev/runbooks/moe-elevated-fallback
+    
+    - name: CacheHitRateLow
+      condition: verdict_cache_hit_rate < 0.5
+      duration: 30m
+      severity: warning
+      description: Cache hit rate below 50%
+      action: Review cache configuration
+      runbook: https://docs.diotec360.dev/runbooks/moe-low-cache-hit
+    
+    - name: GatingNetworkLatencyHigh
+      condition: histogram_quantile(0.95, gating_network_routing_latency_ms) > 10
+      duration: 10m
+      severity: warning
+      description: Gating network latency above 10ms
+      action: Optimize gating network
+      runbook: https://docs.diotec360.dev/runbooks/gating-network-slow
+    
+    - name: ConsensusEngineLatencyHigh
+      condition: histogram_quantile(0.95, consensus_engine_latency_ms) > 1000
+      duration: 10m
+      severity: warning
+      description: Consensus engine latency above 1s
+      action: Investigate consensus bottleneck
+      runbook: https://docs.diotec360.dev/runbooks/consensus-engine-slow
+
+  # Info Alerts (Informational)
+  info:
+    - name: MOEModelPromoted
+      condition: increase(training_model_promotions_total[1h]) > 0
+      duration: 0s
+      severity: info
+      description: Expert model promoted after A/B testing
+      action: Review model promotion details
+    
+    - name: MOEThresholdAdjusted
+      condition: increase(training_threshold_adjustments_total[1h]) > 0
+      duration: 0s
+      severity: info
+      description: Expert confidence threshold adjusted
+      action: Review threshold adjustment
+    
+    - name: MOEAccuracyImproved
+      condition: training_accuracy_improvement > 0.001
+      duration: 0s
+      severity: info
+      description: Expert accuracy improved by >0.1%
+      action: Log improvement, no action required
+
+# ============================================================================
+# Dashboard Configuration
+# ============================================================================
+
+dashboards:
+  moe_overview:
+    title: MOE Intelligence Layer Overview
+    refresh: 5s
+    panels:
+      - title: MOE Status
+        type: stat
+        metric: moe_transactions_total
+        thresholds:
+          - value: 0
+            color: red
+            text: OFFLINE
+          - value: 1
+            color: green
+            text: OPERATIONAL
+      
+      - title: Expert Status
+        type: stat_grid
+        metrics:
+          - name: Z3 Expert
+            metric: z3_expert_accuracy
+            threshold: 0.999
+          - name: Sentinel Expert
+            metric: sentinel_expert_accuracy
+            threshold: 0.999
+          - name: Guardian Expert
+            metric: guardian_expert_accuracy
+            threshold: 0.999
+      
+      - title: Consensus Distribution (1h)
+        type: pie
+        metrics:
+          - moe_verdicts_approved
+          - moe_verdicts_rejected
+          - moe_verdicts_uncertain
+        timeRange: 1h
+      
+      - title: MOE Overhead (24h)
+        type: graph
+        metric: histogram_quantile(0.95, moe_overhead_ms)
+        timeRange: 24h
+        threshold: 10
+      
+      - title: Expert Latency (95th percentile)
+        type: graph
+        metrics:
+          - histogram_quantile(0.95, z3_expert_latency_ms)
+          - histogram_quantile(0.95, sentinel_expert_latency_ms)
+          - histogram_quantile(0.95, guardian_expert_latency_ms)
+        timeRange: 1h
+      
+      - title: Throughput (1h)
+        type: graph
+        metric: moe_throughput_tps
+        timeRange: 1h
+        threshold: 1000
+      
+      - title: Expert Failures (24h)
+        type: bar
+        metrics:
+          - z3_expert_failures_total
+          - sentinel_expert_failures_total
+          - guardian_expert_failures_total
+        timeRange: 24h
+      
+      - title: Cache Performance
+        type: gauge
+        metric: verdict_cache_hit_rate
+        unit: percent
+        thresholds:
+          - value: 50
+            color: red
+          - value: 70
+            color: yellow
+          - value: 90
+            color: green
+      
+      - title: Recent Verdicts
+        type: table
+        query: SELECT * FROM moe_verdicts ORDER BY timestamp DESC LIMIT 100
+        columns: [timestamp, consensus, overall_confidence, activated_experts, latency_ms]
+
+  expert_performance:
+    title: Expert Performance Details
+    refresh: 10s
+    panels:
+      - title: Z3 Expert Accuracy (7d)
+        type: graph
+        metric: z3_expert_accuracy
+        timeRange: 7d
+        threshold: 0.999
+      
+      - title: Z3 Expert Confidence Distribution
+        type: histogram
+        metric: z3_expert_confidence
+        timeRange: 24h
+      
+      - title: Z3 Expert Latency Distribution
+        type: histogram
+        metric: z3_expert_latency_ms
+        timeRange: 24h
+      
+      - title: Sentinel Expert Accuracy (7d)
+        type: graph
+        metric: sentinel_expert_accuracy
+        timeRange: 7d
+        threshold: 0.999
+      
+      - title: Sentinel Expert Confidence Distribution
+        type: histogram
+        metric: sentinel_expert_confidence
+        timeRange: 24h
+      
+      - title: Sentinel Expert Latency Distribution
+        type: histogram
+        metric: sentinel_expert_latency_ms
+        timeRange: 24h
+      
+      - title: Guardian Expert Accuracy (7d)
+        type: graph
+        metric: guardian_expert_accuracy
+        timeRange: 7d
+        threshold: 0.999
+      
+      - title: Guardian Expert Confidence Distribution
+        type: histogram
+        metric: guardian_expert_confidence
+        timeRange: 24h
+      
+      - title: Guardian Expert Latency Distribution
+        type: histogram
+        metric: guardian_expert_latency_ms
+        timeRange: 24h
+
+  training_metrics:
+    title: Expert Training & Adaptation
+    refresh: 1m
+    panels:
+      - title: Accuracy Improvement (30d)
+        type: graph
+        metric: training_accuracy_improvement
+        labels: [expert_name]
+        timeRange: 30d
+      
+      - title: Threshold Adjustments (30d)
+        type: bar
+        metric: training_threshold_adjustments_total
+        labels: [expert_name]
+        timeRange: 30d
+      
+      - title: Active A/B Tests
+        type: stat
+        metric: training_ab_tests_active
+      
+      - title: Model Promotions (90d)
+        type: bar
+        metric: training_model_promotions_total
+        labels: [expert_name]
+        timeRange: 90d
+      
+      - title: Ground Truth Collection Rate
+        type: graph
+        metric: rate(training_ground_truth_collected_total[1h])
+        labels: [expert_name]
+        timeRange: 24h
+
+# ============================================================================
+# Notification Channels
+# ============================================================================
+
+notifications:
+  channels:
+    - name: pagerduty_moe
+      type: pagerduty
+      severity: [critical]
+      integration_key: ${PAGERDUTY_MOE_INTEGRATION_KEY}
+    
+    - name: slack_moe_critical
+      type: slack
+      severity: [critical]
+      webhook_url: ${SLACK_WEBHOOK_MOE_CRITICAL}
+      channel: "#moe-alerts"
+    
+    - name: slack_moe_warning
+      type: slack
+      severity: [warning]
+      webhook_url: ${SLACK_WEBHOOK_MOE_WARNING}
+      channel: "#moe-monitoring"
+    
+    - name: email_moe
+      type: email
+      severity: [critical, warning]
+      recipients:
+        - moe-oncall@diotec360.dev
+        - ai-team@diotec360.dev
+    
+    - name: slack_moe_info
+      type: slack
+      severity: [info]
+      webhook_url: ${SLACK_WEBHOOK_MOE_INFO}
+      channel: "#moe-info"
+
+# ============================================================================
+# Retention Policies
+# ============================================================================
+
+retention:
+  metrics:
+    high_resolution: 7d    # 5s resolution for 7 days
+    medium_resolution: 30d  # 1m resolution for 30 days
+    low_resolution: 90d     # 5m resolution for 90 days
+  
+  logs:
+    moe: 30d
+    expert_verdicts: 90d
+    training_data: 365d
+
+# ============================================================================
+# Export Configuration
+# ============================================================================
+
+export:
+  prometheus:
+    enabled: true
+    port: 9091
+    path: /metrics
+  
+  datadog:
+    enabled: false
+    api_key: ${DATADOG_API_KEY}
+    tags: [env:production, service:diotec360-moe]
+  
+  grafana:
+    enabled: true
+    url: http://localhost:3000
+    api_key: ${GRAFANA_API_KEY}
+    dashboard_folder: MOE Intelligence Layer

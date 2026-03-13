@@ -1,0 +1,75 @@
+═══════════════════════════════════════════════════════════════
+🎯 AÇÃO IMEDIATA: CONFIGURAR DNS AGORA
+═══════════════════════════════════════════════════════════════
+
+STATUS:
+✅ Domínio adicionado no Vercel: aethel.diotec360.com
+⚠️ Aguardando: Configuração DNS
+
+AÇÃO AGORA (3 PASSOS):
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1️⃣ ABRIR PAINEL DNS
+────────────────────────────────────────────────────────────────
+Acesse onde você gerencia diotec360.com:
+
+• Cloudflare → https://dash.cloudflare.com
+• GoDaddy → https://dcc.godaddy.com/manage/dns
+• Namecheap → https://ap.www.namecheap.com/domains/list
+• Hostinger → https://hpanel.hostinger.com
+• Registro.br → https://registro.br
+
+2️⃣ ADICIONAR REGISTRO CNAME
+────────────────────────────────────────────────────────────────
+Clique em "Add Record" ou "Adicionar Registro" e preencha:
+
+┌─────────────────────────────────────────────────────────────┐
+│ Type:   CNAME                                               │
+│ Name:   aethel                                              │
+│ Value:  cname.vercel-dns.com                                │
+│ TTL:    Auto (ou 3600)                                      │
+└─────────────────────────────────────────────────────────────┘
+
+⚠️ IMPORTANTE:
+• Nome = apenas "aethel" (SEM .diotec360.com)
+• Value = exatamente "cname.vercel-dns.com"
+• Se Cloudflare: Desative proxy (nuvem cinza, não laranja)
+
+3️⃣ SALVAR E AGUARDAR
+────────────────────────────────────────────────────────────────
+• Clique em "Save" ou "Salvar"
+• Aguarde 5-30 minutos para propagação
+• Volte ao Vercel Dashboard
+• Status mudará para "Valid" automaticamente
+
+VERIFICAR PROPAGAÇÃO:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Após adicionar o CNAME, teste no CMD:
+
+nslookup aethel.diotec360.com
+
+Deve retornar:
+Name:    cname.vercel-dns.com
+Address: 76.76.21.21 (ou similar)
+
+RESULTADO ESPERADO:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Após DNS validar (5-30 min):
+✅ Vercel emite certificado SSL automaticamente
+✅ https://aethel.diotec360.com fica acessível
+✅ Frontend conecta com api.diotec360.com
+✅ Triangle of Truth completo!
+
+PRÓXIMO PASSO APÓS DNS:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Quando o DNS validar, me avise para:
+1. Testar https://aethel.diotec360.com
+2. Verificar conexão com api.diotec360.com
+3. Validar Triangle of Truth completo
+
+═══════════════════════════════════════════════════════════════
+Configure o CNAME agora e me avise quando terminar! 🚀
+═══════════════════════════════════════════════════════════════

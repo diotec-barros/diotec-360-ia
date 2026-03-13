@@ -1,0 +1,1 @@
+{"prompt": "Generate code code", "completion": "def fibonacci(n):\n    if n <= 1: return n\n    a, b = 0, 1\n    for _ in range(n-1):\n        a, b = b, a + b\n    return b", "metadata": {"source": "deepseek-v3", "category": "code", "confidence": 0.88, "timestamp": 1771427607.6661203}}

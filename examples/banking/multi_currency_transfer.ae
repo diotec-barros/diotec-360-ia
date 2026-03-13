@@ -1,0 +1,40 @@
+# Multi-Currency Transfer with Exchange Rate Conservation
+# Demonstrates currency exchange with proof that value is conserved
+# across different currencies using exchange rates.
+
+solve currency_exchange {
+    # Initial balances in USD and EUR
+    let usd_balance = 1000
+    let eur_balance = 500
+    
+    # Exchange rate: 1 EUR = 1.10 USD
+    let exchange_rate = 1.10
+    
+    # Convert 200 EUR to USD
+    let eur_to_convert = 200
+    
+    # Constraints
+    assert eur_to_convert > 0
+    assert eur_to_convert <= eur_balance
+    
+    # Calculate USD equivalent
+    let usd_received = eur_to_convert * exchange_rate
+    
+    # Update balances
+    let usd_final = usd_balance + usd_received
+    let eur_final = eur_balance - eur_to_convert
+    
+    # Conservation proof: Total value in USD remains constant
+    # Initial value: usd_balance + (eur_balance * exchange_rate)
+    # Final value: usd_final + (eur_final * exchange_rate)
+    let initial_value_usd = usd_balance + (eur_balance * exchange_rate)
+    let final_value_usd = usd_final + (eur_final * exchange_rate)
+    
+    prove initial_value_usd == final_value_usd
+    
+    return {
+        usd_balance: usd_final,
+        eur_balance: eur_final,
+        total_value_usd: final_value_usd
+    }
+}

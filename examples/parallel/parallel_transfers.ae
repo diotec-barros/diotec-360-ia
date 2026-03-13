@@ -1,0 +1,45 @@
+# Parallel Transfers with Conflict Detection
+# Demonstrates executing multiple transfers in parallel while detecting
+# and preventing conflicts between concurrent operations.
+
+solve parallel_transfer_system {
+    # Account balances
+    let account_1 = 1000
+    let account_2 = 2000
+    let account_3 = 1500
+    let account_4 = 3000
+    
+    # Parallel transfer set (no conflicts)
+    # Transfer A: 1 -> 2 (300)
+    # Transfer B: 3 -> 4 (500)
+    # These can execute in parallel as they touch different accounts
+    
+    let transfer_A_amount = 300
+    let transfer_B_amount = 500
+    
+    # Validate no conflicts (different source/destination accounts)
+    assert transfer_A_amount <= account_1
+    assert transfer_B_amount <= account_3
+    
+    # Execute in parallel (order doesn't matter)
+    let account_1_final = account_1 - transfer_A_amount
+    let account_2_final = account_2 + transfer_A_amount
+    let account_3_final = account_3 - transfer_B_amount
+    let account_4_final = account_4 + transfer_B_amount
+    
+    # Conservation proof for each transfer
+    prove account_1 + account_2 == account_1_final + account_2_final
+    prove account_3 + account_4 == account_3_final + account_4_final
+    
+    # Global conservation proof
+    let total_before = account_1 + account_2 + account_3 + account_4
+    let total_after = account_1_final + account_2_final + account_3_final + account_4_final
+    prove total_before == total_after
+    
+    return {
+        parallel_transfers: 2,
+        conflicts_detected: 0,
+        total_conserved: total_after,
+        execution_mode: "parallel"
+    }
+}

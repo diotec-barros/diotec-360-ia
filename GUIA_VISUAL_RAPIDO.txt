@@ -1,0 +1,171 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                    🚀 GUIA VISUAL RÁPIDO - Diotec360 v1.1                       ║
+║                         Deploy em 4 Passos Simples                           ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ SITUAÇÃO ATUAL                                                               │
+├──────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│  ✅ Backend Railway      → Funcionando (logs OK)                            │
+│  ✅ Frontend Vercel      → Deployado                                        │
+│  ✅ Domínio comprado     → diotec360.com                                    │
+│  🔄 Configuração DNS     → PENDENTE (você está aqui!)                       │
+│                                                                              │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ PASSO 1: RAILWAY - Adicionar Domínio Backend (5 min)                        │
+├──────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│  1. Acesse: https://railway.app                                             │
+│  2. Entre no projeto "Aethel"                                               │
+│  3. Settings → Networking → Custom Domain                                   │
+│  4. Digite: api.diotec360.com                                               │
+│  5. COPIE o CNAME mostrado (ex: 7m1g5de7.up.railway.app)                   │
+│                                                                              │
+│  ┌────────────────────────────────────────────────────────────┐            │
+│  │ Configure DNS Records                                      │            │
+│  │ Type    Name    Value                                      │            │
+│  │ CNAME   api     7m1g5de7.up.railway.app  ← COPIE ISSO!   │            │
+│  └────────────────────────────────────────────────────────────┘            │
+│                                                                              │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ PASSO 2: VERCEL DNS - Adicionar Registro CNAME (5 min)                      │
+├──────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│  1. Acesse: https://vercel.com/dashboard                                    │
+│  2. Domains → diotec360.com → Manage/DNS                                    │
+│  3. Add Record                                                              │
+│  4. Preencha:                                                               │
+│                                                                              │
+│     ┌─────────────────────────────────────────────────────┐                │
+│     │ Type:     CNAME                                     │                │
+│     │ Name:     api                                       │                │
+│     │ Value:    7m1g5de7.up.railway.app  (do Passo 1)   │                │
+│     │ TTL:      Auto                                      │                │
+│     │ Comment:  Aethel Backend API                        │                │
+│     └─────────────────────────────────────────────────────┘                │
+│                                                                              │
+│  5. Save/Add                                                                │
+│                                                                              │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ PASSO 3: VERCEL - Adicionar Domínio Frontend (10 min)                       │
+├──────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│  1. Projeto "diotec360-lang" no Vercel                                         │
+│  2. Settings → Domains → Add                                                │
+│  3. Digite: aethel.diotec360.com                                            │
+│  4. Add (Vercel configura automaticamente!)                                 │
+│                                                                              │
+│  5. Settings → Environment Variables                                        │
+│  6. Edite: NEXT_PUBLIC_API_URL                                              │
+│  7. Novo valor: https://api.diotec360.com                                   │
+│  8. Save                                                                    │
+│                                                                              │
+│  9. Deployments → ... → Redeploy                                            │
+│                                                                              │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ PASSO 4: AGUARDAR & TESTAR (10-30 min)                                      │
+├──────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│  Aguarde 10-30 minutos para DNS propagar, depois teste:                     │
+│                                                                              │
+│  ┌────────────────────────────────────────────────────────────┐            │
+│  │ # Teste 1: DNS propagou?                                   │            │
+│  │ nslookup api.diotec360.com                                 │            │
+│  │                                                             │            │
+│  │ # Teste 2: Backend responde?                               │            │
+│  │ curl https://api.diotec360.com/health                      │            │
+│  │ Esperado: {"status":"healthy"}                             │            │
+│  │                                                             │            │
+│  │ # Teste 3: Frontend carrega?                               │            │
+│  │ Abrir: https://aethel.diotec360.com                        │            │
+│  │                                                             │            │
+│  │ # Teste 4: Script completo                                 │            │
+│  │ teste_aethel.bat                                           │            │
+│  └────────────────────────────────────────────────────────────┘            │
+│                                                                              │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ DEPOIS: TESTES FINAIS & LANÇAMENTO                                          │
+├──────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│  Quando tudo funcionar:                                                     │
+│                                                                              │
+│  1. ✅ Executar: TESTES_FINAIS_V1_1.md (1 hora)                            │
+│  2. ✅ Preencher relatório de testes                                        │
+│  3. ✅ Postar anúncios: LAUNCH_V1_1_ANNOUNCEMENTS.md                       │
+│  4. ✅ Monitorar feedback                                                   │
+│  5. 🎉 CELEBRAR!                                                            │
+│                                                                              │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ DOCUMENTOS IMPORTANTES                                                       │
+├──────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│  📘 DOMINIO_CONFIGURACAO_FINAL.md    → Guia detalhado passo a passo        │
+│  📗 TESTES_FINAIS_V1_1.md            → Checklist completo de testes         │
+│  📙 COMANDOS_TESTE_RAPIDO.md         → Comandos de teste                    │
+│  📕 RESUMO_EXECUTIVO_DEPLOY.md       → Resumo executivo                     │
+│  ⚡ teste_aethel.bat                 → Script de teste automatizado         │
+│                                                                              │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ TIMELINE                                                                     │
+├──────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│  Agora        → Configurar domínios (20 min)                                │
+│  +20 min      → Aguardar propagação (10-30 min)                             │
+│  +50 min      → Executar testes (1 hora)                                    │
+│  +1h50min     → Lançar oficialmente (30 min)                                │
+│  ─────────────────────────────────────────────────────────────              │
+│  Total: 2-3 horas até lançamento completo                                   │
+│                                                                              │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ URLS FINAIS                                                                  │
+├──────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│  🌐 Frontend: https://aethel.diotec360.com                                  │
+│  🔌 Backend:  https://api.diotec360.com                                     │
+│  📦 GitHub:   https://github.com/diotec-barros/diotec360-lang                  │
+│                                                                              │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ DICAS IMPORTANTES                                                            │
+├──────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│  💡 DNS leva tempo - seja paciente!                                         │
+│  💡 SSL é automático - Railway e Vercel geram                               │
+│  💡 Teste periodicamente - a cada 5-10 minutos                              │
+│  💡 Não se preocupe se não funcionar imediatamente                          │
+│  💡 Qualidade primeiro - não lance até tudo estar perfeito                  │
+│                                                                              │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                                                                              ║
+║                  🎯 PRÓXIMA AÇÃO: PASSO 1 (Railway)                         ║
+║                                                                              ║
+║              Acesse: https://railway.app                                     ║
+║              Adicione: api.diotec360.com                                     ║
+║              Copie o CNAME                                                   ║
+║                                                                              ║
+║                  ⏱️  TEMPO ESTIMADO: 5 MINUTOS                              ║
+║                                                                              ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+                            🚀 VAMOS LÁ! 💪
+                    Você está a 2 horas do lançamento! 🌟

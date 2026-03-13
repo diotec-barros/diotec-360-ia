@@ -1,0 +1,123 @@
+{
+  "timestamp": 1770312344.5445383,
+  "test_cases": [
+    {
+      "test_case": {
+        "num_transactions": 100,
+        "work_complexity": 10000
+      },
+      "baseline": {
+        "name": "Baseline (No Sentinel)",
+        "num_transactions": 100,
+        "total_duration_seconds": 0.023307085037231445,
+        "throughput_tps": 4290.540830835644,
+        "avg_latency_ms": 0.23177623748779297,
+        "median_latency_ms": 0.2155303955078125,
+        "p95_latency_ms": 0.32258033752441406,
+        "p99_latency_ms": 0.5459785461425781,
+        "cpu_time_seconds": 0.03125,
+        "memory_delta_mb": 0.0
+      },
+      "with_sentinel": {
+        "name": "With Sentinel Monitor",
+        "num_transactions": 100,
+        "total_duration_seconds": 0.046744585037231445,
+        "throughput_tps": 2139.285222456276,
+        "avg_latency_ms": 0.46518564224243164,
+        "median_latency_ms": 0.3294944763183594,
+        "p95_latency_ms": 0.7824897766113281,
+        "p99_latency_ms": 5.355596542358398,
+        "cpu_time_seconds": 0.03125,
+        "memory_delta_mb": 0.44921875
+      },
+      "overhead": {
+        "throughput_degradation_percent": 50.13949740131899,
+        "latency_overhead_percent": 100.70463102022342,
+        "p95_latency_overhead_percent": 142.5720620842572,
+        "cpu_overhead_percent": 0.0,
+        "memory_overhead_mb": 0.44921875
+      }
+    },
+    {
+      "test_case": {
+        "num_transactions": 500,
+        "work_complexity": 10000
+      },
+      "baseline": {
+        "name": "Baseline (No Sentinel)",
+        "num_transactions": 500,
+        "total_duration_seconds": 0.12589049339294434,
+        "throughput_tps": 3971.7057779680053,
+        "avg_latency_ms": 0.25112199783325195,
+        "median_latency_ms": 0.2142190933227539,
+        "p95_latency_ms": 0.32973289489746094,
+        "p99_latency_ms": 1.1396408081054688,
+        "cpu_time_seconds": 0.125,
+        "memory_delta_mb": 0.0
+      },
+      "with_sentinel": {
+        "name": "With Sentinel Monitor",
+        "num_transactions": 500,
+        "total_duration_seconds": 0.19982075691223145,
+        "throughput_tps": 2502.2425484036085,
+        "avg_latency_ms": 0.3978257179260254,
+        "median_latency_ms": 0.27823448181152344,
+        "p95_latency_ms": 1.2557506561279297,
+        "p99_latency_ms": 1.8165111541748047,
+        "cpu_time_seconds": 0.15625,
+        "memory_delta_mb": 1.08203125
+      },
+      "overhead": {
+        "throughput_degradation_percent": 36.99829019853027,
+        "latency_overhead_percent": 58.41930271285373,
+        "p95_latency_overhead_percent": 280.8387563268258,
+        "cpu_overhead_percent": 25.0,
+        "memory_overhead_mb": 1.08203125
+      }
+    },
+    {
+      "test_case": {
+        "num_transactions": 1000,
+        "work_complexity": 10000
+      },
+      "baseline": {
+        "name": "Baseline (No Sentinel)",
+        "num_transactions": 1000,
+        "total_duration_seconds": 0.43877601623535156,
+        "throughput_tps": 2279.0671390380144,
+        "avg_latency_ms": 0.43702054023742676,
+        "median_latency_ms": 0.2351999282836914,
+        "p95_latency_ms": 0.6778240203857422,
+        "p99_latency_ms": 2.4726390838623047,
+        "cpu_time_seconds": 0.21875,
+        "memory_delta_mb": -0.6640625
+      },
+      "with_sentinel": {
+        "name": "With Sentinel Monitor",
+        "num_transactions": 1000,
+        "total_duration_seconds": 5.100911617279053,
+        "throughput_tps": 196.043388913573,
+        "avg_latency_ms": 5.09818434715271,
+        "median_latency_ms": 0.2968311309814453,
+        "p95_latency_ms": 2.9213428497314453,
+        "p99_latency_ms": 6.4544677734375,
+        "cpu_time_seconds": 0.515625,
+        "memory_delta_mb": 0.56640625
+      },
+      "overhead": {
+        "throughput_degradation_percent": 91.39808628032247,
+        "latency_overhead_percent": 1066.5777412619877,
+        "p95_latency_overhead_percent": 330.98839254308825,
+        "cpu_overhead_percent": 135.71428571428572,
+        "memory_overhead_mb": 1.23046875
+      }
+    }
+  ],
+  "summary": {
+    "avg_latency_overhead_percent": 408.56722499835496,
+    "avg_throughput_degradation_percent": 59.511957960057245,
+    "avg_cpu_overhead_percent": 53.57142857142858,
+    "max_overhead_percent": 408.56722499835496,
+    "meets_requirement": false
+  }
+}

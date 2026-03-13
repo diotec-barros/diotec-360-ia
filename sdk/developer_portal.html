@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DIOTEC 360 IA - Developer Portal | Sovereign SDK</title>
+    <meta name="description" content="The TCP/IP of Honesty. Add mathematical verification to any app with one line of code.">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 100px 20px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .hero .tagline {
+            font-size: 24px;
+            margin-bottom: 40px;
+            opacity: 0.95;
+        }
+
+        .hero .cta-button {
+            display: inline-block;
+            padding: 18px 40px;
+            background: white;
+            color: #667eea;
+            text-decoration: none;
+            border-radius: 30px;
+            font-size: 18px;
+            font-weight: bold;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .hero .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 80px 20px;
+        }
+
+        /* Section */
+        .section {
+            margin-bottom: 80px;
+        }
+
+        .section h2 {
+            font-size: 36px;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #333;
+        }
+
+        .section p {
+            font-size: 18px;
+            text-align: center;
+            color: #666;
+            max-width: 800px;
+            margin: 0 auto 40px;
+        }
+
+        /* Features Grid */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .feature {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .feature:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .feature .icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .feature h3 {
+            font-size: 24px;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .feature p {
+            font-size: 16px;
+            color: #666;
+            text-align: center;
+        }
+
+        /* Code Example */
+        .code-example {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 30px;
+            border-radius: 10px;
+            overflow-x: auto;
+            margin: 40px 0;
+        }
+
+        .code-example pre {
+            margin: 0;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        /* Pricing */
+        .pricing {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .pricing-card {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 15px;
+            padding: 40px 30px;
+            text-align: center;
+            transition: transform 0.3s, border-color 0.3s;
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-5px);
+            border-color: #667eea;
+        }
+
+        .pricing-card.featured {
+            border-color: #667eea;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .pricing-card h3 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .pricing-card .price {
+            font-size: 48px;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+
+        .pricing-card .price span {
+            font-size: 18px;
+            font-weight: normal;
+        }
+
+        .pricing-card ul {
+            list-style: none;
+            margin: 30px 0;
+            text-align: left;
+        }
+
+        .pricing-card ul li {
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .pricing-card.featured ul li {
+            border-bottom-color: rgba(255,255,255,0.2);
+        }
+
+        .pricing-card ul li::before {
+            content: "✓ ";
+            color: #28a745;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .pricing-card.featured ul li::before {
+            color: white;
+        }
+
+        .pricing-card .button {
+            display: inline-block;
+            padding: 15px 30px;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+
+        .pricing-card .button:hover {
+            background: #5568d3;
+        }
+
+        .pricing-card.featured .button {
+            background: white;
+            color: #667eea;
+        }
+
+        /* Footer */
+        .footer {
+            background: #2d2d2d;
+            color: white;
+            padding: 60px 20px;
+            text-align: center;
+        }
+
+        .footer h3 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .footer p {
+            color: #ccc;
+            margin-bottom: 30px;
+        }
+
+        .footer .links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .footer .links a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer .links a:hover {
+            color: #667eea;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 32px;
+            }
+
+            .hero .tagline {
+                font-size: 18px;
+            }
+
+            .section h2 {
+                font-size: 28px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <div class="hero">
+        <h1>🏛️ DIOTEC 360 IA</h1>
+        <p class="tagline">The TCP/IP of Honesty</p>
+        <p style="font-size: 18px; margin-bottom: 40px;">
+            Add mathematical verification to any app with one line of code
+        </p>
+        <a href="#get-started" class="cta-button">Get Your API Key →</a>
+    </div>
+
+    <!-- What is DIOTEC -->
+    <div class="container">
+        <div class="section">
+            <h2>What is DIOTEC 360 IA?</h2>
+            <p>
+                DIOTEC 360 IA is the first universal SDK for mathematical verification of critical operations.
+                Transform any app into a trustworthy system with formal proofs, not AI guessing.
+            </p>
+
+            <div class="features">
+                <div class="feature">
+                    <div class="icon">🛡️</div>
+                    <h3>Mathematical Proofs</h3>
+                    <p>Z3 Theorem Prover (Microsoft technology) ensures your logic is correct</p>
+                </div>
+
+                <div class="feature">
+                    <div class="icon">⚖️</div>
+                    <h3>Dual Audit</h3>
+                    <p>Two independent systems validate every operation for maximum confidence</p>
+                </div>
+
+                <div class="feature">
+                    <div class="icon">💎</div>
+                    <h3>Merkle Proofs</h3>
+                    <p>Immutable audit trail for compliance and regulatory requirements</p>
+                </div>
+
+                <div class="feature">
+                    <div class="icon">⚡</div>
+                    <h3>One Line of Code</h3>
+                    <p>No rewrite needed. Integrate in 5 minutes, verify in milliseconds</p>
+                </div>
+
+                <div class="feature">
+                    <div class="icon">🌍</div>
+                    <h3>Universal Templates</h3>
+                    <p>Pre-built verification logic for finance, voting, healthcare, gaming, and more</p>
+                </div>
+
+                <div class="feature">
+                    <div class="icon">🚀</div>
+                    <h3>Network Effects</h3>
+                    <p>Join the Lattice P2P network and benefit from cross-app verification</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Code Example -->
+        <div class="section">
+            <h2>See It In Action</h2>
+            <p>Verify a money transfer with mathematical proof in one line of code</p>
+
+            <div class="code-example">
+                <pre>
+<span style="color: #66d9ef;">import</span> { DiotecSDK } <span style="color: #66d9ef;">from</span> <span style="color: #e6db74;">'@diotec360/sdk'</span>;
+
+<span style="color: #66d9ef;">const</span> diotec = <span style="color: #66d9ef;">new</span> DiotecSDK({
+  apiKey: <span style="color: #e6db74;">'your-api-key'</span>,
+  environment: <span style="color: #e6db74;">'production'</span>
+});
+
+<span style="color: #75715e;">// Verify a money transfer</span>
+<span style="color: #66d9ef;">const</span> result = <span style="color: #66d9ef;">await</span> diotec.verify({
+  intent: <span style="color: #e6db74;">'transfer'</span>,
+  params: {
+    from: <span style="color: #e6db74;">'account_123'</span>,
+    to: <span style="color: #e6db74;">'account_456'</span>,
+    amount: <span style="color: #ae81ff;">1000</span>,
+    currency: <span style="color: #e6db74;">'AOA'</span>,
+    balance: <span style="color: #ae81ff;">5000</span>
+  }
+});
+
+<span style="color: #66d9ef;">if</span> (result.verified) {
+  console.log(<span style="color: #e6db74;">'✅ Transfer verified!'</span>);
+  console.log(<span style="color: #e6db74;">'Merkle Proof:'</span>, result.merkleProof);
+  console.log(<span style="color: #e6db74;">'Certificate:'</span>, result.certificateUrl);
+}
+                </pre>
+            </div>
+        </div>
+
+        <!-- Use Cases -->
+        <div class="section">
+            <h2>Use Cases</h2>
+            <p>DIOTEC 360 IA works for any app that needs trust</p>
+
+            <div class="features">
+                <div class="feature">
+                    <div class="icon">🏦</div>
+                    <h3>Banking & Finance</h3>
+                    <p>Verify transfers, escrow, multi-sig, loan calculations</p>
+                </div>
+
+                <div class="feature">
+                    <div class="icon">🗳️</div>
+                    <h3>Voting & Governance</h3>
+                    <p>Ensure one person, one vote with mathematical proof</p>
+                </div>
+
+                <div class="feature">
+                    <div class="icon">🚚</div>
+                    <h3>Delivery & Logistics</h3>
+                    <p>GPS-verified delivery confirmation and supply chain tracking</p>
+                </div>
+
+                <div class="feature">
+                    <div class="icon">🏥</div>
+                    <h3>Healthcare</h3>
+                    <p>Verify prescriptions, patient consent, medical authorization</p>
+                </div>
+
+                <div class="feature">
+                    <div class="icon">🎮</div>
+                    <h3>Gaming</h3>
+                    <p>Anti-cheat verification, fair play, leaderboard integrity</p>
+                </div>
+
+                <div class="feature">
+                    <div class="icon">🔗</div>
+                    <h3>Supply Chain</h3>
+                    <p>Provenance tracking, checkpoint verification, authenticity</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pricing -->
+        <div class="section" id="get-started">
+            <h2>Pricing</h2>
+            <p>Start free, scale as you grow</p>
+
+            <div class="pricing">
+                <div class="pricing-card">
+                    <h3>Free</h3>
+                    <div class="price">$0<span>/month</span></div>
+                    <ul>
+                        <li>1,000 verifications/month</li>
+                        <li>Sandbox environment</li>
+                        <li>Community support</li>
+                        <li>Badge required</li>
+                    </ul>
+                    <a href="mailto:contact@diotec360.com?subject=Free API Key Request" class="button">Get Started</a>
+                </div>
+
+                <div class="pricing-card featured">
+                    <h3>Professional</h3>
+                    <div class="price">$499<span>/month</span></div>
+                    <ul>
+                        <li>100,000 verifications/month</li>
+                        <li>Production environment</li>
+                        <li>Priority support</li>
+                        <li>Custom templates</li>
+                        <li>White-label option</li>
+                    </ul>
+                    <a href="mailto:contact@diotec360.com?subject=Professional Plan Request" class="button">Get Started</a>
+                </div>
+
+                <div class="pricing-card">
+                    <h3>Enterprise</h3>
+                    <div class="price">Custom</div>
+                    <ul>
+                        <li>Unlimited verifications</li>
+                        <li>Dedicated support</li>
+                        <li>On-premise deployment</li>
+                        <li>SLA guarantee</li>
+                        <li>Custom integrations</li>
+                    </ul>
+                    <a href="mailto:contact@diotec360.com?subject=Enterprise Plan Request" class="button">Contact Sales</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- CTA -->
+        <div class="section" style="text-align: center; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 60px 40px; border-radius: 20px;">
+            <h2 style="color: white;">Ready to Add Integrity to Your App?</h2>
+            <p style="color: white; opacity: 0.95;">Join the revolution. Start verifying today.</p>
+            <a href="mailto:contact@diotec360.com?subject=API Key Request" class="cta-button">Get Your API Key →</a>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <h3>🏛️ DIOTEC 360 IA</h3>
+        <p>The TCP/IP of Honesty | Integrity as a Service</p>
+        <p>Made in Angola 🇦🇴 | Built by Dionísio Sebastião Barros</p>
+
+        <div class="links">
+            <a href="https://github.com/diotec-barros/diotec-360-ia-extension">GitHub</a>
+            <a href="https://www.npmjs.com/package/@diotec360/sdk">NPM</a>
+            <a href="demo_bank.html">Demo</a>
+            <a href="integrity_badge.html">Badge</a>
+            <a href="mailto:contact@diotec360.com">Contact</a>
+        </div>
+
+        <p style="margin-top: 40px; font-size: 14px; color: #999;">
+            © 2026 DIOTEC 360 IA. All rights reserved.
+        </p>
+    </div>
+</body>
+</html>

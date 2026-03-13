@@ -1,0 +1,72 @@
+{
+  "patterns": [
+    {
+      "pattern_id": "trojan_001",
+      "name": "Infinite Loop Trojan",
+      "ast_signature": "WHILE_LOOP{condition:CONSTANT(True),body:ANY}",
+      "severity": 0.9,
+      "description": "While loop with constant True condition without break statement",
+      "active": true,
+      "created_at": 1707148800.0,
+      "true_positives": 0,
+      "false_positives": 0,
+      "effectiveness": 1.0
+    },
+    {
+      "pattern_id": "trojan_002",
+      "name": "Infinite Recursion",
+      "ast_signature": "RECURSIVE_CALL{base_case:NONE}",
+      "severity": 0.95,
+      "description": "Recursive function without base case",
+      "active": true,
+      "created_at": 1707148800.0,
+      "true_positives": 0,
+      "false_positives": 0,
+      "effectiveness": 1.0
+    },
+    {
+      "pattern_id": "trojan_003",
+      "name": "Resource Exhaustion",
+      "ast_signature": "LOOP{body:MEMORY_ALLOCATION{size:EXPONENTIAL}}",
+      "severity": 0.85,
+      "description": "Exponential memory allocation pattern",
+      "active": true,
+      "created_at": 1707148800.0,
+      "true_positives": 0,
+      "false_positives": 0,
+      "effectiveness": 1.0
+    },
+    {
+      "pattern_id": "trojan_004",
+      "name": "Hidden State Mutation",
+      "ast_signature": "CONDITIONAL{condition:ASSIGNMENT}",
+      "severity": 0.8,
+      "description": "Assignment hidden inside conditional expression",
+      "active": true,
+      "created_at": 1707148800.0,
+      "true_positives": 0,
+      "false_positives": 0,
+      "effectiveness": 1.0
+    },
+    {
+      "pattern_id": "trojan_005",
+      "name": "Unbounded Range Loop",
+      "ast_signature": "FOR_LOOP{range:LARGE_CONSTANT,early_exit:NONE}",
+      "severity": 0.75,
+      "description": "For loop with very large range and no early exit",
+      "active": true,
+      "created_at": 1707148800.0,
+      "true_positives": 0,
+      "false_positives": 0,
+      "effectiveness": 1.0
+    }
+  ],
+  "version": "1.9.0",
+  "last_updated": 1707148800.0,
+  "metadata": {
+    "total_patterns": 5,
+    "active_patterns": 5,
+    "avg_severity": 0.85,
+    "description": "Default Trojan patterns for Autonomous Sentinel v1.9.0"
+  }
+}

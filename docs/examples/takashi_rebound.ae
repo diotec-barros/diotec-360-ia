@@ -1,0 +1,66 @@
+# Takashi Rebound Strategy
+# The Sniper: Mean Reversion on Crisis Events
+#
+# Strategy: Wait for 20%+ market drops, buy the panic, sell the recovery
+# Risk Profile: High Risk / High Reward
+# Holding Period: Days to weeks
+#
+# Named after legendary traders who made fortunes during the 2008 crisis
+
+intent takashi_rebound_trade(
+    asset: Currency,
+    current_price: Price,
+    moving_average_30d: Price,
+    drop_percent: Percentage
+) {
+    # GUARD: Only trigger on significant drops
+    guard {
+        drop_percent >= 20.0;
+        current_price < moving_average_30d;
+        volume_spike_detected == true;
+        no_fundamental_collapse == true;
+    }
+    
+    # SOLVE: Calculate optimal position size
+    solve {
+        position_size = portfolio_value * 0.05;  # Conservative 5%
+        entry_price = current_price;
+        target_price = current_price * 1.15;  # 15% profit target
+        stop_loss = current_price * 0.95;  # 5% stop loss
+        
+        # Execute buy order
+        buy(asset, position_size, entry_price);
+    }
+    
+    # VERIFY: Conservation and risk limits
+    verify {
+        # Conservation: Total portfolio value unchanged (minus fees)
+        portfolio_value_after >= portfolio_value_before * 0.999;
+        
+        # Risk limit: Position size <= 5% of portfolio
+        position_size <= portfolio_value * 0.05;
+        
+        # Drawdown protection: Max 2% portfolio drawdown
+        potential_loss = position_size * 0.05;  # 5% stop loss
+        potential_loss <= portfolio_value * 0.02;
+        
+        # Proof of rebound probability
+        historical_rebound_rate >= 0.70;
+        expected_return > 0.10;  # Expect 10%+ return
+    }
+}
+
+# Example: EUR/USD Flash Crash
+#
+# Scenario: EUR/USD drops from 1.20 to 0.96 (20% drop) due to panic selling
+# Takashi Strategy: Buy at 0.96, target 1.10 (15% profit)
+#
+# Proof:
+# - 30-day MA: 1.20
+# - Current: 0.96
+# - Drop: 20%
+# - Volume: 3x normal (panic)
+# - News: No fundamental issues
+# - Historical: 75% rebound rate within 30 days
+#
+# Result: Buy 5% of portfolio, expect 15% return, risk 5% stop loss

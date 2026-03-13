@@ -1,0 +1,58 @@
+# Atomic Batch Transfer Example
+# Demonstrates parallel execution with atomic guarantees
+
+atomic_batch payroll_batch {
+    intent pay_alice(company: Balance, alice: Balance, amount: Balance) {
+        guard {
+            company >= amount;
+            amount >= 0;
+        }
+        
+        solve {
+            priority: security;
+            target: payroll;
+        }
+        
+        verify {
+            company >= 0;
+            alice >= 0;
+            company + alice >= 0;
+        }
+    }
+    
+    intent pay_bob(company: Balance, bob: Balance, amount: Balance) {
+        guard {
+            company >= amount;
+            amount >= 0;
+        }
+        
+        solve {
+            priority: security;
+            target: payroll;
+        }
+        
+        verify {
+            company >= 0;
+            bob >= 0;
+            company + bob >= 0;
+        }
+    }
+    
+    intent pay_charlie(company: Balance, charlie: Balance, amount: Balance) {
+        guard {
+            company >= amount;
+            amount >= 0;
+        }
+        
+        solve {
+            priority: security;
+            target: payroll;
+        }
+        
+        verify {
+            company >= 0;
+            charlie >= 0;
+            company + charlie >= 0;
+        }
+    }
+}

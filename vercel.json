@@ -1,0 +1,50 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "api/main.py",
+      "use": "@vercel/python"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "api/main.py"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "https://app.diotec360.com,https://diotec360.com,https://www.diotec360.com"
+        },
+        {
+          "key": "Access-Control-Allow-Methods",
+          "value": "GET, POST, PUT, DELETE, OPTIONS"
+        },
+        {
+          "key": "Access-Control-Allow-Headers",
+          "value": "Content-Type, Authorization"
+        }
+      ]
+    }
+  ],
+  "env": {
+    "DIOTEC360_P2P_ENABLED": "false",
+    "DIOTEC360_LATTICE_NODES": "https://diotec-360-diotec-360-ia-judge.hf.space,https://api.diotec360.com",
+    "DIOTEC360_NODE_NAME": "api-production",
+    "DIOTEC360_NODE_ROLE": "genesis",
+    "DIOTEC360_HEARTBEAT_INTERVAL": "5",
+    "DIOTEC360_HTTP_POLL_INTERVAL": "10",
+    "DIOTEC360_PEERLESS_TIMEOUT": "60",
+    "DIOTEC360_ENVIRONMENT": "production",
+    "DIOTEC360_LOG_LEVEL": "INFO",
+    "ALPHA_VANTAGE_API_KEY": "O3TC4CQU6GJWBNVL",
+    "PAYPAL_MODE": "live",
+    "PAYPAL_CLIENT_ID": "",
+    "PAYPAL_CLIENT_SECRET": "",
+    "PAYPAL_WEBHOOK_ID": ""
+  }
+}

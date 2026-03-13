@@ -1,0 +1,42 @@
+{
+  "buildCommand": "npm run build",
+  "outputDirectory": ".next",
+  "framework": "nextjs",
+  "installCommand": "npm install",
+  "devCommand": "npm run dev",
+  "env": {
+    "NEXT_PUBLIC_API_URL": "https://api.diotec360.com",
+    "NEXT_PUBLIC_LATTICE_NODES": "https://api.diotec360.com,https://diotec-360-diotec-360-ia-judge.hf.space",
+    "NEXT_PUBLIC_APP_NAME": "DIOTEC 360",
+    "NEXT_PUBLIC_APP_VERSION": "1.7.0",
+    "NEXT_PUBLIC_APP_ENV": "production",
+    "NEXT_PUBLIC_DOMAIN": "diotec360.com",
+    "NEXT_PUBLIC_API_DOMAIN": "api.diotec360.com",
+    "NEXT_PUBLIC_APP_DOMAIN": "app.diotec360.com",
+    "ALPHA_VANTAGE_API_KEY": "O3TC4CQU6GJWBNVL",
+    "NEXT_PUBLIC_PAYPAL_CLIENT_ID": "",
+    "NEXT_PUBLIC_PAYPAL_MODE": "live",
+    "NEXT_PUBLIC_ENABLE_PAYMENTS": "true",
+    "NEXT_PUBLIC_ENABLE_PAYPAL": "true",
+    "NEXT_PUBLIC_ENABLE_MULTICAIXA": "true"
+  },
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "X-XSS-Protection",
+          "value": "1; mode=block"
+        }
+      ]
+    }
+  ]
+}

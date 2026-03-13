@@ -1,0 +1,61 @@
+[
+  {
+    "benchmark": "consensus_time_1000_nodes",
+    "consensus_time": 0.029969215393066406,
+    "measured_time": 0.0029969215393066406,
+    "num_nodes": 1000,
+    "num_proofs": 5,
+    "requirement_met": true,
+    "requirement_threshold": 30.0
+  },
+  {
+    "benchmark": "consensus_scaling",
+    "results": [
+      {
+        "num_nodes": 10,
+        "consensus_time": 0.0017528533935546875,
+        "valid": true
+      },
+      {
+        "num_nodes": 100,
+        "consensus_time": 0.0019347667694091797,
+        "valid": true
+      },
+      {
+        "num_nodes": 1000,
+        "consensus_time": 0.0017485618591308594,
+        "valid": true
+      }
+    ]
+  },
+  {
+    "benchmark": "proof_verification_throughput",
+    "batch_size": 100,
+    "time_parallel": 0.028516292572021484,
+    "throughput_parallel": 3506.7672190358344,
+    "max_throughput": 3506.7672190358344,
+    "requirement_met": true,
+    "requirement_threshold": 1000
+  },
+  {
+    "benchmark": "state_sync_performance",
+    "state_size": 1000,
+    "sync_time": 0.01812148094177246,
+    "extrapolated_time": 0.1812148094177246,
+    "sync_valid": true,
+    "throughput": 55183.127869801465,
+    "requirement_met": true,
+    "requirement_threshold": 60.0
+  },
+  {
+    "benchmark": "merkle_tree_cache",
+    "time": 0.005473613739013672,
+    "cache_stats": {
+      "cache_hits": 0,
+      "cache_misses": 510,
+      "hit_rate_percent": 0.0,
+      "cache_size": 102,
+      "max_cache_size": 1000
+    }
+  }
+]

@@ -1,0 +1,216 @@
+╔══════════════════════════════════════════════════════════════════════════╗
+║                  Diotec360 v3.0.5 - VERCEL DEPLOYMENT                       ║
+║                     TRIANGLE OF TRUTH ARCHITECTURE                       ║
+╚══════════════════════════════════════════════════════════════════════════╝
+
+┌──────────────────────────────────────────────────────────────────────────┐
+│                            FRONTEND LAYER                                │
+├──────────────────────────────────────────────────────────────────────────┤
+│                                                                          │
+│  ┌────────────────────────────────────────────────────────────────┐    │
+│  │  VERCEL - Next.js Frontend                                     │    │
+│  │  https://aethel.diotec360.com/                                │    │
+│  │                                                                │    │
+│  │  • Next.js 14                                                  │    │
+│  │  • TypeScript                                                  │    │
+│  │  • Tailwind CSS                                                │    │
+│  │  • Triangle Fallback Logic                                     │    │
+│  └────────────────────────────────────────────────────────────────┘    │
+│                                                                          │
+└──────────────────────────────────────────────────────────────────────────┘
+                                    │
+                                    │ API Calls
+                                    ▼
+┌──────────────────────────────────────────────────────────────────────────┐
+│                         BACKEND TRIANGLE LAYER                           │
+├──────────────────────────────────────────────────────────────────────────┤
+│                                                                          │
+│  ┌─────────────────────┐  ┌─────────────────────┐  ┌─────────────────┐ │
+│  │   NODE 1            │  │   NODE 2            │  │   NODE 3        │ │
+│  │   Hugging Face      │  │   diotec360.com     │  │   VERCEL ✨     │ │
+│  ├─────────────────────┤  ├─────────────────────┤  ├─────────────────┤ │
+│  │                     │  │                     │  │                 │ │
+│  │ diotec-aethel-      │  │ aethel.diotec360    │  │ backup.diotec   │ │
+│  │ judge.hf.space      │  │ .com                │  │ 360.com         │ │
+│  │                     │  │                     │  │                 │ │
+│  │ • FastAPI           │  │ • FastAPI           │  │ • FastAPI       │ │
+│  │ • Public Access     │  │ • Primary Backend   │  │ • Serverless    │ │
+│  │ • Genesis Node      │  │ • Genesis Node      │  │ • Backup Node   │ │
+│  │ • HTTP Sync         │  │ • HTTP Sync         │  │ • HTTP Sync     │ │
+│  │                     │  │                     │  │                 │ │
+│  └─────────────────────┘  └─────────────────────┘  └─────────────────┘ │
+│           │                         │                        │          │
+│           └─────────────────────────┼────────────────────────┘          │
+│                                     │                                   │
+│                          HTTP Synchronization                           │
+│                          (P2P Disabled)                                 │
+│                                                                          │
+└──────────────────────────────────────────────────────────────────────────┘
+                                    │
+                                    │ State Sync
+                                    ▼
+┌──────────────────────────────────────────────────────────────────────────┐
+│                          STATE CONSENSUS LAYER                           │
+├──────────────────────────────────────────────────────────────────────────┤
+│                                                                          │
+│  ┌────────────────────────────────────────────────────────────────┐    │
+│  │  MERKLE STATE STORE                                            │    │
+│  │  Synchronized across all 3 nodes                               │    │
+│  │                                                                │    │
+│  │  Root: 5df3daee3a0ca23c388a16c3db2c2388aea63f1c4ed5fa12...   │    │
+│  │  Entries: 7 (Genesis Assets)                                   │    │
+│  │                                                                │    │
+│  │  • Conservation Validator                                      │    │
+│  │  • Proof Verifier                                              │    │
+│  │  • HTTP-Only Resilience                                        │    │
+│  └────────────────────────────────────────────────────────────────┘    │
+│                                                                          │
+└──────────────────────────────────────────────────────────────────────────┘
+
+
+╔══════════════════════════════════════════════════════════════════════════╗
+║                         VERCEL DEPLOYMENT FLOW                           ║
+╚══════════════════════════════════════════════════════════════════════════╝
+
+STEP 1: PREPARE
+┌─────────────────────────────────────────────────────────────────────────┐
+│  • vercel.json created                                                  │
+│  • requirements-vercel.txt created                                      │
+│  • .env.node3.backup configured                                         │
+│  • deploy_node3_vercel.bat ready                                        │
+└─────────────────────────────────────────────────────────────────────────┘
+                                    │
+                                    ▼
+STEP 2: DEPLOY
+┌─────────────────────────────────────────────────────────────────────────┐
+│  $ npm install -g vercel                                                │
+│  $ vercel login                                                         │
+│  $ deploy_node3_vercel.bat                                              │
+│                                                                         │
+│  Vercel builds and deploys:                                             │
+│  • Installs Python dependencies                                         │
+│  • Configures FastAPI                                                   │
+│  • Sets environment variables                                           │
+│  • Generates deployment URL                                             │
+└─────────────────────────────────────────────────────────────────────────┘
+                                    │
+                                    ▼
+STEP 3: CONFIGURE DOMAIN
+┌─────────────────────────────────────────────────────────────────────────┐
+│  Vercel Dashboard → Settings → Domains                                  │
+│                                                                         │
+│  Add: backup.diotec360.com                                              │
+│                                                                         │
+│  DNS Configuration:                                                     │
+│  Type: CNAME                                                            │
+│  Name: backup                                                           │
+│  Value: cname.vercel-dns.com                                            │
+└─────────────────────────────────────────────────────────────────────────┘
+                                    │
+                                    ▼
+STEP 4: VERIFY
+┌─────────────────────────────────────────────────────────────────────────┐
+│  $ curl https://backup.diotec360.com/health                             │
+│  $ python verify_production_triangle.py                                 │
+│                                                                         │
+│  Expected:                                                              │
+│  ✅ Node 3 healthy                                                      │
+│  ✅ Synchronized with Nodes 1 & 2                                       │
+│  ✅ Triangle operational                                                │
+└─────────────────────────────────────────────────────────────────────────┘
+
+
+╔══════════════════════════════════════════════════════════════════════════╗
+║                      DEPLOYMENT CHARACTERISTICS                          ║
+╚══════════════════════════════════════════════════════════════════════════╝
+
+┌────────────────────────┬──────────────────────────────────────────────┐
+│ Aspect                 │ Details                                      │
+├────────────────────────┼──────────────────────────────────────────────┤
+│ Platform               │ Vercel Serverless                            │
+│ Runtime                │ Python 3.9+                                  │
+│ Framework              │ FastAPI                                      │
+│ Deployment Time        │ 2-3 minutes                                  │
+│ Cold Start             │ ~1-2 seconds                                 │
+│ Scaling                │ Automatic                                    │
+│ SSL                    │ Automatic (Let's Encrypt)                    │
+│ CDN                    │ Global Edge Network                          │
+│ Cost                   │ Free tier available                          │
+│ Uptime SLA             │ 99.9%                                        │
+└────────────────────────┴──────────────────────────────────────────────┘
+
+
+╔══════════════════════════════════════════════════════════════════════════╗
+║                         SYNCHRONIZATION FLOW                             ║
+╚══════════════════════════════════════════════════════════════════════════╝
+
+Node 3 (Vercel) ──────┐
+                      │
+                      ├──► HTTP Sync Every 10s
+                      │
+Node 1 (HF) ──────────┤
+                      │
+                      ├──► Merkle Root Comparison
+                      │
+Node 2 (diotec) ──────┘
+                      │
+                      ▼
+              ┌───────────────┐
+              │ State Aligned │
+              │ Root: 5df3... │
+              └───────────────┘
+
+
+╔══════════════════════════════════════════════════════════════════════════╗
+║                           FAILOVER LOGIC                                 ║
+╚══════════════════════════════════════════════════════════════════════════╝
+
+Frontend Request
+       │
+       ▼
+Try Node 2 (Primary)
+       │
+       ├─── Success ──► Return Response
+       │
+       └─── Fail
+              │
+              ▼
+       Try Node 1 (HF)
+              │
+              ├─── Success ──► Return Response
+              │
+              └─── Fail
+                     │
+                     ▼
+              Try Node 3 (Vercel Backup) ✨
+                     │
+                     ├─── Success ──► Return Response
+                     │
+                     └─── Fail ──► Error to User
+
+
+╔══════════════════════════════════════════════════════════════════════════╗
+║                         MONITORING POINTS                                ║
+╚══════════════════════════════════════════════════════════════════════════╝
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│  Health Endpoints:                                                      │
+│  • https://backup.diotec360.com/health                                  │
+│  • https://backup.diotec360.com/api/lattice/state                       │
+│  • https://backup.diotec360.com/api/lattice/p2p/status                  │
+│                                                                         │
+│  Vercel Monitoring:                                                     │
+│  • Dashboard: https://vercel.com/dashboard                              │
+│  • Logs: vercel logs aethel-backup --prod                               │
+│  • Analytics: Built-in Vercel Analytics                                 │
+│                                                                         │
+│  Custom Monitoring:                                                     │
+│  • verify_production_triangle.py (every 5 minutes)                      │
+│  • monitor_triangle.bat (continuous)                                    │
+└─────────────────────────────────────────────────────────────────────────┘
+
+
+═══════════════════════════════════════════════════════════════════════════
+                    🔺 VERCEL DEPLOYMENT READY 🔺
+                Execute: deploy_node3_vercel.bat
+═══════════════════════════════════════════════════════════════════════════

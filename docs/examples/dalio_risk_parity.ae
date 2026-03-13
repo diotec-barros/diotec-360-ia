@@ -1,0 +1,96 @@
+// Ray Dalio's Risk Parity Strategy
+// The "All Weather Portfolio" - Profitable in any economic scenario
+//
+// Invariant: Uncorrelated assets MUST reduce overall portfolio risk
+// Principle: Balance by volatility contribution, not dollar amount
+//
+// Aethel Advantage: Automatic rebalancing with mathematical proof
+
+intent dalio_risk_parity(
+    portfolio_value: int,
+    asset_weights: map<string, int>,  // Asset -> target weight (basis points)
+    asset_volatilities: map<string, int>,  // Asset -> annualized volatility
+    rebalance_threshold: int  // Basis points deviation to trigger rebalance
+) {
+    // The Four Economic Environments (Dalio's Framework):
+    // 1. Rising Growth + Rising Inflation → Commodities
+    // 2. Rising Growth + Falling Inflation → Stocks
+    // 3. Falling Growth + Rising Inflation → Gold/TIPS
+    // 4. Falling Growth + Falling Inflation → Bonds
+    
+    guard {
+        // Portfolio must have value
+        portfolio_value > 0;
+        
+        // Weights must sum to 10000 (100.00%)
+        sum(asset_weights.values()) == 10000;
+        
+        // All volatilities must be positive
+        all(asset_volatilities.values(), |v| v > 0);
+        
+        // Rebalance threshold must be reasonable (0.1% to 5%)
+        rebalance_threshold >= 10 && rebalance_threshold <= 500;
+    }
+    
+    solve {
+        priority: balance;
+        target: risk_parity_engine;
+        
+        // Calculate risk contribution for each asset
+        // risk_contribution = weight × volatility
+        for asset in asset_weights.keys() {
+            let weight = asset_weights[asset];
+            let volatility = asset_volatilities[asset];
+            let risk_contrib = (weight * volatility) / 10000;
+            
+            // In true risk parity, all assets contribute equally to risk
+            // This is Dalio's key insight: balance by RISK, not by DOLLARS
+            assert risk_contrib > 0;
+        }
+    }
+    
+    verify {
+        // INVARIANT 1: Conservation of Capital
+        // Total portfolio value cannot change during rebalancing
+        new_portfolio_value == portfolio_value;
+        
+        // INVARIANT 2: Weight Conservation
+        // Weights must still sum to 100%
+        sum(new_asset_weights.values()) == 10000;
+        
+        // INVARIANT 3: Risk Parity Maintained
+        // All assets contribute equally to portfolio risk
+        // (This is the mathematical proof of Dalio's principle)
+        let target_risk_per_asset = total_portfolio_risk / num_assets;
+        for asset in new_asset_weights.keys() {
+            let actual_risk = calculate_risk_contribution(asset);
+            // Allow small deviation due to discrete rebalancing
+            abs(actual_risk - target_risk_per_asset) <= rebalance_threshold;
+        }
+        
+        // INVARIANT 4: No Leverage
+        // Cannot borrow to increase position (unless explicitly allowed)
+        total_exposure <= portfolio_value;
+    }
+}
+
+// Helper: Calculate risk contribution for an asset
+function calculate_risk_contribution(asset: string) -> int {
+    let weight = asset_weights[asset];
+    let volatility = asset_volatilities[asset];
+    return (weight * volatility) / 10000;
+}
+
+// Example Usage:
+// 
+// Classic "All Weather" allocation:
+// - 30% Stocks (High volatility)
+// - 40% Long-term Bonds (Medium volatility)
+// - 15% Intermediate Bonds (Low volatility)
+// - 7.5% Gold (High volatility)
+// - 7.5% Commodities (Very high volatility)
+//
+// But in Risk Parity, we adjust these weights so each contributes
+// EQUALLY to portfolio risk, not equally to portfolio value.
+//
+// This is why Dalio's fund survived 2008 while others collapsed.

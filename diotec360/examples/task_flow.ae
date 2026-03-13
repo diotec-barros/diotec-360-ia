@@ -1,0 +1,82 @@
+# Task Flow - Life-Management Precedent (PoP)
+# Invariante Universal:
+#   Nenhuma tarefa pode ser iniciada se a anterior não estiver DONE.
+# Prova (esqueleto): consistência do cronograma sob janela de tempo disponível.
+
+intent iniciar_tarefa(
+    tarefa_atual_id: String,
+    tarefa_anterior_status: Integer,   # 0=todo, 1=doing, 2=done
+    tarefa_atual_status: Integer,      # 0=todo, 1=doing, 2=done
+    now_ts: Integer,
+    deadline_ts: Integer
+) {
+    guard {
+        deadline_ts > now_ts;
+
+        # Só posso iniciar a tarefa atual se a anterior estiver DONE
+        tarefa_anterior_status == 2;
+
+        # Tarefa atual só pode sair de todo -> doing
+        tarefa_atual_status == 1;
+    }
+
+    solve {
+        priority: productivity;
+        target: life_management;
+    }
+
+    verify {
+        # Invariante preservado
+        tarefa_anterior_status == 2;
+        tarefa_atual_status == 1;
+        deadline_ts > now_ts;
+    }
+}
+
+intent concluir_tarefa(
+    tarefa_id: String,
+    tarefa_status: Integer,            # 0=todo, 1=doing, 2=done
+    now_ts: Integer,
+    deadline_ts: Integer
+) {
+    guard {
+        deadline_ts > now_ts;
+
+        # Só conclui se estava em execução
+        tarefa_status == 2;
+    }
+
+    solve {
+        priority: productivity;
+        target: life_management;
+    }
+
+    verify {
+        tarefa_status == 2;
+        deadline_ts > now_ts;
+    }
+}
+
+intent provar_cronograma_possivel(
+    available_minutes: Integer,
+    t1_minutes: Integer,
+    t2_minutes: Integer,
+    t3_minutes: Integer
+) {
+    guard {
+        available_minutes > 0;
+        t1_minutes > 0;
+        t2_minutes > 0;
+        t3_minutes > 0;
+    }
+
+    solve {
+        priority: planning;
+        target: life_management;
+    }
+
+    verify {
+        # Cronograma fisicamente possível: soma das durações cabe no tempo disponível
+        t1_minutes + t2_minutes + t3_minutes <= available_minutes;
+    }
+}

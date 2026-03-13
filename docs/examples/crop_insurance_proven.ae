@@ -1,0 +1,253 @@
+// CROP INSURANCE WITH PROVEN WEATHER ORACLE
+// The Nexus Strategy Applied to Agriculture
+//
+// Traditional Crop Insurance: Farmer pays premium, hopes for payout
+// Aethel Crop Insurance: Oracle PROVES weather event, automatic payout
+//
+// The Causal Chain:
+// 1. Weather Oracle detects drought (PROVEN FACT)
+// 2. Aethel executes insurance payout (AUTOMATIC)
+// 3. Farmer receives funds (GUARANTEED)
+// 4. No claims process, no disputes, no delays
+
+intent proven_crop_insurance(
+    farmer_id: string,
+    farm_location: string,
+    crop_type: string,          // 'coffee', 'corn', 'wheat', 'soybeans'
+    insured_amount: int,         // Amount of coverage
+    premium_paid: int,           // Premium already paid
+    coverage_start_date: int,    // Unix timestamp
+    coverage_end_date: int,      // Unix timestamp
+    drought_threshold: int,      // Days without rain to trigger payout
+    frost_threshold: int         // Temperature (Celsius * 100) to trigger payout
+) {
+    guard {
+        // Basic validation
+        insured_amount > 0;
+        premium_paid > 0;
+        coverage_end_date > coverage_start_date;
+        
+        // Thresholds must be reasonable
+        drought_threshold >= 14 && drought_threshold <= 90;  // 14-90 days
+        frost_threshold >= -1000 && frost_threshold <= 500;  // -10°C to 5°C
+        
+        // Premium must be reasonable (1-20% of insured amount)
+        premium_paid >= (insured_amount / 100) && 
+        premium_paid <= (insured_amount / 5);
+    }
+    
+    solve {
+        priority: balance;
+        target: nexus_causal_engine;
+        
+        // ═══════════════════════════════════════════════════════════
+        // STEP 1: QUERY WEATHER ORACLE
+        // ═══════════════════════════════════════════════════════════
+        
+        let weather_data = query_oracle(
+            oracle_type: "weather",
+            location: farm_location,
+            start_date: coverage_start_date,
+            end_date: coverage_end_date
+        );
+        
+        // Extract proven facts from oracle
+        let days_without_rain = weather_data.consecutive_dry_days;
+        let minimum_temperature = weather_data.min_temp_celsius_x100;
+        let oracle_confidence = weather_data.confidence;
+        
+        // ═══════════════════════════════════════════════════════════
+        // STEP 2: CHECK TRIGGER CONDITIONS
+        // ═══════════════════════════════════════════════════════════
+        
+        let drought_triggered = (
+            days_without_rain >= drought_threshold &&
+            oracle_confidence >= 95  // 95% confidence required
+        );
+        
+        let frost_triggered = (
+            minimum_temperature <= frost_threshold &&
+            oracle_confidence >= 95
+        );
+        
+        let payout_triggered = drought_triggered || frost_triggered;
+        
+        // ═══════════════════════════════════════════════════════════
+        // STEP 3: CALCULATE PAYOUT
+        // ═══════════════════════════════════════════════════════════
+        
+        let payout_amount = if payout_triggered {
+            // Full payout if trigger conditions met
+            insured_amount
+        } else {
+            // No payout if conditions not met
+            0
+        };
+        
+        // ═══════════════════════════════════════════════════════════
+        // STEP 4: EXECUTE PAYOUT (IF TRIGGERED)
+        // ═══════════════════════════════════════════════════════════
+        
+        if payout_amount > 0 {
+            // Transfer funds from insurance pool to farmer
+            transfer(
+                from: "insurance_pool",
+                to: farmer_id,
+                amount: payout_amount
+            );
+            
+            // Log the causal event
+            emit_event(
+                event_type: "insurance_payout",
+                farmer: farmer_id,
+                crop: crop_type,
+                trigger: if drought_triggered { "drought" } else { "frost" },
+                oracle_confidence: oracle_confidence,
+                payout: payout_amount
+            );
+        }
+    }
+    
+    verify {
+        // ═══════════════════════════════════════════════════════════
+        // INVARIANT 1: ORACLE CONFIDENCE
+        // ═══════════════════════════════════════════════════════════
+        // Payout can only occur if oracle confidence >= 95%
+        
+        if payout_amount > 0 {
+            oracle_confidence >= 95;
+        }
+        
+        // ═══════════════════════════════════════════════════════════
+        // INVARIANT 2: TRIGGER VALIDITY
+        // ═══════════════════════════════════════════════════════════
+        // Payout can only occur if trigger conditions are met
+        
+        if payout_amount > 0 {
+            (days_without_rain >= drought_threshold) ||
+            (minimum_temperature <= frost_threshold);
+        }
+        
+        // ═══════════════════════════════════════════════════════════
+        // INVARIANT 3: PAYOUT AMOUNT
+        // ═══════════════════════════════════════════════════════════
+        // Payout is either 0 or full insured amount (no partial payouts)
+        
+        payout_amount == 0 || payout_amount == insured_amount;
+        
+        // ═══════════════════════════════════════════════════════════
+        // INVARIANT 4: CONSERVATION OF FUNDS
+        // ═══════════════════════════════════════════════════════════
+        // Insurance pool balance must decrease by exactly payout amount
+        
+        new_insurance_pool_balance == old_insurance_pool_balance - payout_amount;
+        
+        // ═══════════════════════════════════════════════════════════
+        // INVARIANT 5: FARMER BALANCE
+        // ═══════════════════════════════════════════════════════════
+        // Farmer balance must increase by exactly payout amount
+        
+        new_farmer_balance == old_farmer_balance + payout_amount;
+        
+        // ═══════════════════════════════════════════════════════════
+        // INVARIANT 6: SINGLE PAYOUT
+        // ═══════════════════════════════════════════════════════════
+        // Each insurance policy can only pay out once
+        
+        policy_payout_count <= 1;
+        
+        // ═══════════════════════════════════════════════════════════
+        // INVARIANT 7: TIME VALIDITY
+        // ═══════════════════════════════════════════════════════════
+        // Payout can only occur during coverage period
+        
+        if payout_amount > 0 {
+            current_timestamp >= coverage_start_date &&
+            current_timestamp <= coverage_end_date;
+        }
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// EXAMPLE USAGE: Coffee Farmer in Brazil
+// ═══════════════════════════════════════════════════════════════════
+
+// Scenario: Coffee farmer in Brazil insures against drought and frost
+// Premium: $5,000 (5% of coverage)
+// Coverage: $100,000
+// Period: 6 months (planting to harvest)
+// Triggers: 30 days without rain OR temperature below 0°C
+
+proven_crop_insurance(
+    farmer_id: "farmer_jose_silva_brazil",
+    farm_location: "minas_gerais_coffee_belt",
+    crop_type: "coffee",
+    insured_amount: 100000_00,  // $100,000
+    premium_paid: 5000_00,      // $5,000
+    coverage_start_date: 1704067200,  // Jan 1, 2024
+    coverage_end_date: 1719792000,    // Jun 30, 2024
+    drought_threshold: 30,      // 30 days without rain
+    frost_threshold: 0_00       // 0°C
+);
+
+// ═══════════════════════════════════════════════════════════════════
+// THE NEXUS ADVANTAGE
+// ═══════════════════════════════════════════════════════════════════
+
+// Traditional Insurance:
+// 1. Farmer files claim (days/weeks)
+// 2. Adjuster visits farm (weeks)
+// 3. Company reviews claim (weeks/months)
+// 4. Disputes and negotiations (months)
+// 5. Payout (if approved) (months)
+// Total Time: 3-12 months
+
+// Aethel Insurance:
+// 1. Oracle detects weather event (real-time)
+// 2. Smart contract verifies conditions (seconds)
+// 3. Automatic payout (seconds)
+// Total Time: < 1 minute
+
+// ═══════════════════════════════════════════════════════════════════
+// THE CAUSAL CHAIN
+// ═══════════════════════════════════════════════════════════════════
+
+// PROVEN FACT (Oracle):
+//   "30 consecutive days without rain in Minas Gerais"
+//   Confidence: 98%
+//
+// CAUSAL PREDICTION (Nexus):
+//   "Coffee crop will fail"
+//   "Farmer needs immediate funds"
+//
+// AUTOMATIC EXECUTION (Aethel):
+//   Transfer $100,000 to farmer
+//   No human intervention required
+//   No disputes possible
+//
+// RESULT:
+//   Farmer receives funds BEFORE crop fails
+//   Can replant or cover losses immediately
+//   No financial ruin, no bankruptcy
+
+// ═══════════════════════════════════════════════════════════════════
+// THE COMMERCIAL VALUE
+// ═══════════════════════════════════════════════════════════════════
+
+// This is not just "smart contract insurance."
+// This is CAUSAL INSURANCE - payout based on PROVEN FACTS, not claims.
+
+// Market Size:
+// - Global crop insurance: $40 billion/year
+// - Claims processing cost: 30-40% of premiums
+// - Aethel processing cost: < 0.1% of premiums
+
+// The Disruption:
+// - Eliminate claims adjusters (save 30%)
+// - Eliminate disputes (save 10%)
+// - Eliminate delays (save farmer's business)
+
+// The Pitch:
+// "What if insurance paid out automatically when the weather oracle
+//  PROVES your crop is damaged - no claims, no waiting, no disputes?"
+

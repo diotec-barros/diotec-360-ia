@@ -1,0 +1,28 @@
+# Safe Banking Transfer with Conservation Proof
+# This example demonstrates a secure bank transfer with mathematical proof
+# that money is conserved during the transaction.
+
+solve transfer_funds {
+    # Initial state: Alice has $1000, Bob has $500
+    let alice_initial = 1000
+    let bob_initial = 500
+    let transfer_amount = 250
+    
+    # Constraint: Transfer amount must be positive and within Alice's balance
+    assert transfer_amount > 0
+    assert transfer_amount <= alice_initial
+    
+    # Execute transfer
+    let alice_final = alice_initial - transfer_amount
+    let bob_final = bob_initial + transfer_amount
+    
+    # Conservation law: Total money must remain constant
+    prove alice_initial + bob_initial == alice_final + bob_final
+    
+    # Output final balances
+    return {
+        alice: alice_final,
+        bob: bob_final,
+        total_conserved: alice_final + bob_final
+    }
+}

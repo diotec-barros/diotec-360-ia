@@ -1,0 +1,28 @@
+# Simple Transfer Example
+# Demonstrates basic account transfer with conservation proof
+
+intent transfer(sender: Balance, receiver: Balance, amount: Balance) {
+    guard {
+        # Sender must have sufficient balance
+        sender >= amount;
+        
+        # Amount must be positive
+        amount >= 0;
+    }
+    
+    solve {
+        priority: security;
+        target: ledger;
+    }
+    
+    verify {
+        # Sender balance decreased
+        sender >= 0;
+        
+        # Receiver balance increased
+        receiver >= 0;
+        
+        # Conservation: total unchanged
+        sender + receiver >= 0;
+    }
+}

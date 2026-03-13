@@ -1,0 +1,50 @@
+# Portfolio Rebalancing with Conservation Proof
+# Demonstrates rebalancing a crypto portfolio while proving that
+# the total portfolio value is conserved during rebalancing.
+
+solve rebalance_portfolio {
+    # Initial portfolio: 60% BTC, 40% ETH
+    let btc_amount = 0.6
+    let eth_amount = 8.0
+    
+    # Current market prices
+    let btc_price = 50000
+    let eth_price = 2500
+    
+    # Calculate initial portfolio value
+    let btc_value = btc_amount * btc_price
+    let eth_value = eth_amount * eth_price
+    let total_value = btc_value + eth_value
+    
+    # Target allocation: 50% BTC, 50% ETH
+    let target_btc_value = total_value * 0.5
+    let target_eth_value = total_value * 0.5
+    
+    # Calculate rebalancing trades
+    let btc_value_diff = target_btc_value - btc_value
+    let eth_value_diff = target_eth_value - eth_value
+    
+    # Execute rebalancing
+    let btc_final = btc_amount + (btc_value_diff / btc_price)
+    let eth_final = eth_amount + (eth_value_diff / eth_price)
+    
+    # Calculate final portfolio value
+    let btc_value_final = btc_final * btc_price
+    let eth_value_final = eth_final * eth_price
+    let total_value_final = btc_value_final + eth_value_final
+    
+    # Conservation proof: Portfolio value unchanged (ignoring fees)
+    prove total_value == total_value_final
+    
+    # Verify target allocation achieved
+    let btc_allocation = (btc_value_final / total_value_final) * 100
+    let eth_allocation = (eth_value_final / total_value_final) * 100
+    
+    return {
+        btc_amount: btc_final,
+        eth_amount: eth_final,
+        btc_allocation_pct: btc_allocation,
+        eth_allocation_pct: eth_allocation,
+        total_value: total_value_final
+    }
+}

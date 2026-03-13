@@ -1,0 +1,321 @@
+# Adversarial Vaccine Test
+# This example demonstrates the Adversarial Vaccine and Self-Healing capabilities:
+# 1. Known attack patterns being blocked
+# 2. Self-Healing rule generation from attack traces
+# 3. Adversarial Vaccine training and vulnerability discovery
+
+# ============================================================================
+# Part 1: Known Attack Patterns Being Blocked
+# ============================================================================
+
+state balances: map<address, int>
+
+init:
+    balances[attacker] = 1000
+    balances[victim] = 5000
+    balances[bank] = 1000000
+
+# Attack 1: Infinite Recursion (Trojan Pattern)
+transaction infinite_recursion_attack:
+    # Semantic Sanitizer detects: recursive function without base case
+    def drain_account(from, to, amount):
+        transfer(from, to, amount)
+        drain_account(from, to, amount)  # No base case!
+    
+    drain_account(victim, attacker, 100)
+    
+    # BLOCKED by Semantic Sanitizer
+    # Detection: AST pattern "RECURSIVE_CALL without BASE_CASE"
+    # Logged to Gauntlet Report:
+    # - Attack type: TROJAN
+    # - Pattern: infinite_recursion
+    # - Severity: 0.9
+    # - Timestamp: 2026-02-05 14:32:15
+
+# Attack 2: Unbounded Loop (DoS Pattern)
+transaction unbounded_loop_attack:
+    # Semantic Sanitizer detects: while True without break
+    while True:
+        transfer(victim, attacker, 1)
+    
+    # BLOCKED by Semantic Sanitizer
+    # Detection: AST pattern "WHILE_LOOP with CONSTANT(True) and NO_BREAK"
+    # Logged to Gauntlet Report:
+    # - Attack type: DOS
+    # - Pattern: unbounded_loop
+    # - Severity: 0.95
+
+# Attack 3: Resource Exhaustion (Memory Bomb)
+transaction memory_bomb_attack:
+    # Semantic Sanitizer detects: exponential memory allocation
+    huge_list = []
+    for i in range(1000000):
+        huge_list.append([0] * 1000000)  # 1 trillion elements!
+    
+    transfer(victim, attacker, 100)
+    
+    # BLOCKED by Semantic Sanitizer
+    # Detection: Entropy score 0.92 (threshold: 0.8)
+    # Reason: "Exponential memory allocation pattern detected"
+
+# Attack 4: Hidden State Mutation (Trojan)
+transaction hidden_mutation_attack:
+    # Appears to be a simple transfer
+    amount = 100
+    
+    # But hidden in complex expression:
+    transfer(victim, attacker, amount if (balances[bank] := 0) else amount)
+    
+    # BLOCKED by Semantic Sanitizer
+    # Detection: Hidden state mutation in expression
+    # Pattern: "ASSIGNMENT inside CONDITIONAL"
+
+# ============================================================================
+# Part 2: Self-Healing Rule Generation
+# ============================================================================
+
+# Scenario: A novel attack bypasses Semantic Sanitizer
+transaction novel_attack:
+    # New attack pattern: recursive transfer with obfuscated base case
+    def sneaky_drain(from, to, depth):
+        if depth > 0:  # Base case exists but is ineffective
+            transfer(from, to, 10)
+            sneaky_drain(from, to, depth + 1)  # Depth INCREASES!
+    
+    sneaky_drain(victim, attacker, 1)
+    
+    # This attack reaches the Judge but fails at Layer 1 (Conservation)
+    # because it drains more than the account balance
+
+# Self-Healing Process:
+# 1. Attack trace captured:
+#    - Code: sneaky_drain function
+#    - AST: RECURSIVE_CALL with INCREASING_PARAMETER
+#    - Detection method: Layer 1 (Conservation)
+#
+# 2. Pattern extraction:
+#    - Generalized pattern: "RECURSIVE_CALL where PARAMETER increases"
+#    - Signature: "RECURSIVE{param: INCREASING}"
+#
+# 3. False positive validation:
+#    - Test against 1000 historical legitimate transactions
+#    - False positives: 0
+#
+# 4. Rule injection:
+#    - New TrojanPattern added to Semantic Sanitizer database
+#    - Pattern ID: "trojan_recursive_increasing_param"
+#    - Severity: 0.85
+#
+# 5. Rule effectiveness tracking:
+#    - True positives: 0 (just created)
+#    - False positives: 0
+#    - Effectiveness score: 1.0 (perfect)
+
+# Re-test the same attack after Self-Healing
+transaction novel_attack_retry:
+    def sneaky_drain(from, to, depth):
+        if depth > 0:
+            transfer(from, to, 10)
+            sneaky_drain(from, to, depth + 1)
+    
+    sneaky_drain(victim, attacker, 1)
+    
+    # NOW BLOCKED by Semantic Sanitizer!
+    # Detection: New pattern "trojan_recursive_increasing_param"
+    # Self-Healing SUCCESS ✓
+
+# ============================================================================
+# Part 3: Adversarial Vaccine Training
+# ============================================================================
+
+# The Adversarial Vaccine generates 1000 attack scenarios to test defenses
+# This happens in a separate process to avoid blocking production traffic
+
+# Vaccine Training Session Report:
+# {
+#   "total_scenarios": 1000,
+#   "blocked_by_sentinel": 847,
+#   "blocked_by_layers": 142,
+#   "vulnerabilities_found": 11,
+#   "vulnerabilities_patched": 11,
+#   "training_duration_seconds": 3600,
+#   "scenarios_by_type": {
+#     "mutation": 250,
+#     "trojan": 250,
+#     "dos": 250,
+#     "novel": 250
+#   }
+# }
+
+# Example Attack Scenarios Generated:
+
+# Scenario 1: Mutation of known exploit
+transaction vaccine_mutation_1:
+    # Original: while True: transfer(...)
+    # Mutation: for i in range(999999999): transfer(...)
+    for i in range(999999999):
+        transfer(victim, attacker, 1)
+    
+    # Result: BLOCKED by Semantic Sanitizer
+    # Detection: Unbounded loop (large range without early exit)
+
+# Scenario 2: Trojan - legitimate code + hidden malice
+transaction vaccine_trojan_1:
+    # Appears to be a payroll distribution
+    employees = [alice, bob, charlie]
+    for employee in employees:
+        transfer(bank, employee, 1000)  # Legitimate
+    
+    # Hidden: extra transfer to attacker
+    transfer(bank, attacker, 100000)  # Malicious!
+    
+    # Result: BLOCKED by Semantic Sanitizer
+    # Detection: Suspicious transfer pattern (amount >> others)
+
+# Scenario 3: DoS - resource exhaustion
+transaction vaccine_dos_1:
+    # Exponential computation
+    def fibonacci(n):
+        if n <= 1:
+            return n
+        return fibonacci(n-1) + fibonacci(n-2)
+    
+    result = fibonacci(100)  # 2^100 operations!
+    transfer(victim, attacker, result)
+    
+    # Result: BLOCKED by Sentinel Monitor
+    # Detection: CPU time exceeds baseline by 10x (anomaly score: 0.95)
+
+# Scenario 4: Novel attack using Architect
+transaction vaccine_novel_1:
+    # Architect generates creative attack:
+    # "What if we hide the recursion in a lambda?"
+    recursive_lambda = lambda x: transfer(victim, attacker, 1) or recursive_lambda(x)
+    recursive_lambda(0)
+    
+    # Result: VULNERABILITY FOUND!
+    # This bypassed Semantic Sanitizer (lambda not analyzed)
+    # Blocked by: Layer 3 (Z3 timeout after 30s)
+    #
+    # Self-Healing triggered:
+    # - Pattern extracted: "LAMBDA with RECURSIVE_CALL"
+    # - Rule generated: "trojan_recursive_lambda"
+    # - Rule injected into Semantic Sanitizer
+    #
+    # Re-test: NOW BLOCKED by Semantic Sanitizer ✓
+
+# ============================================================================
+# Part 4: Vaccination Cycle
+# ============================================================================
+
+# The Adversarial Vaccine runs continuously (can be scheduled):
+# 1. Generate 1000 attack scenarios (250 of each type)
+# 2. Submit each scenario through Sentinel + Judge pipeline
+# 3. For each vulnerability found:
+#    a. Extract attack pattern
+#    b. Generate new Semantic Sanitizer rule
+#    c. Validate rule (zero false positives)
+#    d. Inject rule into production
+#    e. Re-test to confirm patch
+# 4. Generate vaccination report
+# 5. Sleep for N hours (e.g., 24 hours)
+# 6. Repeat
+
+# Over time, the system becomes immune to entire classes of attacks!
+
+# ============================================================================
+# Part 5: Rule Effectiveness Tracking
+# ============================================================================
+
+# Self-Healing tracks effectiveness of each generated rule
+# Example rule lifecycle:
+
+# Day 1: Rule "trojan_recursive_lambda" created
+# - True positives: 0
+# - False positives: 0
+# - Effectiveness: 1.0
+
+# Day 2: Rule blocks 5 real attacks
+# - True positives: 5
+# - False positives: 0
+# - Effectiveness: 1.0 (perfect!)
+
+# Day 30: Rule blocks 127 attacks, 2 false positives
+# - True positives: 127
+# - False positives: 2
+# - Effectiveness: 127/(127+2) = 0.984 (excellent)
+
+# Day 90: Rule blocks 450 attacks, 150 false positives
+# - True positives: 450
+# - False positives: 150
+# - Effectiveness: 450/(450+150) = 0.75 (above threshold)
+
+# Day 120: Effectiveness drops to 0.65 (below 0.7 threshold)
+# - Rule automatically deactivated
+# - Logged to Gauntlet Report
+# - Operators notified for manual review
+
+# ============================================================================
+# Part 6: Gauntlet Report - Attack Forensics
+# ============================================================================
+
+# Query Gauntlet Report for attack statistics
+attack_stats = get_gauntlet_statistics(
+    start_time=now() - 30*24*3600,  # Last 30 days
+    end_time=now()
+)
+
+# Example output:
+# {
+#   "total_attacks": 15847,
+#   "by_category": {
+#     "injection": 3421,
+#     "dos": 5632,
+#     "trojan": 4891,
+#     "overflow": 1203,
+#     "conservation": 700,
+#     "unknown": 0
+#   },
+#   "by_detection_method": {
+#     "semantic_sanitizer": 14205,
+#     "layer0": 892,
+#     "layer1": 450,
+#     "layer2": 200,
+#     "layer3": 100,
+#     "layer4": 0
+#   },
+#   "avg_severity": 0.78,
+#   "top_attack_types": [
+#     {"type": "unbounded_loop", "count": 3421},
+#     {"type": "infinite_recursion", "count": 2891},
+#     {"type": "memory_bomb", "count": 2100},
+#     {"type": "hidden_mutation", "count": 1890},
+#     {"type": "recursive_lambda", "count": 1200}
+#   ],
+#   "crisis_mode_activations": 23,
+#   "self_healing_rules_generated": 47,
+#   "adversarial_vaccine_sessions": 30
+# }
+
+# Export report for compliance
+export_gauntlet_report(
+    format="pdf",
+    start_time=now() - 90*24*3600,  # Last 90 days
+    output_path="gauntlet_report_q1_2026.pdf"
+)
+
+# ============================================================================
+# Summary
+# ============================================================================
+
+# The Adversarial Vaccine and Self-Healing provide:
+# 1. ✅ Proactive defense against unknown attacks
+# 2. ✅ Automatic rule generation from attack traces
+# 3. ✅ Zero false positive validation before rule injection
+# 4. ✅ Continuous effectiveness tracking and rule deactivation
+# 5. ✅ 1000+ attack scenarios tested per training session
+# 6. ✅ Complete attack forensics and compliance reporting
+# 7. ✅ System becomes immune to attacks that don't exist yet!
+
+# This is the world's first formally verified language with
+# autonomous self-healing capabilities!

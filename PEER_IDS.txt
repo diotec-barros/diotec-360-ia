@@ -1,0 +1,12 @@
+DIOTEC360 LATTICE - GENESIS NODE PEER IDs
+============================================================
+
+NODE1 (node1-huggingface):
+  QmQmPqwh46zuSzyJ8TCqE2fDAwsgZraNs8MU8i34vx8hEGbG
+
+NODE2 (node2-diotec360):
+  QmQmTMpBFvFP58iPVDxa6xkpHSKsXaXyCrZUHQFw9fbGzz6Y
+
+NODE3 (node3-backup):
+  QmQmUzC3Jp81hVWgwpBsR79MgWutbZ2oxPsTc8Z4Pp5myvCC
+

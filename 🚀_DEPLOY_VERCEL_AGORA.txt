@@ -1,0 +1,181 @@
+╔═══════════════════════════════════════════════════════════════════╗
+║                                                                   ║
+║              🚀 DEPLOY VERCEL - AÇÃO IMEDIATA 🚀                  ║
+║                                                                   ║
+║            SOVEREIGN ARCHITECTURE - FRONTEND DEPLOY               ║
+║                                                                   ║
+╚═══════════════════════════════════════════════════════════════════╝
+
+┌───────────────────────────────────────────────────────────────────┐
+│                                                                   │
+│  🎯 OBJETIVO: Deploy do Frontend com Arquitetura Soberana        │
+│                                                                   │
+│  ✅ Variáveis de Ambiente Prontas                                │
+│  🚀 Pronto para Deploy                                            │
+│                                                                   │
+└───────────────────────────────────────────────────────────────────┘
+
+
+═══════════════════════════════════════════════════════════════════
+  PASSO 1: ACESSAR VERCEL
+═══════════════════════════════════════════════════════════════════
+
+  🌐 Vá para: https://vercel.com/dashboard
+
+
+═══════════════════════════════════════════════════════════════════
+  PASSO 2: CONFIGURAR VARIÁVEIS DE AMBIENTE
+═══════════════════════════════════════════════════════════════════
+
+  Caminho: Settings → Environment Variables
+
+  Adicione estas 3 variáveis:
+
+  ┌─────────────────────────────────────────────────────────────┐
+  │                                                             │
+  │  1. NEXT_PUBLIC_API_URL                                     │
+  │     Value: https://api.diotec360.com                        │
+  │     Environment: Production                                 │
+  │                                                             │
+  │  2. NEXT_PUBLIC_LATTICE_NODES                               │
+  │     Value: https://diotec-diotec360-judge.hf.space,            │
+  │            https://backup.diotec360.com                     │
+  │     Environment: Production                                 │
+  │                                                             │
+  │  3. ALPHA_VANTAGE_API_KEY                                   │
+  │     Value: EFQ0A2ZCKGNHFGTNAQVLOOL9,-1                      │
+  │     Environment: Production                                 │
+  │                                                             │
+  └─────────────────────────────────────────────────────────────┘
+
+
+═══════════════════════════════════════════════════════════════════
+  PASSO 3: FAZER DEPLOY
+═══════════════════════════════════════════════════════════════════
+
+  OPÇÃO A: Git Push (Recomendado)
+  ────────────────────────────────
+  cd frontend
+  git add .
+  git commit -m "feat: Sovereign Architecture"
+  git push origin main
+
+  OPÇÃO B: Vercel CLI
+  ────────────────────
+  cd frontend
+  vercel --prod
+
+  OPÇÃO C: Redeploy no Dashboard
+  ───────────────────────────────
+  1. Vá em: Deployments
+  2. Clique nos 3 pontos do último deployment
+  3. Clique em "Redeploy"
+
+
+═══════════════════════════════════════════════════════════════════
+  PASSO 4: AGUARDAR BUILD
+═══════════════════════════════════════════════════════════════════
+
+  ⏱️  Build leva 2-5 minutos
+  📊 Acompanhe em: Deployments → Building
+
+
+═══════════════════════════════════════════════════════════════════
+  PASSO 5: TESTAR
+═══════════════════════════════════════════════════════════════════
+
+  1. Acesse: https://aethel.diotec360.com/
+
+  2. Abra DevTools (F12) e verifique:
+     ✅ Conexão com api.diotec360.com
+     ✅ Fallback para diotec-diotec360-judge.hf.space
+     ✅ Fallback para backup.diotec360.com
+
+  3. Teste funcionalidades:
+     ✅ Carregar exemplos
+     ✅ Executar provas
+     ✅ Verificar sincronização
+
+
+╔═══════════════════════════════════════════════════════════════════╗
+║                                                                   ║
+║                🔺 TRIANGLE OF TRUTH 🔺                            ║
+║                                                                   ║
+║  Frontend: https://aethel.diotec360.com/                         ║
+║  └─ Conecta ao Nexo Soberano                                     ║
+║                                                                   ║
+║  Node 1: https://diotec-diotec360-judge.hf.space                    ║
+║  Node 2: https://api.diotec360.com ⭐ SOVEREIGN                  ║
+║  Node 3: https://backup.diotec360.com                            ║
+║                                                                   ║
+╚═══════════════════════════════════════════════════════════════════╝
+
+
+═══════════════════════════════════════════════════════════════════
+  📊 VARIÁVEIS DE AMBIENTE
+═══════════════════════════════════════════════════════════════════
+
+  NEXT_PUBLIC_API_URL
+  └─ https://api.diotec360.com
+     └─ Seu território soberano
+
+  NEXT_PUBLIC_LATTICE_NODES
+  └─ https://diotec-diotec360-judge.hf.space,
+     https://backup.diotec360.com
+     └─ Triangle Resilience
+
+  ALPHA_VANTAGE_API_KEY
+  └─ EFQ0A2ZCKGNHFGTNAQVLOOL9,-1
+     └─ Forex data
+
+
+═══════════════════════════════════════════════════════════════════
+  🎯 CHECKLIST
+═══════════════════════════════════════════════════════════════════
+
+  [ ] Acessar Vercel Dashboard
+  [ ] Configurar 3 variáveis de ambiente
+  [ ] Fazer deploy (Git push ou Redeploy)
+  [ ] Aguardar build (2-5 min)
+  [ ] Acessar https://aethel.diotec360.com/
+  [ ] Verificar conexão com api.diotec360.com
+  [ ] Testar funcionalidades
+  [ ] Confirmar Triangle operacional ✅
+
+
+═══════════════════════════════════════════════════════════════════
+  💡 DICA RÁPIDA
+═══════════════════════════════════════════════════════════════════
+
+  Se você já tem as variáveis configuradas no Vercel,
+  basta fazer um Redeploy no dashboard!
+
+  Deployments → 3 pontos → Redeploy
+
+
+═══════════════════════════════════════════════════════════════════
+  🏛️ BRANDED INTEGRITY
+═══════════════════════════════════════════════════════════════════
+
+  Após o deploy, o frontend estará conectado ao seu
+  território soberano: api.diotec360.com
+
+  "Nossa infraestrutura principal atende em api.diotec360.com,
+   mas nossa rede de prova é resiliente e distribuída em
+   nexos globais."
+
+
+╔═══════════════════════════════════════════════════════════════════╗
+║                                                                   ║
+║              🚀 PRONTO PARA DEPLOY! 🚀                            ║
+║                                                                   ║
+║  Leia: DEPLOY_VERCEL_SOVEREIGN_ARCHITECTURE.md                   ║
+║                                                                   ║
+║  Execute: Siga os passos acima no Vercel Dashboard               ║
+║                                                                   ║
+╚═══════════════════════════════════════════════════════════════════╝
+
+
+[STATUS: READY FOR VERCEL DEPLOY] ✅
+[OBJECTIVE: SOVEREIGN FRONTEND DEPLOYMENT] 🏛️
+[VERDICT: BRANDED INTEGRITY AWAITS] ⚖️🛡️✨

@@ -1,0 +1,62 @@
+# Concurrent Settlement with Linearizability Proof
+# Demonstrates concurrent settlement of multiple transactions with proof
+# that the final state is equivalent to some serial execution order.
+
+solve concurrent_settlement {
+    # Settlement system with multiple parties
+    let party_A_balance = 5000
+    let party_B_balance = 3000
+    let party_C_balance = 4000
+    let clearinghouse_balance = 0
+    
+    # Concurrent settlements
+    # Settlement 1: A owes B 1000
+    # Settlement 2: B owes C 500
+    # Settlement 3: C owes A 300
+    
+    let settlement_1 = 1000  # A -> B
+    let settlement_2 = 500   # B -> C
+    let settlement_3 = 300   # C -> A
+    
+    # Validate all settlements
+    assert settlement_1 <= party_A_balance
+    assert settlement_2 <= party_B_balance
+    assert settlement_3 <= party_C_balance
+    
+    # Execute settlements concurrently through clearinghouse
+    # Step 1: All parties deposit to clearinghouse
+    let ch_from_A = settlement_1
+    let ch_from_B = settlement_2
+    let ch_from_C = settlement_3
+    
+    # Step 2: Clearinghouse distributes
+    let ch_to_A = settlement_3
+    let ch_to_B = settlement_1
+    let ch_to_C = settlement_2
+    
+    # Calculate final balances
+    let party_A_final = party_A_balance - ch_from_A + ch_to_A
+    let party_B_final = party_B_balance - ch_from_B + ch_to_B
+    let party_C_final = party_C_balance - ch_from_C + ch_to_C
+    
+    # Clearinghouse should net to zero
+    let ch_net = (ch_from_A + ch_from_B + ch_from_C) - (ch_to_A + ch_to_B + ch_to_C)
+    prove ch_net == 0
+    
+    # Global conservation proof
+    let total_before = party_A_balance + party_B_balance + party_C_balance
+    let total_after = party_A_final + party_B_final + party_C_final
+    prove total_before == total_after
+    
+    # Linearizability: Final state is consistent with some serial order
+    prove party_A_final == party_A_balance - settlement_1 + settlement_3
+    prove party_B_final == party_B_balance + settlement_1 - settlement_2
+    prove party_C_final == party_C_balance + settlement_2 - settlement_3
+    
+    return {
+        settlements_processed: 3,
+        clearinghouse_net: ch_net,
+        total_conserved: total_after,
+        linearizable: true
+    }
+}

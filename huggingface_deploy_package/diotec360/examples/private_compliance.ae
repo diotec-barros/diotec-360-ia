@@ -1,0 +1,38 @@
+# Aethel v1.6.2 - Private Compliance Check with ZKP
+# ===================================================
+#
+# This example demonstrates ZKP for compliance:
+# - Patient data is SECRET
+# - Eligibility is PROVED without revealing diagnosis
+# - HIPAA-compliant verification
+#
+# Use Case: Healthcare, insurance, regulated industries
+
+intent check_treatment_eligibility(patient: Account, treatment: Treatment, diagnosis: Diagnosis) {
+    guard {
+        # Secret: diagnosis never revealed!
+        secret diagnosis_severity >= treatment_min_severity;
+        secret patient_age >= treatment_min_age;
+        secret patient_age <= treatment_max_age;
+        
+        # Public: patient is registered
+        patient_registered == true;
+        treatment_approved == true;
+    }
+    
+    solve {
+        priority: privacy;
+        target: healthcare_system;
+    }
+    
+    verify {
+        # Secret: eligibility proven without revealing why
+        secret patient_eligible == true;
+        
+        # Public: treatment can proceed
+        treatment_authorized == true;
+        
+        # Audit trail (public)
+        authorization_logged == true;
+    }
+}

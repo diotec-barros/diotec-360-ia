@@ -1,0 +1,43 @@
+# Flash Loan Shield with Conservation Proof
+# Demonstrates a flash loan with built-in protection against exploits
+# by proving that the loan is fully repaid within the same transaction.
+
+solve flash_loan_arbitrage {
+    # Flash loan amount
+    let loan_amount = 100000
+    let flash_loan_fee = 0.0009  # 0.09% fee
+    
+    # Arbitrage opportunity between two DEXs
+    let dex1_price = 1.00
+    let dex2_price = 1.02
+    
+    # Execute arbitrage
+    # 1. Borrow loan_amount
+    let borrowed = loan_amount
+    
+    # 2. Buy on DEX1 at lower price
+    let tokens_bought = borrowed / dex1_price
+    
+    # 3. Sell on DEX2 at higher price
+    let proceeds = tokens_bought * dex2_price
+    
+    # 4. Calculate profit and repayment
+    let fee_amount = loan_amount * flash_loan_fee
+    let total_repayment = loan_amount + fee_amount
+    let profit = proceeds - total_repayment
+    
+    # Critical constraint: Must repay loan + fee
+    assert proceeds >= total_repayment
+    
+    # Conservation proof: All borrowed funds are accounted for
+    # borrowed = total_repayment + profit
+    prove borrowed + fee_amount == total_repayment
+    prove proceeds == total_repayment + profit
+    
+    return {
+        loan_amount: loan_amount,
+        repayment: total_repayment,
+        profit: profit,
+        arbitrage_successful: true
+    }
+}

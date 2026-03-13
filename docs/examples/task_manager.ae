@@ -1,0 +1,83 @@
+# Universal Task Manager (Domain-Agnostic Proof Template)
+# Demonstrates that Aethel invariants apply to time/responsibility/state,
+# not only finance.
+
+intent create_task(
+    task_id: String,
+    owner: String,
+    deadline_ts: Integer,   # unix epoch seconds
+    now_ts: Integer,
+    status: String          # "todo" | "doing" | "done"
+) {
+    guard {
+        # Owner must exist
+        owner != "";
+
+        # Deadline must be in the future
+        deadline_ts > now_ts;
+
+        # Only valid initial states
+        status == "todo";
+    }
+
+    solve {
+        priority: productivity;
+        target: life_management;
+    }
+
+    verify {
+        # Task is created as todo
+        status == "todo";
+
+        # Deadline still consistent
+        deadline_ts > now_ts;
+    }
+}
+
+intent transition_task_status(
+    task_id: String,
+    owner: String,
+    old_status: String,
+    new_status: String,
+    now_ts: Integer,
+    deadline_ts: Integer
+) {
+    guard {
+        owner != "";
+        deadline_ts > now_ts;
+
+        # No contradictory states in a single transition
+        old_status != new_status;
+
+        # Allowed states
+        (old_status == "todo") or (old_status == "doing") or (old_status == "done");
+        (new_status == "todo") or (new_status == "doing") or (new_status == "done");
+
+        # Allowed transitions: todo -> doing -> done (no skipping backwards)
+        if old_status == "todo" {
+            new_status == "doing";
+        }
+        if old_status == "doing" {
+            new_status == "done";
+        }
+        if old_status == "done" {
+            # Done is terminal
+            new_status == "done";
+        }
+    }
+
+    solve {
+        priority: consistency;
+        target: life_management;
+    }
+
+    verify {
+        # Enforce terminal state
+        if old_status == "done" {
+            new_status == "done";
+        }
+
+        # Deadline invariant preserved
+        deadline_ts > now_ts;
+    }
+}
