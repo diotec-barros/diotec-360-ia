@@ -3,6 +3,8 @@ uvicorn[standard]
 z3-solver
 lark
 psutil
-libp2p==0.5.0
+# libp2p==0.5.0  # Temporarily disabled - causes build issues with coincurve on Python 3.14
 aiohttp
 dnspython
+pydantic
+python-multipart
