@@ -54,6 +54,10 @@ from api.autopilot import router as autopilot_router
 from api.memory_bridge import router as memory_router
 from api.lattice_bridge import router as lattice_router  # v3.4.0 - Proof Mining
 from api.treasury_api import router as treasury_router  # v3.6.0 - Credit Purchase
+from api.knowledge_api import router as knowledge_router  # v7.1.3 - Intelligence Harvester
+from api.llm_api import router as llm_router  # v10.0.0 - Dual-Brain Mode
+from api.sdk_gateway import router as sdk_router  # v1.0.0 - Sovereign SDK
+from api.geo_api import router as geo_router  # v10.0.9 - IP Geolocation
 
 # Initialize FastAPI app
 app = FastAPI(
@@ -87,6 +91,19 @@ app.include_router(lattice_router)
 
 # Include Treasury router (v3.6.0 - Credit Purchase)
 app.include_router(treasury_router)
+
+# Include Knowledge router (v7.1.3 - Intelligence Harvester)
+app.include_router(knowledge_router)
+
+# Include LLM router (v10.0.0 - Dual-Brain Mode)
+app.include_router(llm_router)
+
+# Include SDK router (v1.0.0 - Sovereign SDK)
+app.include_router(sdk_router)
+
+# Include Geo router (v10.0.9 - IP Geolocation)
+app.include_router(geo_router)
+app.include_router(sdk_router)
 
 # Initialize DIOTEC360 components
 parser = AethelParser()
@@ -604,6 +621,25 @@ async def _lattice_startup() -> None:
     lattice_streams = get_lattice_streams(persistence)
     print("[STARTUP] Lattice streams initialized")
     
+    # Initialize GunDB P2P Network (v10.0.9 - Global Nerve)
+    try:
+        from api.gundb_connector import initialize_gun
+        from api.peer_announcer import initialize_peer_announcer
+        import uuid
+        
+        relay_url = getenv("GUNDB_RELAY_URL", default="wss://gun-relay.diotec360.com/gun")
+        await initialize_gun(relay_url)
+        print(f"[STARTUP] [GUN] GunDB connector initialized: {relay_url}")
+        
+        # Generate server peer ID
+        server_id = f"server_{uuid.uuid4().hex[:8]}"
+        await initialize_peer_announcer(server_id)
+        print(f"[STARTUP] [GUN] Peer announcer started: {server_id}")
+        
+    except Exception as e:
+        print(f"[STARTUP] [WARN] GunDB initialization failed: {e}")
+        print("[STARTUP] [WARN] Continuing without GunDB P2P network")
+    
     # Try to start P2P (Primary Lung)
     if lattice_streams.config.enabled:
         print("[STARTUP] P2P enabled, attempting to start...")
@@ -630,6 +666,58 @@ async def _lattice_startup() -> None:
         http_sync_task = asyncio.create_task(_http_sync_heartbeat())
         print("[STARTUP] [LUNG] HTTP Sync Heartbeat activated")
     
+    print("="*70)
+
+@app.on_event("shutdown")
+async def _lattice_shutdown() -> None:
+    """Graceful shutdown of all services"""
+    print("\n" + "="*70)
+    print("[SHUTDOWN] DIOTEC360 LATTICE - Graceful Shutdown")
+    print("="*70)
+    
+    # Stop GunDB P2P Network (v10.0.9)
+    try:
+        from api.peer_announcer import get_peer_announcer
+        from api.gundb_connector import get_gun
+        
+        announcer = get_peer_announcer()
+        await announcer.stop()
+        print("[SHUTDOWN] [GUN] Peer announcer stopped")
+        
+        gun = get_gun()
+        await gun.disconnect()
+        print("[SHUTDOWN] [GUN] GunDB connector disconnected")
+        
+    except Exception as e:
+        print(f"[SHUTDOWN] [WARN] GunDB shutdown error: {e}")
+    
+    # Stop P2P heartbeat monitor
+    global p2p_heartbeat_task
+    if p2p_heartbeat_task:
+        p2p_heartbeat_task.cancel()
+        try:
+            await p2p_heartbeat_task
+        except asyncio.CancelledError:
+            pass
+        print("[SHUTDOWN] P2P heartbeat monitor stopped")
+    
+    # Stop HTTP sync heartbeat
+    global http_sync_task
+    if http_sync_task:
+        http_sync_task.cancel()
+        try:
+            await http_sync_task
+        except asyncio.CancelledError:
+            pass
+        print("[SHUTDOWN] HTTP sync heartbeat stopped")
+    
+    # Stop lattice streams
+    if lattice_streams:
+        await lattice_streams.stop()
+        print("[SHUTDOWN] Lattice streams stopped")
+    
+    print("="*70)
+    print("[SHUTDOWN] Goodbye! 🌌")
     print("="*70)
     print("[ROCKET] LATTICE READY - Hybrid Sync Active")
     print("="*70 + "\n")

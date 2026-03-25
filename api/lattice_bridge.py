@@ -1,20 +1,25 @@
 """
-Lattice Node Bridge API - v3.4.0
-Distributed proof mining endpoints for DIOTEC 360
+Lattice Node Bridge API - v10.0.8
+Distributed proof mining + P2P network visualization for DIOTEC 360
 
 Endpoints:
 - GET /api/lattice/challenge - Request pending Z3 challenge
 - POST /api/lattice/submit-proof - Submit solved proof for verification
+- GET /api/lattice/peers - Get connected P2P peers
+- GET /api/lattice/consensus - Get Merkle consensus data
+- GET /api/lattice/events - Get recent verification events
+- WebSocket /api/lattice/stream - Real-time event stream
 """
 
-from fastapi import APIRouter, HTTPException, Request
+from fastapi import APIRouter, HTTPException, Request, WebSocket, WebSocketDisconnect
 from pydantic import BaseModel, Field, validator
-from typing import Optional
+from typing import Optional, List
 import time
 import uuid
 import logging
 from datetime import datetime
 import json
+import asyncio
 
 # Z3 solver integration
 try:
@@ -83,17 +88,42 @@ class SolveResponse(BaseModel):
     solver_time_ms: int
     error: Optional[str] = None
 
-class SolveRequest(BaseModel):
-    """Request for POST /api/lattice/solve"""
-    formula: str
-    timeout_ms: int = Field(ge=100, le=120000)  # 100ms to 2 minutes
+class PeerData(BaseModel):
+    """P2P peer information"""
+    peer_id: str
+    location: str
+    status: str  # 'connected' | 'syncing' | 'offline'
+    uptime_seconds: int
+    proofs_validated: int
+    last_seen: int
 
-class SolveResponse(BaseModel):
-    """Response for POST /api/lattice/solve"""
-    success: bool
-    proof: Optional[str] = None
-    solver_time_ms: int
-    error: Optional[str] = None
+class PeersResponse(BaseModel):
+    """Response for GET /api/lattice/peers"""
+    ok: bool
+    peers: List[PeerData]
+    total_peers: int
+
+class ConsensusResponse(BaseModel):
+    """Response for GET /api/lattice/consensus"""
+    ok: bool
+    merkle_root: str
+    consensus_percentage: int
+    agreeing_peers: int
+    total_peers: int
+    last_update: int
+
+class VerificationEventData(BaseModel):
+    """Verification event data"""
+    event_id: str
+    type: str  # 'proof_validated' | 'merkle_sync' | 'peer_connected' | 'peer_disconnected'
+    message: str
+    peer_id: str
+    timestamp: int
+
+class EventsResponse(BaseModel):
+    """Response for GET /api/lattice/events"""
+    ok: bool
+    events: List[VerificationEventData]
 
 # ============================================================================
 # IN-MEMORY CHALLENGE POOL (TODO: Replace with persistent storage)
@@ -195,6 +225,93 @@ class CreditTracker:
 
 # Global credit tracker instance
 credit_tracker = CreditTracker()
+
+# ============================================================================
+# P2P NETWORK TRACKING (TODO: Replace with real GunDB integration)
+# ============================================================================
+
+class NetworkTracker:
+    """
+    Tracks P2P network peers and events
+    
+    TODO Phase 2: Integrate with real GunDB peer discovery
+    TODO Phase 3: Add geographic IP lookup for real locations
+    """
+    
+    def __init__(self):
+        self.peers = {}  # peer_id -> peer_data
+        self.events = []  # Recent verification events (max 100)
+        self._initialize_mock_peers()
+    
+    def _initialize_mock_peers(self):
+        """Initialize with mock peers for demo"""
+        mock_peers = [
+            {'peer_id': 'abc123def456', 'location': '🇦🇴 Luanda, Angola', 'status': 'connected', 'uptime_seconds': 86400, 'proofs_validated': 1234},
+            {'peer_id': 'ghi789jkl012', 'location': '🇵🇹 Lisboa, Portugal', 'status': 'connected', 'uptime_seconds': 172800, 'proofs_validated': 2456},
+            {'peer_id': 'mno345pqr678', 'location': '🇧🇷 São Paulo, Brazil', 'status': 'syncing', 'uptime_seconds': 43200, 'proofs_validated': 567},
+            {'peer_id': 'stu901vwx234', 'location': '🇺🇸 New York, USA', 'status': 'connected', 'uptime_seconds': 259200, 'proofs_validated': 3789},
+            {'peer_id': 'yza567bcd890', 'location': '🇬🇧 London, UK', 'status': 'connected', 'uptime_seconds': 345600, 'proofs_validated': 4567},
+            {'peer_id': 'efg123hij456', 'location': '🇿🇦 Cape Town, South Africa', 'status': 'connected', 'uptime_seconds': 129600, 'proofs_validated': 1890},
+            {'peer_id': 'klm789nop012', 'location': '🇫🇷 Paris, France', 'status': 'connected', 'uptime_seconds': 216000, 'proofs_validated': 3012},
+        ]
+        
+        for peer in mock_peers:
+            peer['last_seen'] = int(time.time())
+            self.peers[peer['peer_id']] = peer
+    
+    def get_peers(self) -> List[dict]:
+        """Get all active peers"""
+        return list(self.peers.values())
+    
+    def get_consensus(self) -> dict:
+        """Calculate network consensus"""
+        total_peers = len(self.peers)
+        connected_peers = len([p for p in self.peers.values() if p['status'] == 'connected'])
+        
+        consensus_percentage = int((connected_peers / total_peers * 100)) if total_peers > 0 else 0
+        
+        return {
+            'merkle_root': f'mock_root_{int(time.time())}',
+            'consensus_percentage': consensus_percentage,
+            'agreeing_peers': connected_peers,
+            'total_peers': total_peers,
+            'last_update': int(time.time())
+        }
+    
+    def add_event(self, event: dict):
+        """Add verification event to stream"""
+        self.events.insert(0, event)
+        # Keep only last 100 events
+        self.events = self.events[:100]
+    
+    def get_recent_events(self, limit: int = 50) -> List[dict]:
+        """Get recent verification events"""
+        return self.events[:limit]
+
+# Global network tracker instance
+network_tracker = NetworkTracker()
+
+# WebSocket connection manager
+class ConnectionManager:
+    def __init__(self):
+        self.active_connections: List[WebSocket] = []
+    
+    async def connect(self, websocket: WebSocket):
+        await websocket.accept()
+        self.active_connections.append(websocket)
+    
+    def disconnect(self, websocket: WebSocket):
+        self.active_connections.remove(websocket)
+    
+    async def broadcast(self, message: dict):
+        for connection in self.active_connections:
+            try:
+                await connection.send_json(message)
+            except Exception as e:
+                logger.error(f"Error broadcasting to WebSocket: {e}")
+
+# Global connection manager
+ws_manager = ConnectionManager()
 
 # ============================================================================
 # PROOF VERIFICATION (TODO: Integrate real Z3 verification)
@@ -452,6 +569,13 @@ async def submit_proof(submission: ProofSubmission):
         # TODO: Integrate with MerkleStateTree
         merkle_root = f"mock_root_{int(time.time())}"
         
+        # Step 9: Broadcast verification event to WebSocket clients
+        await broadcast_verification_event(
+            event_type='proof_validated',
+            message=f"🛡️ Proof #{submission.challenge_id[:8]} verified ({credits_earned} credits)",
+            peer_id=public_key[:12]
+        )
+        
         logger.info(
             f"Proof verified and credits awarded: {credits_earned} "
             f"(total: {total_credits}) for {public_key[:16]}...",
@@ -619,3 +743,184 @@ async def health_check():
         "completed_challenges": len(challenge_pool.completed_challenges),
         "timestamp": int(time.time())
     }
+
+
+# ============================================================================
+# P2P NETWORK ENDPOINTS (v10.0.8)
+# ============================================================================
+
+@router.get("/peers", response_model=PeersResponse)
+async def get_peers():
+    """
+    Get list of connected P2P peers
+    
+    Returns:
+        PeersResponse with peer list and count
+    """
+    try:
+        peers = network_tracker.get_peers()
+        
+        logger.info(f"Peers requested: {len(peers)} active peers")
+        
+        return PeersResponse(
+            ok=True,
+            peers=[PeerData(**peer) for peer in peers],
+            total_peers=len(peers)
+        )
+        
+    except Exception as e:
+        logger.error(f"Error getting peers: {e}", exc_info=True)
+        raise HTTPException(
+            status_code=500,
+            detail="Internal server error occurred while fetching peers"
+        )
+
+@router.get("/consensus", response_model=ConsensusResponse)
+async def get_consensus():
+    """
+    Get Merkle consensus data from network
+    
+    Returns:
+        ConsensusResponse with consensus percentage and Merkle root
+    """
+    try:
+        consensus = network_tracker.get_consensus()
+        
+        logger.info(
+            f"Consensus requested: {consensus['consensus_percentage']}% "
+            f"({consensus['agreeing_peers']}/{consensus['total_peers']} peers)"
+        )
+        
+        return ConsensusResponse(
+            ok=True,
+            merkle_root=consensus['merkle_root'],
+            consensus_percentage=consensus['consensus_percentage'],
+            agreeing_peers=consensus['agreeing_peers'],
+            total_peers=consensus['total_peers'],
+            last_update=consensus['last_update']
+        )
+        
+    except Exception as e:
+        logger.error(f"Error getting consensus: {e}", exc_info=True)
+        raise HTTPException(
+            status_code=500,
+            detail="Internal server error occurred while fetching consensus"
+        )
+
+@router.get("/events", response_model=EventsResponse)
+async def get_events(limit: int = 50):
+    """
+    Get recent verification events
+    
+    Args:
+        limit: Maximum number of events to return (default: 50)
+    
+    Returns:
+        EventsResponse with recent events
+    """
+    try:
+        events = network_tracker.get_recent_events(limit)
+        
+        logger.info(f"Events requested: {len(events)} events")
+        
+        return EventsResponse(
+            ok=True,
+            events=[VerificationEventData(**event) for event in events]
+        )
+        
+    except Exception as e:
+        logger.error(f"Error getting events: {e}", exc_info=True)
+        raise HTTPException(
+            status_code=500,
+            detail="Internal server error occurred while fetching events"
+        )
+
+@router.websocket("/stream")
+async def websocket_stream(websocket: WebSocket):
+    """
+    WebSocket endpoint for real-time verification events
+    
+    Broadcasts events to all connected clients:
+    - Proof validations
+    - Merkle syncs
+    - Peer connections/disconnections
+    """
+    await ws_manager.connect(websocket)
+    
+    try:
+        logger.info("WebSocket client connected to Lattice stream")
+        
+        # Send initial connection message
+        await websocket.send_json({
+            'type': 'connection',
+            'message': 'Connected to Lattice verification stream',
+            'timestamp': int(time.time())
+        })
+        
+        # Keep connection alive and listen for client messages
+        while True:
+            try:
+                # Wait for client messages (ping/pong)
+                data = await websocket.receive_text()
+                
+                # Echo back for keepalive
+                await websocket.send_json({
+                    'type': 'pong',
+                    'timestamp': int(time.time())
+                })
+                
+            except WebSocketDisconnect:
+                break
+            except Exception as e:
+                logger.error(f"WebSocket error: {e}")
+                break
+                
+    except Exception as e:
+        logger.error(f"WebSocket connection error: {e}", exc_info=True)
+    finally:
+        ws_manager.disconnect(websocket)
+        logger.info("WebSocket client disconnected from Lattice stream")
+
+# ============================================================================
+# EVENT BROADCASTING (Called when proofs are verified)
+# ============================================================================
+
+async def broadcast_verification_event(event_type: str, message: str, peer_id: str):
+    """
+    Broadcast verification event to all WebSocket clients AND GunDB network
+    
+    Args:
+        event_type: Type of event
+        message: Human-readable message
+        peer_id: Peer that triggered the event
+    """
+    event = {
+        'event_id': str(uuid.uuid4()),
+        'type': event_type,
+        'message': message,
+        'peer_id': peer_id,
+        'timestamp': int(time.time())
+    }
+    
+    # Add to event history
+    network_tracker.add_event(event)
+    
+    # Broadcast to WebSocket clients
+    await ws_manager.broadcast({
+        'type': 'verification_event',
+        'event': event
+    })
+    
+    # Broadcast to GunDB P2P network (v10.0.9)
+    try:
+        from api.peer_announcer import get_peer_announcer
+        announcer = get_peer_announcer()
+        await announcer.broadcast_proof_event(
+            event_type=event_type,
+            message=message,
+            source_peer_id=peer_id
+        )
+    except Exception as e:
+        logger.warning(f"Could not broadcast to GunDB: {e}")
+    
+    logger.info(f"Broadcasted event: {event_type} - {message}")

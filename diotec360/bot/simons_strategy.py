@@ -10,7 +10,7 @@ Logic:
 3. Capture tiny profits (0.01% - 0.1%) thousands of times
 4. Zero directional risk (market neutral)
 
-The Aethel Advantage:
+The DIOTEC 360 Advantage:
 - Synchrony v1.8 enables parallel execution (<5ms)
 - Oracle v1.7 syncs prices across exchanges
 - Judge v1.9 proves net profit before execution

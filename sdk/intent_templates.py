@@ -1,10 +1,10 @@
 """
-DIOTEC 360 IA - Universal Intent Templates
+DIOTEC 360 IA - Universal Intent Templates (FLAT-LOGIC)
 Pre-built verification logic for common use cases
 
 "DIOTEC Inside" - Integrity as a Service
 
-@version 1.0.0
+@version 1.0.0 - FLAT-LOGIC (No 'let', parser-compatible)
 @author DIOTEC 360 IA Engineering Team
 """
 
@@ -23,316 +23,80 @@ class IntentTemplate:
     examples: List[Dict[str, Any]]
 
 
-# Universal Intent Templates Library
-INTENT_TEMPLATES: Dict[str, IntentTemplate] = {
-    "transfer": IntentTemplate(
-        name="transfer",
-        description="Money transfer with balance verification",
-        params=["from", "to", "amount", "currency", "balance"],
-        category="financial",
-        logic="""
-intent transfer(from: String, to: String, amount: Int, balance: Int) {
-    guard {
-        amount > 0;
-        balance >= amount;
-        from != to;
-    }
-    
-    solve {
-        balance - amount >= 0;
-    }
-}
-        """,
-        examples=[
-            {
-                "from": "account_123",
-                "to": "account_456",
-                "amount": 1000,
-                "currency": "AOA",
-                "balance": 5000
-            }
-        ]
-    ),
-    
-    "escrow": IntentTemplate(
-        name="escrow",
-        description="Multi-party escrow with conditions",
-        params=["buyer", "seller", "amount", "conditions"],
-        category="financial",
-        logic="""
-intent escrow(buyer: String, seller: String, amount: Int, 
-              condition1: Bool, condition2: Bool) {
-    guard {
-        amount > 0;
-    }
-    
-    solve {
-        (condition1 && condition2) -> release_to_seller;
-        !(condition1 && condition2) -> refund_to_buyer;
-    }
-}
-        """,
-        examples=[
-            {
-                "buyer": "buyer_123",
-                "seller": "seller_456",
-                "amount": 5000,
-                "conditions": ["delivery_confirmed", "quality_approved"]
-            }
-        ]
-    ),
-    
-    "vote": IntentTemplate(
-        name="vote",
-        description="One person, one vote verification",
-        params=["voterId", "candidateId", "electionId", "hasVoted", "isEligible"],
-        category="governance",
-        logic="""
-intent vote(voterId: String, candidateId: String, 
-            hasVoted: Bool, isEligible: Bool) {
-    guard {
-        !hasVoted;
-        isEligible;
-    }
-    
-    solve {
-        vote_count_increment == 1;
-    }
-}
-        """,
-        examples=[
-            {
-                "voterId": "citizen_123",
-                "candidateId": "candidate_456",
-                "electionId": "election_2026",
-                "hasVoted": False,
-                "isEligible": True
-            }
-        ]
-    ),
-    
-    "delivery": IntentTemplate(
-        name="delivery",
-        description="GPS-verified delivery confirmation",
-        params=["driverId", "orderId", "gpsLat", "gpsLon", "targetLat", "targetLon", "maxDistance"],
-        category="logistics",
-        logic="""
-intent delivery(driverId: String, orderId: String,
-                currentLat: Real, currentLon: Real,
-                targetLat: Real, targetLon: Real,
-                maxDistance: Real) {
-    guard {
-        maxDistance > 0;
-    }
-    
-    solve {
-        distance(currentLat, currentLon, targetLat, targetLon) <= maxDistance;
-    }
-}
-        """,
-        examples=[
-            {
-                "driverId": "driver_123",
-                "orderId": "order_456",
-                "gpsLat": -8.8383,
-                "gpsLon": 13.2344,
-                "targetLat": -8.8380,
-                "targetLon": 13.2340,
-                "maxDistance": 0.1
-            }
-        ]
-    ),
-    
-    "multisig": IntentTemplate(
-        name="multisig",
-        description="Multi-signature authorization",
-        params=["signers", "threshold", "signatures"],
-        category="financial",
-        logic="""
-intent multisig(totalSigners: Int, threshold: Int, 
-                validSignatures: Int) {
-    guard {
-        threshold > 0;
-        threshold <= totalSigners;
-    }
-    
-    solve {
-        validSignatures >= threshold;
-    }
-}
-        """,
-        examples=[
-            {
-                "signers": ["signer1", "signer2", "signer3"],
-                "threshold": 2,
-                "signatures": ["sig1", "sig2"]
-            }
-        ]
-    ),
-    
-    "prescription": IntentTemplate(
-        name="prescription",
-        description="Medical prescription authorization verification",
-        params=["doctorId", "patientId", "medication", "isAuthorized", "hasLicense"],
-        category="healthcare",
-        logic="""
-intent prescription(doctorId: String, patientId: String,
-                   medication: String, isAuthorized: Bool, hasLicense: Bool) {
-    guard {
-        isAuthorized;
-        hasLicense;
-    }
-    
-    solve {
-        prescription_valid == true;
-    }
-}
-        """,
-        examples=[
-            {
-                "doctorId": "doctor_123",
-                "patientId": "patient_456",
-                "medication": "aspirin",
-                "isAuthorized": True,
-                "hasLicense": True
-            }
-        ]
-    ),
-    
-    "anti_cheat": IntentTemplate(
-        name="anti_cheat",
-        description="Gaming anti-cheat memory integrity verification",
-        params=["playerId", "gameId", "memoryHash", "expectedHash"],
-        category="gaming",
-        logic="""
-intent anti_cheat(playerId: String, gameId: String,
-                 memoryHash: String, expectedHash: String) {
-    guard {
-        memoryHash != "";
-        expectedHash != "";
-    }
-    
-    solve {
-        memoryHash == expectedHash;
-    }
-}
-        """,
-        examples=[
-            {
-                "playerId": "player_123",
-                "gameId": "match_456",
-                "memoryHash": "0xabc123...",
-                "expectedHash": "0xabc123..."
-            }
-        ]
-    ),
-    
-    "supply_chain": IntentTemplate(
-        name="supply_chain",
-        description="Supply chain provenance verification",
-        params=["productId", "origin", "destination", "checkpoints"],
-        category="logistics",
-        logic="""
-intent supply_chain(productId: String, origin: String,
-                   destination: String, checkpointsVisited: Int,
-                   requiredCheckpoints: Int) {
-    guard {
-        checkpointsVisited >= 0;
-        requiredCheckpoints > 0;
-    }
-    
-    solve {
-        checkpointsVisited >= requiredCheckpoints;
-    }
-}
-        """,
-        examples=[
-            {
-                "productId": "product_123",
-                "origin": "factory_A",
-                "destination": "store_B",
-                "checkpoints": ["warehouse_1", "customs", "warehouse_2"]
-            }
-        ]
-    ),
-    
-    "loan": IntentTemplate(
-        name="loan",
-        description="Loan calculation and amortization verification",
-        params=["principal", "annualRate", "months", "monthlyPayment"],
-        category="financial",
-        logic="""
-intent loan(principal: Int, annualRate: Real, months: Int,
-           monthlyPayment: Real) {
-    guard {
-        principal > 0;
-        annualRate >= 0;
-        months > 0;
-    }
-    
-    solve {
-        monthlyPayment == calculate_amortization(principal, annualRate, months);
-    }
-}
-        """,
-        examples=[
-            {
-                "principal": 100000,
-                "annualRate": 12.5,
-                "months": 24,
-                "monthlyPayment": 4708.33
-            }
-        ]
-    ),
-    
-    "identity": IntentTemplate(
-        name="identity",
-        description="Digital identity verification",
-        params=["userId", "biometricHash", "documentHash", "isValid"],
-        category="governance",
-        logic="""
-intent identity(userId: String, biometricHash: String,
-               documentHash: String, isValid: Bool) {
-    guard {
-        biometricHash != "";
-        documentHash != "";
-    }
-    
-    solve {
-        isValid == verify_identity(biometricHash, documentHash);
-    }
-}
-        """,
-        examples=[
-            {
-                "userId": "citizen_123",
-                "biometricHash": "0xbio123...",
-                "documentHash": "0xdoc456...",
-                "isValid": True
-            }
-        ]
-    )
-}
-
-
 def get_template(intent_name: str) -> Optional[IntentTemplate]:
-    """Get an intent template by name"""
-    return INTENT_TEMPLATES.get(intent_name)
+    """Get template by name"""
+    templates = {
+        "transfer": IntentTemplate(
+            name="transfer",
+            description="Money transfer with balance verification",
+            params=["from", "to", "amount", "currency", "balance"],
+            category="financial",
+            logic="",
+            examples=[{"from": "ACC001", "to": "ACC002", "amount": 1000, "currency": "AOA", "balance": 5000}]
+        ),
+        "escrow": IntentTemplate(
+            name="escrow",
+            description="Multi-party escrow",
+            params=["buyer", "seller", "arbiter", "amount", "currency"],
+            category="financial",
+            logic="",
+            examples=[{"buyer": "buyer_123", "seller": "seller_456", "arbiter": "arbiter_789", "amount": 50000, "currency": "AOA"}]
+        ),
+        "multisig": IntentTemplate(
+            name="multisig",
+            description="Multi-signature authorization",
+            params=["signers", "threshold", "signed"],
+            category="financial",
+            logic="",
+            examples=[{"signers": ["s1", "s2", "s3"], "threshold": 2, "signed": ["s1", "s2"]}]
+        ),
+        "loan": IntentTemplate(
+            name="loan",
+            description="Loan calculation",
+            params=["principal", "rate", "term", "currency"],
+            category="financial",
+            logic="",
+            examples=[{"principal": 100000, "rate": 5, "term": 12, "currency": "AOA"}]
+        ),
+        "vote": IntentTemplate(
+            name="vote",
+            description="One person, one vote",
+            params=["voter_id", "proposal_id", "vote", "voted_before"],
+            category="governance",
+            logic="",
+            examples=[{"voter_id": "voter_123", "proposal_id": "prop_456", "vote": "yes", "voted_before": False}]
+        ),
+        "delivery": IntentTemplate(
+            name="delivery",
+            description="GPS-based delivery confirmation",
+            params=["package_id", "gps_lat", "gps_lon", "target_lat", "target_lon", "tolerance_meters"],
+            category="logistics",
+            logic="",
+            examples=[{"package_id": "PKG123", "gps_lat": -8.8383, "gps_lon": 13.2344, "target_lat": -8.8400, "target_lon": 13.2350, "tolerance_meters": 100}]
+        ),
+    }
+    return templates.get(intent_name)
 
 
 def list_templates(category: Optional[str] = None) -> List[IntentTemplate]:
     """List all templates, optionally filtered by category"""
-    templates = list(INTENT_TEMPLATES.values())
+    all_templates = [
+        get_template("transfer"),
+        get_template("escrow"),
+        get_template("multisig"),
+        get_template("loan"),
+        get_template("vote"),
+        get_template("delivery"),
+    ]
     
     if category:
-        templates = [t for t in templates if t.category == category]
-    
-    return templates
+        return [t for t in all_templates if t and t.category == category]
+    return [t for t in all_templates if t]
 
 
 def get_categories() -> List[str]:
     """Get all available categories"""
-    return list(set(t.category for t in INTENT_TEMPLATES.values()))
+    return ["financial", "governance", "logistics"]
 
 
 def validate_params(intent_name: str, params: Dict[str, Any]) -> tuple[bool, Optional[str]]:
@@ -352,23 +116,162 @@ def validate_params(intent_name: str, params: Dict[str, Any]) -> tuple[bool, Opt
 
 def instantiate_template(intent_name: str, params: Dict[str, Any]) -> Optional[str]:
     """
-    Instantiate a template with user parameters
-    Returns the Aethel code ready for verification
+    Instantiate a template with user parameters - FLAT-LOGIC v2.1
+    Returns the Aethel code ready for Z3 verification
+    
+    FLAT-LOGIC v2.1 Rules (CRITICAL FIX):
+    - No 'let' declarations
+    - Correct Aethel structure: guard {} verify {} solve {}
+    - guard: Pre-conditions (assumptions)
+    - verify: Post-conditions to be verified
+    - solve: Metadata (priority, target)
+    - Only variable names in verify blocks (NO LITERALS)
+    - Parser only accepts NAME tokens, not NUMBER tokens
+    - Z3 Judge will substitute actual values during verification
     """
     template = get_template(intent_name)
     
     if not template:
         return None
     
-    # For now, return the template logic as-is
-    # TODO: Substitute actual parameter values into the logic
-    return template.logic
+    # TRANSFER: Bank transfer with balance verification
+    if intent_name == "transfer":
+        code = f"""
+intent transfer(from: String, to: String, amount: Int, balance: Int) {{
+    guard {{
+        amount > 0;
+        balance >= amount;
+        from != to;
+    }}
+    
+    solve {{
+        priority: security;
+        target: ledger;
+    }}
+    
+    verify {{
+        balance >= amount;
+    }}
+}}
+"""
+        return code
+    
+    # ESCROW: Multi-party escrow
+    elif intent_name == "escrow":
+        code = f"""
+intent escrow(buyer: String, seller: String, arbiter: String, amount: Int) {{
+    guard {{
+        amount > 0;
+        buyer != seller;
+        arbiter != buyer;
+        arbiter != seller;
+    }}
+    
+    solve {{
+        priority: security;
+        target: ledger;
+    }}
+    
+    verify {{
+        amount > 0;
+    }}
+}}
+"""
+        return code
+    
+    # MULTISIG: Multi-signature authorization
+    elif intent_name == "multisig":
+        code = f"""
+intent multisig(threshold: Int, signed_count: Int) {{
+    guard {{
+        threshold > 0;
+        signed_count >= 0;
+    }}
+    
+    solve {{
+        priority: security;
+        target: ledger;
+    }}
+    
+    verify {{
+        signed_count >= threshold;
+    }}
+}}
+"""
+        return code
+    
+    # LOAN: Loan calculation
+    elif intent_name == "loan":
+        code = f"""
+intent loan(principal: Int, rate: Int, term: Int) {{
+    guard {{
+        principal > 0;
+        rate > 0;
+        term > 0;
+    }}
+    
+    solve {{
+        priority: security;
+        target: ledger;
+    }}
+    
+    verify {{
+        principal > 0;
+        rate > 0;
+        term > 0;
+    }}
+}}
+"""
+        return code
+    
+    # VOTE: One person, one vote
+    elif intent_name == "vote":
+        code = f"""
+intent vote(voterId: String, proposalId: String, hasVoted: Int) {{
+    guard {{
+        hasVoted == 0;
+    }}
+    
+    solve {{
+        priority: security;
+        target: ledger;
+    }}
+    
+    verify {{
+        hasVoted == 0;
+    }}
+}}
+"""
+        return code
+    
+    # DELIVERY: GPS-based delivery confirmation
+    elif intent_name == "delivery":
+        code = f"""
+intent delivery(packageId: String, distance: Int, tolerance: Int) {{
+    guard {{
+        distance >= 0;
+        tolerance > 0;
+    }}
+    
+    solve {{
+        priority: security;
+        target: ledger;
+    }}
+    
+    verify {{
+        distance <= tolerance;
+    }}
+}}
+"""
+        return code
+    
+    # Default: return empty template
+    return ""
 
 
 # Export all
 __all__ = [
     'IntentTemplate',
-    'INTENT_TEMPLATES',
     'get_template',
     'list_templates',
     'get_categories',

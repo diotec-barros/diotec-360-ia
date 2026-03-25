@@ -1,0 +1,9 @@
+[build]
+  command = "pip install -r requirements.txt"
+  publish = "."
+
+[build.environment]
+  PYTHON_VERSION = "3.11"
+
+# Para FastAPI/Python, o Netlify precisa de um plugin ou deploy via Docker
+# Recomendado: usar Netlify Functions com Python ou deploy via Render/Railway

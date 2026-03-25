@@ -23,7 +23,7 @@ from benchmarks.parallel_execution import ParallelExecutionBenchmark
 def main():
     """Run all benchmarks and generate comprehensive report"""
     print("="*70)
-    print(" "*20 + "AETHEL BENCHMARK SUITE")
+    print(" "*20 + "DIOTEC 360 BENCHMARK SUITE")
     print("="*70)
     print()
     

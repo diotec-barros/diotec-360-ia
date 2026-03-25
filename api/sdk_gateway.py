@@ -21,9 +21,22 @@ import sys
 from pathlib import Path
 sys.path.append(str(Path(__file__).parent.parent))
 
-from sdk.intent_templates import get_template, validate_params, list_templates
+from sdk.intent_templates import get_template, validate_params, list_templates, instantiate_template
+from diotec360.core.judge import AethelJudge
+from diotec360.core.parser import AethelParser
 
 router = APIRouter(prefix="/api/sdk", tags=["Sovereign SDK"])
+
+# Initialize Judge and Parser for Z3 verification
+_judge = None
+_parser = None
+
+def get_judge():
+    global _judge, _parser
+    if _judge is None:
+        _parser = AethelParser()
+        _judge = AethelJudge(intent_map={})
+    return _judge, _parser
 
 
 # Request/Response Models
@@ -82,7 +95,7 @@ async def verify_intent(
     api_key: str = Depends(validate_api_key)
 ):
     """
-    Verify a single intent with mathematical proof
+    Verify a single intent with mathematical proof using Z3 Theorem Prover
     
     This is the core endpoint that external apps use to verify critical operations.
     
@@ -118,36 +131,86 @@ async def verify_intent(
         if not is_valid:
             raise HTTPException(status_code=400, detail=error_msg)
         
-        # TODO: Call Z3 verifier with template logic
-        # TODO: Generate Merkle proof
-        # TODO: Store in audit log
+        # Instantiate template with actual parameters
+        aethel_code = instantiate_template(request.intent, request.params)
         
-        # For alpha, simulate verification
+        if not aethel_code:
+            raise HTTPException(
+                status_code=500,
+                detail="Failed to instantiate intent template"
+            )
+        
+        # Parse DIOTEC 360 code
+        judge, parser = get_judge()
+        parsed = parser.parse(aethel_code)
+        
+        if not parsed or request.intent not in parsed:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Failed to parse intent code or intent '{request.intent}' not found"
+            )
+        
+        # Load intent into Judge with actual parameter values
+        intent_data = parsed[request.intent]
+        
+        # Inject actual parameter values into constraints
+        # The parser creates the structure, but we need to substitute actual values
+        # for Z3 verification
+        if 'constraints' in intent_data:
+            for i, constraint in enumerate(intent_data['constraints']):
+                if isinstance(constraint, dict) and 'expression' in constraint:
+                    expr = constraint['expression']
+                    # Substitute parameter values in the expression
+                    for param_name, param_value in request.params.items():
+                        if isinstance(param_value, (int, float)):
+                            # Replace variable names with actual values in the expression
+                            # This allows Z3 to verify with concrete values
+                            expr = expr.replace(param_name, str(param_value))
+                    constraint['expression'] = expr
+        
+        if 'post_conditions' in intent_data:
+            for i, condition in enumerate(intent_data['post_conditions']):
+                if isinstance(condition, dict) and 'expression' in condition:
+                    expr = condition['expression']
+                    # Substitute parameter values in the expression
+                    for param_name, param_value in request.params.items():
+                        if isinstance(param_value, (int, float)):
+                            expr = expr.replace(param_name, str(param_value))
+                    condition['expression'] = expr
+        
+        judge.intent_map = {request.intent: intent_data}
+        
+        # Verify with Z3
+        verification_result = judge.verify_logic(request.intent)
+        
+        # Generate timestamp and proof ID
         timestamp = datetime.now(timezone.utc).isoformat()
         proof_id = hashlib.sha256(
-            f"{request.intent}{timestamp}{api_key}".encode()
+            f"{request.intent}{timestamp}{api_key}{verification_result['status']}".encode()
         ).hexdigest()
         
-        # Simulate verification result (always PROVED for alpha)
-        verified = True
-        status = "PROVED"
+        # Determine if verified
+        verified = verification_result['status'] == 'PROVED'
+        status = verification_result['status']
         
+        # Build response
         response = VerifyResponse(
             verified=verified,
             status=status,
-            merkleProof=proof_id,
-            certificateUrl=f"https://diotec360.com/certificates/{proof_id}",
+            merkleProof=proof_id if verified else "",
+            certificateUrl=f"https://diotec360.com/certificates/{proof_id}" if verified else "",
             timestamp=timestamp,
             details={
                 "intent": request.intent,
                 "params": request.params,
                 "template": template.description,
                 "category": template.category,
-                "verification_time_ms": int((time.time() - start_time) * 1000)
-            }
+                "verification_time_ms": int((time.time() - start_time) * 1000),
+                "z3_result": verification_result.get('message', ''),
+                "model": verification_result.get('model', None) if verified else None
+            },
+            error=verification_result.get('message', '') if not verified else None
         )
-        
-        # TODO: Log verification for billing
         
         return response
         

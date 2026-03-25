@@ -1,0 +1,23 @@
+# Files to exclude from NPM package
+
+# Tests
+test-sdk.js
+examples/
+
+# Documentation (keep README.md)
+INTEGRATION_GUIDE.md
+PUBLISH_GUIDE.md
+QUICK_START.md
+
+# Development files
+*.log
+*.tmp
+.DS_Store
+node_modules/
+
+# Python files
+*.py
+__pycache__/
+
+# HTML demos
+*.html

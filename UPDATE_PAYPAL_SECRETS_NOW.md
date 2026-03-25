@@ -9,11 +9,13 @@
 ## ✅ CREDENCIAIS CORRETAS CONFIRMADAS:
 
 ```
-PAYPAL_CLIENT_ID = AYgnWYP4m3eJ8vqHYzYyOOnmeah-alxgffc4k4KI_pHyUXph9GETWswifBI_1h0jpzy6fWYmHxQBxF3O
-PAYPAL_SECRET = EJEcd6NsvRuVitGr38uWXG291O9SfVetIl9tM4uJZPVwilxsI12NBPTWpITM22IF_AwRwJRX0MOjtVrc
-PAYPAL_WEBHOOK_ID = 2CJ51023VJ7141838
+PAYPAL_CLIENT_ID = YOUR_PAYPAL_CLIENT_ID_HERE
+PAYPAL_SECRET = YOUR_PAYPAL_SECRET_HERE
+PAYPAL_WEBHOOK_ID = YOUR_WEBHOOK_ID_HERE
 PAYPAL_MODE = sandbox
 ```
+
+**IMPORTANTE:** Obtenha suas credenciais em https://developer.paypal.com/dashboard/
 
 ---
 
@@ -36,12 +38,12 @@ Clique em "New secret" para cada um:
 
 #### Secret 1: PAYPAL_CLIENT_ID
 - **Name**: `PAYPAL_CLIENT_ID`
-- **Value**: `AYgnWYP4m3eJ8vqHYzYyOOnmeah-alxgffc4k4KI_pHyUXph9GETWswifBI_1h0jpzy6fWYmHxQBxF3O`
+- **Value**: `[Sua Client ID do PayPal Dashboard]`
 - Clique em "Add secret"
 
 #### Secret 2: PAYPAL_SECRET
 - **Name**: `PAYPAL_SECRET`
-- **Value**: `EJEcd6NsvRuVitGr38uWXG291O9SfVetIl9tM4uJZPVwilxsI12NBPTWpITM22IF_AwRwJRX0MOjtVrc`
+- **Value**: `[Seu Secret do PayPal Dashboard]`
 - Clique em "Add secret"
 
 #### Secret 3: PAYPAL_WEBHOOK_ID

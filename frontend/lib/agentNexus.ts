@@ -122,9 +122,10 @@ async function tryCreateGunInstance() {
   const Gun = await tryCreateGun();
   if (!Gun) return null;
 
-  const peersEnv = (process.env.NEXT_PUBLIC_GUN_PEERS || "").trim();
-  const peers = peersEnv
-    ? peersEnv
+  // Prioriza NEXT_PUBLIC_GUNDB_RELAY, fallback para NEXT_PUBLIC_GUN_PEERS
+  const relayUrl = (process.env.NEXT_PUBLIC_GUNDB_RELAY || process.env.NEXT_PUBLIC_GUN_PEERS || "").trim();
+  const peers = relayUrl
+    ? relayUrl
         .split(",")
         .map((s) => s.trim())
         .filter(Boolean)

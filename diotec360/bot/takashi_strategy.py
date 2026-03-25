@@ -10,7 +10,7 @@ Logic:
 3. Buy at the bottom with mathematical proof
 4. Sell when price rebounds to mean
 
-The Aethel Advantage:
+The DIOTEC 360 Advantage:
 - Sentinel v1.9 detects flash crashes in real-time
 - Judge v1.9 proves the rebound probability
 - Conservation laws prevent over-leverage

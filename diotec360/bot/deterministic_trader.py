@@ -49,6 +49,7 @@ class TradingInvariants:
     confirmation_wait_ms: int = 5
     min_proof_confidence: float = 0.95
     max_position_size_percent: Decimal = Decimal('10.0')
+    minimum_reserve_usd: Decimal = Decimal('5000.00')  # 🛡️ DALIO PROTECTION
     require_conservation_proof: bool = True
     require_whatsapp_signature: bool = True
 
@@ -137,6 +138,7 @@ class DeterministicTrader:
         2. Drawdown limit (max 2%)
         3. Position size limit
         4. Proof confidence threshold
+        5. Minimum reserve protection (Dalio Defense)
         """
         # Check 1: Proof confidence
         if signal.confidence < self.invariants.min_proof_confidence:
@@ -154,8 +156,18 @@ class DeterministicTrader:
         position_size_percent = (signal.amount * signal.price / self.portfolio_value) * 100
         if position_size_percent > self.invariants.max_position_size_percent:
             return False
+        
+        # Check 4: Minimum Reserve Protection (DALIO DEFENSE)
+        if signal.action == 'buy':
+            cost = signal.amount * signal.price
+            remaining_balance = self.portfolio_value - cost
             
-        # Check 4: Conservation proof (if required)
+            if remaining_balance < self.invariants.minimum_reserve_usd:
+                print(f"🛡️ RESERVE PROTECTION: Signal rejected")
+                print(f"   Would leave ${remaining_balance:,.2f} (minimum: ${self.invariants.minimum_reserve_usd:,.2f})")
+                return False
+            
+        # Check 5: Conservation proof (if required)
         if self.invariants.require_conservation_proof:
             if not await self._verify_conservation(signal):
                 return False

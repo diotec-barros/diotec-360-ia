@@ -55,7 +55,7 @@ def main():
         print("[OK] WhatsAppGate initialized")
         
         judge = AethelJudge(intent_map={})
-        print("[OK] AethelJudge initialized")
+        print("[OK] AethelJudge initialized (DIOTEC 360 Core)")
         
         conservation = ConservationChecker()
         print("[OK] ConservationChecker initialized")

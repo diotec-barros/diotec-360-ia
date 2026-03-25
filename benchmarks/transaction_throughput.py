@@ -21,7 +21,7 @@ try:
     from diotec360.core.runtime import Runtime
     from diotec360.core.judge import Judge
 except ImportError:
-    print("Warning: Aethel core not found. Using mock implementations.")
+    print("Warning: DIOTEC 360 core not found. Using mock implementations.")
     Runtime = None
     Judge = None
 

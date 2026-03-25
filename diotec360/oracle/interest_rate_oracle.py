@@ -15,7 +15,7 @@ limitations under the License.
 """
 
 """
-Aethel Interest Rate Oracle v5.1 - "Mrs. Watanabe's Eye"
+DIOTEC 360 IA Interest Rate Oracle v5.1 - "Mrs. Watanabe's Eye"
 
 Fetches central bank interest rates for carry trade strategy.
 Integrates with Alpha Vantage API for real-time data.

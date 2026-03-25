@@ -1,0 +1,55 @@
+{
+  "name": "@diotec360/sdk",
+  "version": "1.0.0",
+  "description": "DIOTEC 360 IA - Sovereign SDK for Mathematical Proof Verification",
+  "main": "diotec360-sdk.js",
+  "types": "diotec360-sdk.d.ts",
+  "module": "diotec360-sdk.mjs",
+  "exports": {
+    ".": {
+      "import": "./diotec360-sdk.mjs",
+      "require": "./diotec360-sdk.js",
+      "types": "./diotec360-sdk.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "echo 'Build skipped - files already compiled'",
+    "test": "node test-sdk.js",
+    "prepublishOnly": "echo 'Ready to publish'"
+  },
+  "keywords": [
+    "diotec360",
+    "verification",
+    "z3",
+    "theorem-prover",
+    "blockchain",
+    "integrity",
+    "proof",
+    "banking",
+    "fintech",
+    "angola"
+  ],
+  "author": "Dionísio Sebastião Barros <contact@diotec360.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/diotec-barros/diotec-360-ia-extension"
+  },
+  "bugs": {
+    "url": "https://github.com/diotec-barros/diotec-360-ia-extension/issues"
+  },
+  "homepage": "https://diotec360.com",
+  "files": [
+    "diotec360-sdk.js",
+    "diotec360-sdk.mjs",
+    "diotec360-sdk.d.ts",
+    "README.md"
+  ],
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "@diotec360/sdk": "^1.0.0"
+  }
+}
